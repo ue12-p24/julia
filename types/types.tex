@@ -1,0 +1,834 @@
+\documentclass[12pt, aspectratio=141]{beamer}
+
+\definecolor{jrouge}{HTML}{CB3C33}
+\definecolor{jvert}{HTML}{389826}
+\definecolor{jbleu}{HTML}{4063D8}
+\definecolor{jviolet}{HTML}{9558B2}
+\definecolor{lightred}{HTML}{fcf3f3}
+\definecolor{lightgreen}{HTML}{e1f6db}
+\definecolor{lightpurple}{HTML}{f4eef7}
+\definecolor{lightgrey}{gray}{0.95}
+
+\mode<presentation>
+{
+	\usetheme{default}
+	\usecolortheme{rose}
+%	\useoutertheme{smoothbars}
+	\useinnertheme{circles}
+	
+	\definecolor{beamer@blendedblue}{HTML}{4063D8}
+	%\definecolor{titlemustard}{rgb}{0.6,0.6,0.0}
+	%\setbeamercolor{title}{bg=titlemustard}
+	\setbeamercolor{normal text}{fg=black}
+	\setbeamercolor{alerted text}{fg=jrouge}
+	\setbeamerfont{title}{shape=\bfseries}
+	\setbeamercolor{example text}{fg=jvert}
+	
+	%\setbeamercolor{structure}{fg=beamer@blendedblue}
+	\setbeamertemplate{navigation symbols}{}
+	\setbeamertemplate{footline}{\color{black!50}\hfill\scriptsize\insertpagenumber\hspace{2em}\vspace{2em}}
+}
+
+\usepackage{natbib}
+%\renewcommand{\citenumfont}[1]{{\tiny#1}}
+\renewcommand{\citenumfont}[1]{}
+\bibpunct{}{};s;;
+
+\usepackage[french]{babel}
+\usepackage[mathletters]{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+% Alternative for XeLaTeX:
+%\usefonttheme{professionalfonts}
+%\usepackage{fontspec}
+%\setmonofont{JuliaMono}
+%\setdefaultlanguage{french}
+%\usepackage{unicode-math}
+
+\usepackage{subcaption}
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{soul}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{bbm}
+\usepackage{svg}
+
+\usepackage{tikz}
+\usetikzlibrary{scopes, backgrounds, arrows, automata, positioning, patterns, calc, decorations.pathmorphing, decorations.pathreplacing, arrows.meta}
+
+\usepackage{hyperref}
+\usepackage{ragged2e}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{aeguill}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{stmaryrd}
+\usepackage{moresize}
+
+\newcommand{\llbra}{\left\llbracket}
+\newcommand{\rrbra}{\right\rrbracket}
+\renewcommand{\brack}[1]{\ensuremath{\llbra#1\rrbra}}
+\newcommand{\der}[2]{#1^{\ensuremath{\left(#2\right)}}}
+\newcommand{\paren}[1]{\ensuremath{\left(#1\right)}}
+\newcommand{\abs}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\interval}[1]{\ensuremath{\left[#1\right]}}
+\newcommand{\set}[2]{\ensuremath{\left\{#1\,\middle|\,#2\right\}}}
+\newcommand{\cont}[1]{\mathcal{C}^{#1}}
+\newcommand{\tends}[2]{\underset{#1\to #2}{\longrightarrow}}
+\newcommand{\seq}[3]{\ensuremath{\left(#1_{#2}\right)_{#2\in#3}}}
+\newcommand{\matr}[2]{\mathcal{M}_{#1}\paren{#2}}
+\newcommand{\matrRect}[3]{\mathcal{M}_{#1,#2}\paren{#3}}
+\newcommand{\Id}{\text{Id}}
+\newenvironment{disj}[1]{\left\{\begin{array}{#1}} {\end{array}\right.}
+
+
+\newenvironment{changemargin}[2]{%
+\begin{list}{}{%
+		%\setlength{\topsep}{0pt}%
+		\setlength{\leftmargin}{#1}%
+		\setlength{\rightmargin}{#2}%
+		\setlength{\listparindent}{\parindent}%
+		\setlength{\itemindent}{\parindent}%
+		\setlength{\parsep}{\parskip}%
+	}%
+	\item[]}{\end{list}}
+
+\defbeamertemplate{section page}{mruffel}[1][]{%
+	\begin{centering}
+		{\usebeamerfont{section name}\usebeamercolor[fg]{section name}#1
+			\vskip1em\par
+			
+			\begin{beamercolorbox}[sep=12pt,center,rounded=true,shadow=true]{part title}
+				\usebeamerfont{section title}\insertsection\par
+		\end{beamercolorbox}}
+	\end{centering}
+}
+
+
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+\pgfdeclareimage[height=0.5cm]{Mines}{../figures/Mines.pdf}
+\logo{\begin{tikzpicture}[overlay,remember picture]
+	\node[left=0.2cm] at (current page.31){
+		\pgfuseimage{Mines}
+	};
+\end{tikzpicture}}
+
+
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+%\AtBeginSubsection[]
+%{
+	%  \begin{frame}<beamer>
+		%    \tableofcontents[currentsection,currentsubsection]
+		%  \end{frame}
+	%}
+
+\AtBeginSection[]
+{
+	\begin{frame}
+		\sectionpage
+	\end{frame}
+}
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+
+%\beamerdefaultoverlayspecification{<+->}
+
+\usepackage{minted}
+\usemintedstyle{paraiso-light}
+\setminted[julia]{mathescape,linenos,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightred,escapeinside=££}
+\setminted[bash]{mathescape,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightgrey,escapeinside=££}
+
+\usepackage{lmodern}
+%\newcommand{\jl}[1]{\colorbox{lightred}{\small\ttfamily #1}}
+\newmintinline[jl]{julia}{}
+\newmintinline[jlscript]{julia}{fontsize=\scriptsize}
+\newmint[JL]{julia}{}
+\newmint[JLa]{julia}{linenos=false}
+\newminted{julia}{}
+\newenvironment{julia}{\vspace{-0.6em}\VerbatimEnvironment\begin{juliacode}}{\end{juliacode}}
+\newminted[jlrepl]{julia}{linenos=false}
+\newenvironment{repl}{\vspace{-0.6em}\VerbatimEnvironment\begin{jlrepl}}{\end{jlrepl}}
+\newcommand{\q}{\textquotesingle}
+\newcommand{\qq}{\textquotedbl}
+\newcommand{\jlREPL}{\textcolor{jvert}{\bfseries julia>}}
+
+\DeclareTextFontCommand{\emph}{\color{jrouge}\bfseries}
+
+\newenvironment<>{definition}[1]{%
+	\setbeamercolor{block title}{bg=lightgreen}%
+	\begin{block}{Définition}{#1}}{\end{block}}
+
+\newenvironment<>{convention}[1]{%
+	\setbeamercolor{block title}{bg=lightpurple}%
+	\begin{block}{Convention}{#1}}{\end{block}}
+
+\usepackage{xspace}
+\newcommand{\expr}{\ensuremath{\left\langle\textit{expr}\right\rangle}\xspace}
+\newcommand{\expra}[1]{\ensuremath{\left\langle\textit{expr}_{#1}\right\rangle}\xspace}
+\newcommand{\bexpr}{\ensuremath{\left\langle\textit{bexpr}\right\rangle}\xspace}
+\newcommand{\bexpra}[1]{\ensuremath{\left\langle\textit{bexpr}_{#1}\right\rangle}\xspace}
+\newcommand{\type}{\ensuremath{\left\langle\textit{type}\right\rangle}\xspace}
+\newcommand{\typea}[1]{\ensuremath{\left\langle\textit{type}_{#1}\right\rangle}\xspace}
+
+
+\title{Apprentissage de la programmation en Julia}
+
+\subtitle{Types concrets}
+
+\author{Lionel~Zoubritzky\inst{}}
+
+\institute{Mines Paris -- PSL}
+
+\date{11/2024}
+
+\begin{document}
+\setbeamertemplate{section page}[mruffel]
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}[fragile]{Type d'une valeur}
+	\begin{definition}
+		Toute valeur, représentée en mémoire par une série de bits, possède un \emph{type}, qui confère un sens particulier à la série de bits.
+	\end{definition}
+
+	Une même série de bits peut donc correspondre à des valeurs différentes. Par exemple, \verb|1111101100100001| peut désigner :
+	\begin{itemize}
+		\item Le nombre \jl{-1247} si c'est un \jl{Int16} (entier sur 16 bits).
+		\item Le nombre \jl{64289} si c'est un \jl{UInt16} (entier naturel sur 16 bits).
+		\item Le nombre \jl{6.43e4} si c'est un \jl{Float16} (nombre à virgule flottante sur 16 bits).
+		\item Le caractère \jl{'£$\aleph$£'} si c'est un \jl{Char}.
+	\end{itemize}
+	\vfill
+
+	Pour le voir, on peut utiliser la fonction \jl{reinterpret} :
+	\begin{repl}
+		£\jlREPL£ reinterpret(Int16, 0b1111101100100001)
+		-1247
+	\end{repl}
+\end{frame}
+
+\begin{frame}{Type d'une valeur}
+	Attention : à l'inverse, une même valeur peut aussi parfois être représentée par des séries de bits différents !
+	\vfill
+
+	Exemples :
+	\begin{itemize}
+		\item \jl{NaN}, qui est de type \jl{Float64} désigne le résultat d'une opération qui n'est pas définie, par exemple \jl{0.0 * Inf}. Toutes les séries de bits de la forme $s\, \overbrace{1\ 1\ \ldots\ 1}^{11\text{ bits}}\,\overbrace{m\ m\ \ldots\ m}^{52\text{ bits}}$ avec $s = 0$ ou $1$ et $m \neq 0$ représentent un \jl{NaN}.
+		\item Si l'on définit deux tableaux \jl{a = [13]} et \jl{b = [13]} alors \jl{a == b} mais les séries de bits correspondant à \jl{a} et \jl{b} sont celles qui contiennent la taille et l'adresse de ces deux tableaux, or les adresses de \jl{a} et \jl{b} sont différentes (\jl{a !== b}). Les valeurs de \jl{a} et \jl{b} sont donc les mêmes, mais pas leur série de bits correspondant.
+	\end{itemize}
+	\vfill
+
+	L'égalité de deux valeurs (évaluée par \jl{==}) vient donc de la sémantique (le sens) et non pas seulement d'une égalité stricte des séries de bits et des types (évaluée par \jl{===}).
+\end{frame}
+
+\begin{frame}{Types et ensembles de valeurs}
+	Conceptuellement, un type peut être compris comme un ensemble de valeurs possibles, qui sont ses \emph{instances} :
+	\begin{itemize}
+		\item \jl{Char} représente l'ensemble des caractères.
+		\item \jl{Int64} représente l'ensemble des entiers représentables sur 64 bits. Le type \jl{Int} est un alias pour \jl{Int64} sur les machines 64 bits (et pour \jl{Int32} sur les machines 32 bits).
+	\end{itemize}
+	\vfill
+
+	Cet ensemble de valeurs peut avoir différentes tailles, souvent infinie :
+	\begin{itemize}
+		\item \jl{Bool} n'est associé qu'à deux instances : \jl{true} et \jl{false}.
+		\item \jl{Nothing} n'est associé qu'à une seule instance : \jl{nothing}.
+		\item \jl{Int64} est associé à $2^{64}$ valeurs d'entiers allant de $-2^{63}$ à $2^{63}-1$.
+		\item \jl{String} est associé à une infinité de chaînes de caractères possibles.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Opérateur \texttt{::}}
+	Le type d'une valeur peut être obtenue avec \jl{typeof} :
+	\begin{repl}
+		£\jlREPL£ typeof(2 + 3.1)
+		Float64
+	\end{repl}
+
+	L'opérateur \jl{::} permet d'affirmer qu'une valeur est d'un type donné. L'opération \jl{£\expr{}£::£\type{}£} ne fait que vérifier que \expr est bien de type \type, et lance une erreur si ce n'est pas le cas :
+	\begin{repl}
+		£\jlREPL£ letter = 'a';
+
+		£\jlREPL£ letter::Char
+		'a': ASCII/Unicode U+0061 (category Ll: Letter, lowercase)
+
+		£\jlREPL£ letter::String
+		ERROR: TypeError: in typeassert, expected String, got a value
+		of type Char
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Opérateur \texttt{::}}
+	Lors d'une déclaration de variable, l'opérateur \jl{::} utilisé sur la variable force cette dernière à ne pouvoir avoir que des valeurs du type fixé :
+	\begin{repl}
+		£\jlREPL£ x::Int = 12;
+
+		£\jlREPL£ x = "Ha !"
+		ERROR: MethodError: Cannot `convert` an object of type String
+		to an object of type Int64
+
+		£\jlREPL£ x = 5.0; x  # conversion occurs automatically
+		5
+	\end{repl}
+
+	\begin{alertblock}{Piège}
+		Un opérateur \jl{::} utilisé à droite du \jl{=} ne sert qu'à vérifier le type :
+		\begin{minted}[linenos=false,xrightmargin=20pt]{julia}
+			£\jlREPL£ y = 12::Int;
+			
+			£\jlREPL£ y = "Oh"
+			"Oh"
+		\end{minted}
+	\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Opérateur \texttt{::}}
+	Lors de la déclaration des arguments d'une fonction, l'opérateur \jl{::} sert à contraindre leur type :
+	\begin{repl}
+		£\jlREPL£ half(x::Float64) = x/2;
+		
+		£\jlREPL£ half(1.6)
+		0.8
+		
+		£\jlREPL£ half(4)
+		ERROR: MethodError: no method matching half(::Int64)
+	\end{repl}
+
+	Dans le cas d'arguments optionnels, la contrainte de type se place \underline{avant} la valeur par défaut (sinon \jl{::} ne fait qu'affirmer le type de cette valeur) :
+	\begin{repl}
+		£\jlREPL£ halfway(x::Float64, y::Float64=0.0) = (x+y)/2;
+
+		£\jlREPL£ halfway(4.2)
+		2.1
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Opérateur \texttt{::}}
+	Si un argument typé d'une fonction n'est pas utilisé, son nom peut être omis :
+	\begin{repl}
+		£\jlREPL£ ignorenothing(::Nothing, x) = x;
+
+		£\jlREPL£ ignorenothing(nothing, 1)
+		1
+
+		£\jlREPL£ ignorenothing(3, 2) # the type constraint must hold
+		ERROR: MethodError: no method matching
+		ignorenothing(::Int64, ::Int64)
+	\end{repl}
+	\vfill
+
+	Si l'argument n'est pas typé, on utilise \jl{_} à la place pour indiquer un argument inutilisé :
+	\begin{repl}
+		£\jlREPL£ ignorefirst(_, x) = x;
+
+		£\jlREPL£ ignorefirst(NaN, -0.8)
+		-0.8
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Types composites}
+	\begin{definition}
+		Un \emph{type composite} est un type dont les valeurs ont zéro, un ou plusieurs \emph{champs} (\textit{field}) nommés, chacun associé à son propre type.
+	\end{definition}
+
+	En Julia, un type composite est défini à l'aide du mot-clé \jl{struct} :
+	\begin{julia}
+		struct Book
+			title::String
+			pages::Int
+			information  # no type indication is equivalent to ::Any
+		end
+	\end{julia}
+\end{frame}
+
+\begin{frame}[fragile]{Construction d'une instance d'un type composite}
+	Une instance peut être créée en appelant le \emph{constructeur} du type. Il s'agit d'une fonction du même nom créée en même temps que le type :
+	\begin{repl}
+		£\jlREPL£ b = Book("Uprooted", 438, ("Naomi Novik", 2015))
+		Book("Uprooted", 438, ("Naomi Novik", 2015))
+	\end{repl}
+
+	Il est possible de créer des \emph{constructeurs externes} en définissant des fonctions du même nom \underline{après} la définition du type :
+	\begin{repl}
+		£\jlREPL£ function Book(title, pages) # new outer constructor
+		           Book(title, pages, nothing) # inner constructor call
+		       end;
+		
+		£\jlREPL£ Book("The Name of the Wind", 662)
+		Book("The Name of the Wind", 662, nothing)
+	\end{repl}
+
+	Ces constructeurs externes font appel au constructeur interne.
+\end{frame}
+
+\begin{frame}[fragile]{Construction d'une instance d'un type composite}
+	On peut aussi définir des \emph{constructeurs internes} alternatifs, en définissant des fonctions du même nom \underline{dans} le \jl{struct}, qui utilisent la fonction spéciale \jl{new} pour créer une instance du type. Ces constructeurs \underline{remplacent} le constructeur par défaut :
+	
+	\begin{julia}
+		struct Book
+			title::String
+			pages::Int
+			information  # no type indication is equivalent to ::Any
+		
+			Book(title) = new(title, 0, nothing) # inner constructor
+		end
+	\end{julia}
+\vspace{-1em}
+	\begin{repl}
+		£\jlREPL£ Book("The Blade Itself") # new inner constructor call
+		Book("The Blade Itself", 0, nothing)
+		
+		£\jlREPL£ Book("Babel", 546, "by R. F. Kuang") # default one
+		ERROR: MethodError: no method matching Book(::String, ::Int64,
+		::String)
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Champs d'un types composites}
+	On accède aux champs d'un type composite avec un \jl{.} :
+	\begin{repl}
+		£\jlREPL£ b.title
+		"Uprooted"
+	\end{repl}
+	
+	Il est possible d'inspecter le nom et le type des champs d'un \jl{struct} avec \jl{fieldnames} et \jl{fieldtypes} respectivement :
+	\begin{repl}
+		£\jlREPL£ fieldnames(Book)
+		(:title, :pages, :information)
+		
+		£\jlREPL£ fieldtypes(Book)
+		(String, Int64, Any)
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Mutabilité}
+	\begin{definition}
+		Un type est \emph{mutable} lorsque les champs d'une instance peuvent être modifiés. Sinon, il est \emph{immutable}.
+	\end{definition}
+
+	Par défaut, les types composites sont immutables. Pour être mutable, il faut le déclarer avant le mot-clé \jl{struct} :
+	\begin{julia}
+		mutable struct Box
+			content::Any
+		end
+	\end{julia}
+
+	Les champs peuvent alors être modifiés avec la syntaxe d'affectation :
+	\begin{repl}
+		£\jlREPL£ b = Box(12)
+		Box(12)
+
+		£\jlREPL£ b.content = nothing  # mutable field modification
+
+		£\jlREPL£ b
+		Box(nothing)
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Type paramétrique}
+	Un type peut avoir des \emph{paramètres de type}. Ces paramètres, déclarés entre accolades \jl|{}|, peuvent représenter un type ou bien une valeur :
+	\begin{julia}
+		struct MySpecialArray{T,N}  # two parameters T and N
+			data::Array{T,N}
+			special::T
+		end
+	\end{julia}
+	\vfill
+
+	Les paramètres utilisés à la définition (\jl{T} et \jl{N} dans l'exemple) sont appelées \emph{variables de type}. Lors de l'utilisation du type dans le code, elles sont remplacées au besoin par des types ou des valeurs en utilisant les accolades, par exemple \jl{MySpecialArray{Int, 2}}.
+	\vfill
+
+	Les variables de type n'acceptent pas elles-mêmes de paramètres :
+	\begin{repl}
+		£\jlREPL£ WrongTypeVariableUsage{T}
+		           x::T{Int}
+			   end
+		ERROR: TypeError: in Type{...} expression, expected UnionAll,
+		got a value of type TypeVar
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Type paramétrique}
+	On peut voir un type paramétrique comme une sorte de fonction ayant pour variable les variables de type et pour image le type concret.
+
+	Un type peut être réécrit avec le mot-clé \jl{where} pour faire apparaître la ou les variables de type :
+	\begin{repl}
+		£\jlREPL£ Array{T,N} where {T,N}
+		Array
+
+		£\jlREPL£ Array{Int,N} where N
+		Array{Int64}
+
+		£\jlREPL£ Array{Int,3} where {}
+		Array{Int,3}
+	\end{repl}
+
+	\begin{alertblock}{Piège}
+		Attention à l'ordre des variables de type ! On a : \vspace{-0.6em}
+		\[\jl{SomeType{T,N} where {T,N} == (SomeType{T,N} where N) where T}\]\vspace{-1em}
+	\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Constructeurs paramétriques}
+	Un type paramétrique possède deux constucteurs internes par défaut :
+	\begin{itemize}
+		\item Un constructeur paramétrique qui requiert d'expliciter les valeurs des paramètres de type :
+		\begin{repl}
+			£\jlREPL£ MySpecialArray{Float64,1}([1.4, 2.3, 0.5], 2)
+			MySpecialArray{Float64, 1}([1.4, 2.3, 0.5], 2.0)
+		\end{repl}
+	
+		\item Un constructeur non-paramétrique, qui infère tous les types (lorsque c'est possible) :
+		\begin{repl}
+			£\jlREPL£ MySpecialArray([1.4, 2.3, 0.5], 2.0)
+			MySpecialArray{Float64, 1}([1.4, 2.3, 0.5], 2.0)
+		\end{repl}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Constructeurs paramétriques}
+	Pour définir un constructeur interne alternatif à un type paramétrique, la fonction \jl{new} doit avoir des paramètres, tout comme type. Par exemple :
+	\begin{repl}
+		£\jlREPL£ struct ObscureType{T,S}
+			       function ObscureType{T}(x) where {T}
+				       new{T,typeof(x)}()
+			       end
+		       end
+
+		£\jlREPL£ ObscureType{Int}('K')
+		ObscureType{Int64, Char}()
+	\end{repl}
+
+	Comme dans l'exemple, les variables de types doivent être introduites avec le mot-clé \jl{where} lors de la définition de la fonction.
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{Union} de types}
+	Un type décrivant une valeur pouvant être soit de type \jl{A}, soit de type \jl{B} est \jl{Union{A,B}}. L'union est à comprendre dans un sens ensembliste.
+	
+	Une union est $N$ types s'écrit comme \jl{Union} avec $N$ paramètres de type.
+	\vfill
+	
+	\begin{repl}
+		£\jlREPL£ struct Option{T} # either some T or nothing
+			       content::Union{T,Nothing}
+		       end
+
+		£\jlREPL£ Option(42)
+		Option{Int64}(42)
+
+		£\jlREPL£ Option(nothing) # beware, T cannot be inferred here
+		ERROR: UndefVarError: `T` not defined in static parameter
+		matching
+
+		£\jlREPL£ Option{Float64}(nothing)
+		Option{Float64}(nothing)
+	\end{repl}
+
+	Une \jl{Union} d'un seul type est égale au type lui-même : \jl{Union{T} == T}.
+\end{frame}
+
+\begin{frame}[fragile]{Alias}
+	Un type est aussi une valeur : le type lui-même a une représentation sous forme de bits, et son propre type.
+
+	\begin{repl}
+		£\jlREPL£ typeof(Vector{Int})
+		DataType
+
+		£\jlREPL£ typeof(Union{String,Int})
+		Union
+	\end{repl}
+
+	On peut donc créer une variable dont la valeur est un type. Cela revient à donner à ce dernier un nouveau nom : on appelle \emph{alias} du type un tel nom.
+
+	En général, les alias sont définis comme des constantes :
+
+	\begin{repl}
+		£\jlREPL£ const IntOrString = Union{Int,String}
+		Union{Int64, String}
+
+		£\jlREPL£ IntOrString["lemming", 14]
+		2-element Vector{Union{Int64, String}}:
+		   "lemming"
+		 14
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Alias}
+	Il est parfois utile de créer un type dérivés d'un autre, en spécifiant des règles sur certaines variables de type. On utilise pour cela le mot-clé \jl{where}. Par exemple :
+	\begin{repl}
+		£\jlREPL£ const HomogeneousDict = Dict{T,T} where {T}
+		Dict{T,T} where T
+
+		£\jlREPL£ HomogeneousDict{String}
+		Dict{String, String}
+	\end{repl}
+	\vfill
+
+	On peut également déclarer les variables de type directement sur le nouveau type :
+	\begin{repl}
+		£\jlREPL£ const HomogeneousDict{T} = Dict{T,T}
+		Dict{T, T} where T
+	\end{repl}
+
+%	On peut mettre plusieurs paramètres après \jl{where}. Attention à l'ordre :
+%	\begin{repl}
+%		£\jlREPL£ const SetOrSomething{T,X} = Union{Set{T}, X}
+%		Union{Set{T}, X} where {T, X}
+%
+%		£\jlREPL£ SetOrSomething == (Union{Set{T}, X} where T) where X
+%		true
+%	\end{repl}
+\end{frame}
+
+%\begin{frame}[fragile]{Types raffinés}
+%	Exercice : quelle différence y a-t-il entre
+%	\[\jl{Dict{T, Vector{T} where T}}\]
+%	et
+%	\[\jl{Dict{T, Vector{T}} where T}\]
+%	?
+%\end{frame}
+
+\begin{frame}[fragile]{Type \texttt{Tuple}}
+	Le type \jl{Tuple} correspond aux tuples de taille quelconque. Ce n'est pas un type composite (il n'est pas défini avec \jl{struct}) mais il en partage la plupart des propriétés.
+
+	Il a autant de paramètres que la taille du tuple :
+	\begin{repl}
+		£\jlREPL£ (12, "kiwi", 0.7, 'ζ') |> typeof
+		Tuple{Int64, String, Float64, Char}
+	\end{repl}
+	\vfill
+
+	Un \jl{N}-uplet homogène, c'est-à-dire de valeurs ayant le même type \jl{T}, est de type \jl{NTuple{N,T}} :
+	\begin{minted}[linenos=false]{julia}
+		£\jlREPL£ (12, 5, 2, 37, 29) |> typeof
+		NTuple{5, Int64}
+
+		£\jlREPL£ (12, 5, 2, 37, 29) isa Tuple{Int,Int,Int,Int,Int}
+		true
+
+		£\jlREPL£ NTuple{5, Int64} === Tuple{Int,Int,Int,Int,Int}
+		true
+	\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Types des types}
+	Il existe trois types possibles pour un type :
+	\begin{itemize}
+		\item \jl{Union} pour les types de la forme \jl{Union{...}}.
+		\item \jl{UnionAll} pour les types se terminant par un \jl{where {...}}, c'est-à-dire les types paramétriques dont tous les paramètres ne sont pas fixés. Exemples : \jl{Vector}, \jl{Dict{Int}}, \jl{Tuple{T,T} where T}.
+		\item \jl{DataType} pour tous les autres. Exemples : \jl{Int}, Dict{String,Int}, \jl{Vector{String}}, \jl{Tuple{Float64,Float64}}.
+	\end{itemize}
+	\vfill
+
+	En plus de cela, chaque type \jl{T} peut s'écrire comme l'unique instance de \jl{Type{T}} :
+	\begin{repl}
+		£\jlREPL£ const IntOrString = Union{Int,String};
+
+		£\jlREPL£ IntOrString::Type{IntOrString}
+		Union{Int64, String}
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Types concrets}
+	\begin{definition}
+		Un type \emph{concret} désigne le type d'une instance. En d'autres termes, un type est concret s'il peut exister une valeur \jl{x} telle que \jl{typeof(x)} soit le type en question.
+	\end{definition}
+	Corollaire de cette définition : toute valeur a un type concret.
+	\vfill
+
+	Pour être concret, un type composite doit avoir tous ses paramètres attribués. C'est ce que vérifie la fonction \jl{isconcretetype} :
+	\begin{repl}
+		£\jlREPL£ isconcretetype(Dict{String}) # missing the values type
+		false
+
+		£\jlREPL£ isconcretetype(Dict{String,Int}) # full concrete type
+		true
+
+		£\jlREPL£ isconcretetype(Dict{'a',12}) # not actually concrete!
+		true
+	\end{repl}
+\end{frame}
+
+\begin{frame}{Types concrets}
+	Exemples et contre-exemples :
+	\begin{itemize}
+		\item Les types primitifs comme \jl{Int}, \jl{Char}, \jl{String} sont concrets.
+		\item Tout type composite sans paramètre, comme \jl{Nothing}, est concret.
+		\item Le type \jl{Vector} n'est pas concret. En revanche, \jl{Vector{Int}} l'est : il a pour instance \jl{[3, 12]} par exemple. De même, \jl{Vector{Any}} est concret : il a pour instance \jl{[-0.3, "weird."]} par exemple.
+		\item Le type \jl{Tuple} n'est pas concret. En revanche, le type \jl{Tuple{Float64,Char}} l'est : il a pour instance \jl{(NaN, '0')} par exemple.
+		
+		De même, \jl{Tuple{}} est concret, et a pour unique instance \jl{()}.
+		\item Le type \jl{Vector{3}} n'est pas concret car il n'est pas constructible.
+		\item Les types \jl{UnionAll}, comme \jl{Array{Int,N} where N} par exemple, ne sont pas concrets.
+		\item Tout type \jl{Union} avec deux paramètres ou plus n'est pas concret.
+		\item Le type \jl{Any} n'est pas concret (il est abstrait, voir cours suivant).
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Propriété \texttt{isbits}}
+	Certaines valeurs sont uniques une fois donnés leur type et la série de bits les représentant. Pour cela, leur type doit :
+	\begin{itemize}
+		\item être immutable (sinon la valeur dépend aussi de son adresse)
+		\item être concret (sinon ce n'est pas le type d'une valeur)
+		\item n'avoir que des champs avec des types vérifiant les mêmes propriétés
+	\end{itemize}
+	
+	Ces valeurs sont identifiées par \jl{isbits} et leur type par \jl{isbitstype} :
+	\begin{repl}
+		£\jlREPL£ isbitstype(Float64)
+		true
+		
+		£\jlREPL£ isbits([2, 5]) # contains a mutable field
+		false
+	\end{repl}
+	
+	Les paramètres de type ne peuvent prendre pour valeur que des types, ou bien des valeurs \jl{isbits} :
+	\begin{repl}
+		£\jlREPL£ Vector{[13, 23]}
+		ERROR: TypeError: [...]
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Initialisation partielle}
+	Lors de la construction d'une instance d'un type composés, il est parfois souhaitable de reporter à plus tard le choix des valeurs de certains champs. Ceci est possible en définissant un constructeur interne et en omettant certains arguments de \jl{new} :
+	
+	\begin{julia}
+		mutable struct Cons
+			val::Int
+			next::Cons
+			Cons(v) = new(v)   # new inner constructor
+		end
+	\end{julia}
+	\vfill
+	
+	Si les champs non initialisés ne sont pas \jl{isbits}, ils sont représentés comme \jl{#undef} et la fonction \jl{isdefined} permet de les identifier :
+	\begin{repl}
+		£\jlREPL£ Cons(14) # an undefined value is marked as #undef
+		Cons(14, #undef)
+		
+		£\jlREPL£ isdefined(Cons(14), :next)
+		false
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Initialisation partielle}
+	\begin{alertblock}{Piège}
+		Si un champ \jl{isbits} n'est pas initialisé, alors il est occupé par des bits aléatoires et aura donc une valeur, même si elle ne peut pas être prédite.
+	\end{alertblock}
+	
+	Dans ce cas, il est impossible de déterminer si un champ a été initialisé :
+	\begin{repl}
+		£\jlREPL£ mutable struct Reference{T}
+		           val::T
+		           Reference() = new{Int}()
+		       end
+		
+		£\jlREPL£ x = Reference()          # x.val contains garbage
+		Reference{Int}(139910970766752)
+		
+		£\jlREPL£ isdefined(x, :val)        # isdefined does not know this
+		true
+	\end{repl}
+	
+	Il faut donc éviter autant que possible de définir des constructeurs internes laissant des champs \jl{isbits} non initialisés.
+\end{frame}
+
+\begin{frame}[fragile]{Initialisation partielle}
+	Un tableau aussi peut être créé avec une taille fixée mais sans être initialisé explicitement. \jl{isassigned} permet alors de savoir si un élément non-\jl{isbits} est initialisé :
+	\begin{repl}
+		£\jlREPL£ a = Array{Any, 3}(undef, 1, 4, 1)
+		1×4×1 Array{Any, 3}:
+		 [:, :, 1] =
+		 #undef  #undef  #undef  #undef
+		
+		£\jlREPL£ isassigned(a, 1, 3, 1) # is a[1,3,1] assigned
+		false
+	\end{repl}
+	\vfill
+	
+	Attention ! Comme pour les champs composites, l'absence d'initialisation laisse quand même des valeurs pour les types \jl{isbits} :
+	\begin{repl}
+		£\jlREPL£ Vector{Int}(undef, 2)
+		2-element Vector{Int64}:
+		 139911173315128
+		    863288427150
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Représentation mémoire}
+	La mémoire d'un ordinateur est constituée de bits, organisés par groupe de huit : 1 \emph{octet} (\textit{Byte}) = 8 bits. Si l'on voir la mémoire comme un gigantesque vecteur d'octets, alors chaque octet correspond à un index du vecteur, que l'on appelle son \emph{adresse}. Plus généralement, chaque élément de la mémoire, constitué de un ou plusieurs octets, est référencé par l'adresse de son premier octet. L'adresse est un entier exprimé sur 64 bits$^\dagger$.
+	\vspace{0.5em}
+	
+	Une valeur \jl{isbits} est représentée directement par sa suite de bits (incluant éventuellement du \textit{padding} pour préserver l'alignement) :
+	\begin{repl}
+		£\jlREPL£ x = (Int16(1685), 'Δ'); about(x)  # from About.jl
+		Tuple{Int16, Char} (<: Any), occupies 8B.
+		 1::Int16 4B 0000011010010101                            1685
+		 2::Char  4B U+0394 11001110 10010100 00000000 00000000  'Δ'
+
+		  ++++////++++++++
+		   2B  2B    4B
+
+		+ = 4 bits of data    / = 4 bits of padding
+	\end{repl}
+
+	$^\dagger$ \footnotesize sur une machine 64 bits comme les vôtres. Il existe aussi des machines 32 bits.
+\end{frame}
+
+\begin{frame}[fragile]{Représentation mémoire}
+	Lorsqu'un champ n'est pas \jl{isbits}, il est représenté par un \emph{pointeur}, qui est simplement l'adresse mémoire de la valeur correspondante.
+	\begin{repl}
+		£\jlREPL£ struct Data
+		           id::Int32     # isbits
+		           name::String  # non-isbits
+		       end
+		
+		£\jlREPL£ about(Data(75, "hic"))
+		Data (<: Any), occupies 16B directly (referencing 27B in total)
+		   id::Int32   8B  00000000000000000000000001001011   75
+		 name::String  8B  @ 0x00007f5208a90de0               "hic"
+		
+		  ++++++++////////****************
+		  id (4B)   (4B)        name
+		
+		+ = 4 bits of data    / = 4 bits of padding    * = Pointer (8B)
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Représentation mémoire}
+	Dans l'exemple précédent, \texttt{0x00007f5208a90de0} est un l'adresse de la chaîne \jl{"hic"}. Celle-ci est représentée en mémoire à cette adresse par les quatre caractères \jl{'h'}, \jl{'i'}, \jl{'c'} et \jl{'\0'} (qui indique la fin d'une chaîne de caractères) consécutifs.
+
+	\begin{repl}
+		£\jlREPL£ Char(unsafe_load(Ptr{Int8}(pointer("hic")) + 0))
+		'h': ASCII/Unicode U+0068 (category Ll: Letter, lowercase)
+		
+		£\jlREPL£ Char(unsafe_load(Ptr{Int8}(pointer("hic")) + 1))
+		'i': ASCII/Unicode U+0069 (category Ll: Letter, lowercase)
+		
+		£\jlREPL£ Char(unsafe_load(Ptr{Int8}(pointer("hic")) + 2))
+		'c': ASCII/Unicode U+0063 (category Ll: Letter, lowercase)
+		
+		£\jlREPL£ Char(unsafe_load(Ptr{Int8}(pointer("hic")) + 3))
+		'\0': ASCII/Unicode U+0000 (category Cc: Other, control)
+	\end{repl}
+
+	Note : dans votre code, il ne faut jamais lire la mémoire directement avec \jl{unsafe_load} (cela peut mener à un crash si l'adresse n'a pas été allouée).
+\end{frame}
+
+\end{document}

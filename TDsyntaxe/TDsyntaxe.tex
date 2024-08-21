@@ -1,0 +1,291 @@
+\documentclass{article}
+
+\usepackage{xcolor}
+\definecolor{jrouge}{HTML}{CB3C33}
+\definecolor{jvert}{HTML}{389826}
+\definecolor{jbleu}{HTML}{4063D8}
+\definecolor{jviolet}{HTML}{9558B2}
+\definecolor{lightred}{HTML}{fcf3f3}
+\definecolor{lightgreen}{HTML}{e1f6db}
+\definecolor{lightpurple}{HTML}{f4eef7}
+\definecolor{lightgrey}{gray}{0.95}
+
+\usepackage{natbib}
+%\renewcommand{\citenumfont}[1]{{\tiny#1}}
+\renewcommand{\citenumfont}[1]{}
+\bibpunct{}{};s;;
+
+\usepackage[top=1.5cm,bottom=1.5cm, left=2.5cm,right=2.5cm]{geometry}
+\usepackage[french]{babel}
+\usepackage[mathletters]{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+% Alternative for XeLaTeX:
+%\usefonttheme{professionalfonts}
+%\usepackage{fontspec}
+%\setmonofont{JuliaMono}
+%\setdefaultlanguage{french}
+%\usepackage{unicode-math}
+
+\usepackage{subcaption}
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{soul}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{bbm}
+\usepackage{svg}
+
+\usepackage{tikz}
+\usetikzlibrary{scopes, backgrounds, arrows, automata, positioning, patterns, calc, decorations.pathmorphing, decorations.pathreplacing, arrows.meta}
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	breaklinks=true,
+}
+\usepackage{ragged2e}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{aeguill}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{stmaryrd}
+\usepackage{siunitx}
+
+\usepackage{forloop}
+\newcounter{loop}
+\newcounter{numEx}
+\newcommand{\exo}[1]{
+	\stepcounter{numEx}
+	\setcounter{loop}{0}
+	\subsection*{Exercice \arabic{numEx} -- #1}
+}
+\newcommand{\correction}{\textsl{\\Correction de l'exercice \arabic{numEx}\\}}
+\newenvironment{corr}{
+	\correction	\begin{enumerate}}
+	{\end{enumerate}
+}
+
+\usepackage{enumitem}
+\renewlist{itemize}{itemize}{1}
+\setlist[itemize]{label={\textbullet}}
+
+\newcommand{\llbra}{\left\llbracket}
+\newcommand{\rrbra}{\right\rrbracket}
+\renewcommand{\brack}[1]{\ensuremath{\llbra#1\rrbra}}
+\newcommand{\der}[2]{#1^{\ensuremath{\left(#2\right)}}}
+\newcommand{\paren}[1]{\ensuremath{\left(#1\right)}}
+\newcommand{\abs}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\interval}[1]{\ensuremath{\left[#1\right]}}
+\newcommand{\set}[2]{\ensuremath{\left\{#1\,\middle|\,#2\right\}}}
+\newcommand{\cont}[1]{\mathcal{C}^{#1}}
+\newcommand{\tends}[2]{\underset{#1\to #2}{\longrightarrow}}
+\newcommand{\seq}[3]{\ensuremath{\left(#1_{#2}\right)_{#2\in#3}}}
+\newcommand{\matr}[2]{\mathcal{M}_{#1}\paren{#2}}
+\newcommand{\matrRect}[3]{\mathcal{M}_{#1,#2}\paren{#3}}
+\newcommand{\Id}{\text{Id}}
+\newenvironment{disj}[1]{\left\{\begin{array}{#1}} {\end{array}\right.}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\eps}{\varepsilon}
+
+
+
+\title{TD -- Apprentissage de la programmation en Julia}
+
+\author{Lionel~Zoubritzky}
+
+\date{11/2024}
+
+\usepackage{minted}
+\usemintedstyle{paraiso-light}
+\setminted[julia]{mathescape,linenos,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightred,escapeinside=££}
+\setminted[bash]{mathescape,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightgrey,escapeinside=££}
+
+\usepackage{lmodern}
+%\newcommand{\jl}[1]{\colorbox{lightred}{\small\ttfamily #1}}
+\newmintinline[jl]{julia}{}
+\newmintinline[jlscript]{julia}{fontsize=\scriptsize}
+\newmint[JL]{julia}{}
+\newmint[JLa]{julia}{linenos=false}
+\newminted{julia}{}
+\newenvironment{julia}{\vspace{-0.6em}\VerbatimEnvironment\begin{juliacode}}{\end{juliacode}}
+\newminted[jlrepl]{julia}{linenos=false}
+\newenvironment{repl}{\vspace{-0.6em}\VerbatimEnvironment\begin{jlrepl}}{\end{jlrepl}}
+\newcommand{\q}{\textquotesingle}
+\newcommand{\qq}{\textquotedbl}
+\newcommand{\jlREPL}{\textcolor{jvert}{\bfseries julia>}}
+
+\DeclareTextFontCommand{\emph}{\color{jrouge}\bfseries}
+
+\usepackage{xspace}
+\newcommand{\expr}{\ensuremath{\left\langle\textit{expr}\right\rangle}\xspace}
+\newcommand{\expra}[1]{\ensuremath{\left\langle\textit{expr}_{#1}\right\rangle}\xspace}
+\newcommand{\bexpr}{\ensuremath{\left\langle\textit{bexpr}\right\rangle}\xspace}
+\newcommand{\bexpra}[1]{\ensuremath{\left\langle\textit{bexpr}_{#1}\right\rangle}\xspace}
+
+
+
+\begin{document}
+	
+\begin{center}
+	\Large Apprentissage de la programmation en Julia
+	
+	TD \no1 : syntaxe et bases du langage
+	\vspace{2em}
+\end{center}
+
+Les questions et exercices annotés du symbole $(*)$ ne sont pas à traiter en priorité.
+
+À chaque question pour laquelle il faut programmer une fonctionnalité, il est implicitement demandé d'inclure un ou plusieurs tests pour s'assurer que l'implémentation est correcte.
+
+Toute fonction non-auxiliaire doit aussi inclure une docstring. Les commentaires sont partout bienvenus.
+
+
+\section{Théorie des nombres}
+
+\exo{La suite de Syracuse}
+
+La suite de Syracuse est définie comme la suite d'entiers de premier terme $u_0\in\N^*$ et définie par récurrence avec, pour tout $i\in\N$ :
+\begin{itemize}
+	\item si $u_i$ est pair alors $u_{i+1} = u_i/2$ ;
+	\item sinon, $u_{i+1} = 3u_i + 1$.
+\end{itemize}
+
+Écrire une fonction \jl{syracuse(n)} qui renvoie le premier indice $\jl{m}\in\N$ tel que la suite de Syracuse définie par $u_0 = \jl{n}$ vérifie $u_{\jl{m}} = 1$. La conjecture de Syracuse affirme que ce $\jl{m}$ existe toujours.
+
+\exo{Nombres premiers}
+
+Écrire une fonction \jl{isprime(n)} qui renvoie \jl{true} si \jl{n} est premier, et \jl{false} sinon.
+
+\exo{La conjecture de Goldbach}
+
+La conjecture de Goldbach, à ce jour non démontrée, affirme que tout nombre entier pair supérieur à 3 peut s’écrire comme une somme de deux nombres premiers. La conjecture faible de Goldbach affirme, elle, que tout nombre entier impair supérieur à 9 peut s'écrire comme une somme de trois nombres premiers impairs.
+
+Écrire une fonction \jl{goldbach(n)} qui pour tout $\jl{n} \ge 9$ renvoie un triplets d'entiers \jl{(a,b,c)} tel que :
+\begin{itemize}
+	\item Si \jl{n} est pair, alors \jl{c == 0}, \jl{a} et \jl{b} sont premiers et \jl{n == a + b}.
+	\item Sinon, alors \jl{a}, \jl{b} et \jl{c} sont premiers et impairs, et \jl{n == a + b + c}.
+\end{itemize}
+
+\exo{La conjecture d'Euler}
+
+\begin{enumerate}
+	\item La conjecture d'Euler affirme que pour tout $n>2$, la somme de $n-1$ puissances $n$-ièmes n'est jamais une puissance $n$-ième. En d'autres termes :\vspace{-0.5em}
+	\[\forall n>2,\ \forall b\in\N,\ \forall (a_1, \ldots, a_{n-1})\in\paren{\N^*}^{n-1},\ a_1^n + \ldots + a_{n-1}^n \neq b^n\]
+	Cette conjecture s'est finalement révélée fausse. Trouver numériquement un contre-exemple pour $n = 5$.
+	
+	\textsl{On pourra si besoin utiliser la fonction \jl{round(Int, x)} qui renvoie le nombre entier le plus proche du nombre flottant \jl{x}.}
+
+	\item $(*)$ Le problème de trouver des sommes de $n$ (et non pas $n-1$) puissances $n$-ièmes égales à une puissance $n$-ième est plus simple. Écrire une fonction \jl{noteuler(n)} qui renvoie un entier naturel \jl{b} tel qu'il existe un $n$-uplet $(a_1, \ldots, a_n)\in\paren{\N^*}^n$ pour lequel $a_1^n + \ldots + a_n^n = \jl{b}$. La fonction doit aussi afficher les valeurs de $a_1$, \ldots, $a_n$ correspondantes.
+
+	Tester cette fonction pour $n = $ 1, 2, 3 et 5.
+\end{enumerate}
+
+
+\section{Mémoïsation et programmation dynamique}
+
+Dans cette section, on s'intéresse à la mémoïsation, qui est une technique de programmation consistant à retenir les résultats calculés en cours de route, pour ne pas avoir à les recalculer ensuite. Pour illustrer cette idée, on définit une suite de Fibonacci généralisée $\seq un\N$ par récurrence avec $u_1 = a\in\N$, $u_2 = b\in\N$ et $\forall i>2,\ u_i = u_{i-1} + u_{i-2}$. $a$ et $b$ sont des données du problème. La question est de calculer efficacement le terme général d'une telle suite.
+
+Pour ce faire, on définit un tableau \jl{memory} qui contient les termes de la suite de Fibonacci déjà calculés. À chaque appel de \jl{fibonacci(n)}, la fonction que l'on veut produire, le tableau est mis à jour en ajoutant les éléments nécessaires jusqu'à atteindre le terme \jl{n} demandé. Ainsi, le travail effectué lors d'un appel n'a pas besoin d'être reproduit lors d'un appel suivant, il est gardé en mémoire.
+
+La déclaration du tableau \jl{memory} ainsi que la fonction \jl{fib(n)} qui travaille sur le tableau avant de renvoyer la valeur du \jl{n}-ième terme, sont encapsulées dans une fonction \jl{fibonacci_memoization}, qui prend en entrée les paramètres $a$ et $b$, et renvoie \jl{fib}. La fonction \jl{fibonacci} est simplement définie comme la valeur renvoyée par \jl{fibonacci_memoization}, c'est-à-dire la fonction intérieure \jl{fib}.\vspace{0.5em}
+
+\begin{repl}
+function fibonacci_memoization(a, b)
+    memory = [a, b] # already computed values of Fibonacci's sequence
+    function fib(n)
+        for i in (length(memory)+1):n # if n <= length(memory), this loop is empty
+            push!(memory, memory[end] + memory[end-1])
+        end
+        memory[n] # return value of fib
+    end
+    fib
+end
+
+fibonacci = fibonacci_memoization(1, 1) # standard Fibonacci sequence
+\end{repl}
+
+\exo{Suite de Hofstadter--Conway}
+
+On définit la suite $\seq un\N$ par récurrence avec $u_1 = u_2 = 1$ et $\forall n>2,\ u_n = u_{u_{n-1}} + u_{n - u_{n-1}}$.
+
+Déterminer la limite empirique de $u_n/n$ lorsque $n\to\infty$. À quel point le millionième terme est-il proche de la limite ?
+
+\exo{$(*)$ Nombres premiers mémoïsés}
+
+Réécrire la fonction \jl{isprime} de l'exercice 2 en mémoïsant le caractère premier ou non-premier des nombres rencontrés au fur et à mesure. Quantifier l'accélération résultante pour la fonction \jl{goldbach} de l'exercice 3.
+
+\exo{Problème du sac à dos}
+
+On considère un sac à dos pouvant contenir un poids maximal \jl{wmax} et \jl{N} objets, ayant chacun un poids \jl{weights[i]} et une valeur marchande \jl{costs[i]}, avec \jl{i} variant de 1 à \jl{N}.
+Le problème du sac à dos (\textit{knapsack problem}) consiste à choisir quels objets mettre dans le sac pour maximiser la valeur totale sans dépasser le poids maximal.
+
+Pour tester les solutions au problème, on prendre des objets tels que le \jl{i}-ème a pour valeur \jl{3i} et pour poids \jl{i + i÷2 + 2(i%2) - i%3}, pour différentes valeurs de \jl{N} et avec \jl{wmax == N^2÷2}.
+
+\begin{enumerate}
+	\item Implémenter les trois algorithmes gloutons\footnote{Un algorithme est dit ``glouton'' lorsqu'il procède en choisissant à chaque étape le choix localement optimal. Un tel algorithme peut être globalement optimal mais ne l'est pas nécessairement.} suivants :
+	\begin{enumerate}
+		\item Ajouter les objets par ordre décroissant de valeur jusqu'à remplir le sac.
+		\item Ajouter les objets par ordre croissant de poids jusqu'à remplir le sac.
+		\item Ajouter les objets par ordre décroissant de valeur / poids jusqu'à remplir le sac.
+	\end{enumerate}
+
+	Lequel des trois algorithmes donne la meilleure valeur totale ? Est-il optimal ?
+
+	\item On cherche maintenant une solution exacte. Pour cela, remarquons que si l'on dispose de la solution exacte pour les \jl{i - 1} premiers objets pour tout poids maximal inférieur ou égal à \jl{wmax}, alors on peut en déduire la solution exacte pour les \jl{i} premiers objets:
+	\begin{itemize}
+		\item soit l'objet \jl{i} ne fait pas partie de la solution optimale, et il suffit de garder donc la solution optimale pour les \jl{i - 1} premiers objets et le poids maximal \jl{wmax} ;
+		\item soit l'objet \jl{i} fait partie de la solution optimale, donc celle-ci est constituée d'une part du dernier objet et d'autre part de la solution optimale pour les \jl{i - 1} premiers objets et le poids maximal \jl{wmax - weights[i]}.
+	\end{itemize}
+
+	Implémenter un algorithme de programmation dynamique\footnote{La programmation dynamique est une méthode algorithmique qui consiste à découper le problème en sous-problèmes et à les résoudre par ordre croissant de taille, en mémoïsant les résultats intermédiaires.} qui exploite ce raisonnement en construisant au fur et à mesure la matrice \jl{opt} dont chaque case \jl{opt[i,w]} contient la liste des objets à garder pour avoir la solution optimale sur les \jl{i} premiers objets avec un poids maximal \jl{w}.
+\end{enumerate}
+
+\section{Traitement de texte}
+
+\exo{Parcours de chaîne de caractères}
+
+\begin{enumerate}
+	\item On définit la constante suivante : \jl{const REFCHARS = [Char.(33:126); Char.(192:255); 'α':'ω']}. Que fait cette opération ?
+
+	\item On utilise la bibliothèque standard \jl{Random} incluse avec Julia : pour cela, il faut écrire \jl{using Random} dans son code.
+
+	Que fait la fonction \jl{randstring} ? L'utiliser pour générer une chaîne de caractères \jl{str₀} de taille \num{100000000} dont les caractères sont pris dans \jl{REFCHARS}.
+
+	\item Écrire une fonction qui prend en argument une chaîne de caractères et qui identifie la plus longue sous-chaîne ne contenant aucun chiffre. Quelle est sa taille dans \jl{str₀} ?
+
+	\item Écrire une fonction qui calcule le nombre de caractères ASCII dans une chaîne de caractères. On rappelle que les caractères ASCII sont ceux que l'on peut obtenir comme \jl{Char(i)} où $\jl{i}\in\brack{0, 127}$. Quelle est la proportion de caractères ASCII dans \jl{str₀} ? $(*)$ Quelle est la proportion théorique si la taille de \jl{str₀} tend vers $+\infty$ ?
+
+	\item Écrire une fonction qui calcule le nombre d'occurrences où deux lettres consécutives sont identiques. On comptera par exemple deux telles occurrences dans la sous-chaîne ``axxxb"". Quel est le nombre de telles occurrences dans \jl{str₀} ? $(*)$ À quel nombre pouvait-on s'attendre ?
+
+	\item Un palindrome est un mot qui peut se lire identiquement dans les deux sens comme par exemple ``kayak'' ou bien ``engagelejeuquejelegagne''.
+	\begin{enumerate}
+		\item Écrire une fonction \jl{ispalindrome} qui détermine si une chaîne de caractères est un palindrome. On pourra utiliser la fonction \jl{Iterators.reverse} au besoin.
+
+		\item $(*)$ Écrire une fonction \jl{maxpalindrome} qui extrait le plus long palindrome d'une chaîne de caractères. Quel est le plus long palindrome obtenu sur \jl{str₀} ?
+	\end{enumerate}
+\end{enumerate}
+
+\exo{$(*)$ Un peu de bio-informatique}
+
+On considère des séquences d'ADN constituées d'un enchaînement de caractères \jl{'A'}, \jl{'T'}, \jl{'G'} et \jl{'C'}. On peut diviser virtuellement une telle séquence en codons, c'est-à-dire en triplets consécutifs. Le chaîne \jl{AAGCTC} est par exemple constituée des deux codons \jl{AAG} et \jl{CTC}.
+\begin{enumerate}
+	\item Écrire une fonction qui calcule la fréquence d'apparition de chaque codon dans une chaîne de caractères. La valeur renvoyée est un dictionnaire qui associe à chaque codon possible sa fréquence.
+
+	\item Une sous-chaîne \jl{s} est répétée lorsqu'il existe deux sous-chaînes de la séquence \jl{s₁} et \jl{s₂} \underline{disjointes} toutes deux égales à \jl{s}. Écrire une fonction qui identifie la sous-chaîne de \jl{n} codons le plus souvent répété dans une séquence, où \jl{n} est un argument de la fonction. La fonction doit renvoyer la sous-chaîne ainsi que les positions de ses occurrences.
+
+	\item Écrire une fonction qui identifie la sous-chaîne la plus longue qui est répétée dans la séquence (on ne considère que les sous-chaînes constituées de codons, donc de taille multiple de 3).
+\end{enumerate}
+
+\end{document}

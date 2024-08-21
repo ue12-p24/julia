@@ -1,0 +1,1590 @@
+\documentclass[12pt, aspectratio=141]{beamer}
+
+\definecolor{jrouge}{HTML}{CB3C33}
+\definecolor{jvert}{HTML}{389826}
+\definecolor{jbleu}{HTML}{4063D8}
+\definecolor{jviolet}{HTML}{9558B2}
+\definecolor{lightred}{HTML}{fcf3f3}
+\definecolor{lightgreen}{HTML}{e1f6db}
+\definecolor{lightpurple}{HTML}{f4eef7}
+\definecolor{lightgrey}{gray}{0.95}
+\definecolor{jyellow}{HTML}{FFD424}
+
+\mode<presentation>
+{
+	\usetheme{default}
+	\usecolortheme{rose}
+%	\useoutertheme{smoothbars}
+	\useinnertheme{circles}
+	
+	\definecolor{beamer@blendedblue}{HTML}{4063D8}
+	%\definecolor{titlemustard}{rgb}{0.6,0.6,0.0}
+	%\setbeamercolor{title}{bg=titlemustard}
+	\setbeamercolor{normal text}{fg=black}
+	\setbeamercolor{alerted text}{fg=jrouge}
+	\setbeamerfont{title}{shape=\bfseries}
+	\setbeamercolor{example text}{fg=jvert}
+	
+	%\setbeamercolor{structure}{fg=beamer@blendedblue}
+	\setbeamertemplate{navigation symbols}{}
+	\setbeamertemplate{footline}{\color{black!50}\hfill\scriptsize\insertpagenumber\hspace{2em}\vspace{2em}}
+}
+
+\usepackage{natbib}
+%\renewcommand{\citenumfont}[1]{{\tiny#1}}
+\renewcommand{\citenumfont}[1]{}
+\bibpunct{}{};s;;
+
+\usepackage[french]{babel}
+\usepackage[mathletters]{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+% Alternative for XeLaTeX:
+%\usefonttheme{professionalfonts}
+%\usepackage{fontspec}
+%\setmonofont{JuliaMono}
+%\setdefaultlanguage{french}
+%\usepackage{unicode-math}
+
+\usepackage{subcaption}
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{soul}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{bbm}
+\usepackage{svg}
+
+\usepackage{tikz}
+\usetikzlibrary{scopes, backgrounds, arrows, automata, positioning, patterns, calc, decorations.pathmorphing, decorations.pathreplacing, arrows.meta}
+
+\usepackage{hyperref}
+\usepackage{ragged2e}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{aeguill}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{stmaryrd}
+\usepackage{moresize}
+
+\newcommand{\llbra}{\left\llbracket}
+\newcommand{\rrbra}{\right\rrbracket}
+\renewcommand{\brack}[1]{\ensuremath{\llbra#1\rrbra}}
+\newcommand{\der}[2]{#1^{\ensuremath{\left(#2\right)}}}
+\newcommand{\paren}[1]{\ensuremath{\left(#1\right)}}
+\newcommand{\abs}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\interval}[1]{\ensuremath{\left[#1\right]}}
+\newcommand{\set}[2]{\ensuremath{\left\{#1\,\middle|\,#2\right\}}}
+\newcommand{\cont}[1]{\mathcal{C}^{#1}}
+\newcommand{\tends}[2]{\underset{#1\to #2}{\longrightarrow}}
+\newcommand{\seq}[3]{\ensuremath{\left(#1_{#2}\right)_{#2\in#3}}}
+\newcommand{\matr}[2]{\mathcal{M}_{#1}\paren{#2}}
+\newcommand{\matrRect}[3]{\mathcal{M}_{#1,#2}\paren{#3}}
+\newcommand{\Id}{\text{Id}}
+\newenvironment{disj}[1]{\left\{\begin{array}{#1}} {\end{array}\right.}
+
+
+\newenvironment{changemargin}[2]{%
+\begin{list}{}{%
+		%\setlength{\topsep}{0pt}%
+		\setlength{\leftmargin}{#1}%
+		\setlength{\rightmargin}{#2}%
+		\setlength{\listparindent}{\parindent}%
+		\setlength{\itemindent}{\parindent}%
+		\setlength{\parsep}{\parskip}%
+	}%
+	\item[]}{\end{list}}
+
+\defbeamertemplate{section page}{mruffel}[1][]{%
+	\begin{centering}
+		{\usebeamerfont{section name}\usebeamercolor[fg]{section name}#1
+			\vskip1em\par
+			
+			\begin{beamercolorbox}[sep=12pt,center,rounded=true,shadow=true]{part title}
+				\usebeamerfont{section title}\insertsection\par
+		\end{beamercolorbox}}
+	\end{centering}
+}
+%
+\title{Apprentissage de la programmation en Julia}
+
+\subtitle{Syntaxe et bases du langage} % (optional)
+
+\author{Lionel~Zoubritzky\inst{}}
+
+\institute{Mines Paris -- PSL}
+
+\date{11/2024}
+
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+\pgfdeclareimage[height=0.5cm]{Mines}{../figures/Mines.pdf}
+\logo{\begin{tikzpicture}[overlay,remember picture]
+	\node[left=0.2cm] at (current page.31){
+		\pgfuseimage{Mines}
+	};
+\end{tikzpicture}}
+
+
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+%\AtBeginSubsection[]
+%{
+	%  \begin{frame}<beamer>
+		%    \tableofcontents[currentsection,currentsubsection]
+		%  \end{frame}
+	%}
+
+\AtBeginSection[]
+{
+	\begin{frame}
+		\sectionpage
+	\end{frame}
+}
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+
+%\beamerdefaultoverlayspecification{<+->}
+
+\usepackage{minted}
+\usemintedstyle{paraiso-light}
+\setminted[julia]{mathescape,linenos,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightred,escapeinside=££}
+\setminted[bash]{mathescape,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightgrey,escapeinside=££}
+
+\usepackage{lmodern}
+%\newcommand{\jl}[1]{\colorbox{lightred}{\small\ttfamily #1}}
+\newmintinline[jl]{julia}{}
+\newmintinline[jlscript]{julia}{fontsize=\scriptsize}
+\newmint[JL]{julia}{}
+\newmint[JLa]{julia}{linenos=false}
+\newminted{julia}{}
+\newenvironment{julia}{\vspace{-0.6em}\VerbatimEnvironment\begin{juliacode}}{\end{juliacode}}
+\newminted[jlrepl]{julia}{linenos=false}
+\newenvironment{repl}{\vspace{-0.6em}\VerbatimEnvironment\begin{jlrepl}}{\end{jlrepl}}
+\newcommand{\q}{\textquotesingle}
+\newcommand{\qq}{\textquotedbl}
+\newcommand{\jlREPL}{\textcolor{jvert}{\bfseries julia>}}
+\newcommand{\helpREPL}{\textcolor{jyellow}{\bfseries help>}}
+
+\DeclareTextFontCommand{\emph}{\color{jrouge}\bfseries}
+
+\newenvironment<>{definition}[1]{%
+	\setbeamercolor{block title}{bg=lightgreen}%
+	\begin{block}{Définition}{#1}}{\end{block}}
+
+\newenvironment<>{convention}[1]{%
+	\setbeamercolor{block title}{bg=lightpurple}%
+	\begin{block}{Convention}{#1}}{\end{block}}
+
+\usepackage{xspace}
+\newcommand{\expr}{\ensuremath{\left\langle\textit{expr}\right\rangle}\xspace}
+\newcommand{\expra}[1]{\ensuremath{\left\langle\textit{expr}_{#1}\right\rangle}\xspace}
+\newcommand{\bexpr}{\ensuremath{\left\langle\textit{bexpr}\right\rangle}\xspace}
+\newcommand{\bexpra}[1]{\ensuremath{\left\langle\textit{bexpr}_{#1}\right\rangle}\xspace}
+
+
+
+
+
+\begin{document}
+\setbeamertemplate{section page}[mruffel]
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\section{Mise en place}
+
+\begin{frame}[fragile]{Environnement de développement}
+	Comme en Python, il existe deux façons d'exécuter du code Julia :
+	\begin{enumerate}
+		\item Exécuter le contenu d'un fichier avec la commande \mintinline{bash}|julia|:
+\begin{minted}{bash}
+$ julia /chemin/vers/mon_programme.jl
+\end{minted}
+
+		Par convention, les fichiers de code Julia portent l'extension \texttt{.jl}
+		\item Exécuter du code depuis le REPL (Read-Eval-Print-Loop, la console Julia), lancée avec la commande \mintinline{bash}|julia|:
+
+		{\ttfamily\scriptsize
+		\$ julia\\
+		\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{jvert}{\_}\\
+		\ \ \ \textcolor{jbleu}{\_}\ \ \ \ \ \ \ \_\ \textcolor{jrouge}{\_}\textcolor{jvert}{(\_)}\textcolor{jviolet}{\_}\ \ \ \ \ |  Documentation: https://docs.julialang.org\\
+		\ \ \textcolor{jbleu}{(\_)}\ \ \ \ \ |\ \textcolor{jrouge}{(\_)}\ \textcolor{jviolet}{(\_)}\ \ \ \ |\\
+		\ \ \ \_\ \_\ \ \ \_|\ |\_\ \ \_\_\ \_\ \ \ |  Type "?" for help, "]?" for Pkg help.\\
+		\ \ |\ |\ |\ |\ |\ |\ |/\ \_`\ |\ \ |\\
+		\ \ |\ |\ |\_|\ |\ |\ |\ (\_|\ |\ \ |\ \ Version 1.11.0-rc2 (2024-07-29)\\
+		\ \_/\ |\textbackslash\_\_'\_|\_|\_|\textbackslash\_\_'\_| \ |  Official https://julialang.org/ release\\
+		|\_\_/\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ |\\
+		\ \\
+		\textcolor{jvert}{\bfseries julia>} 3 + 4\\
+		7\\
+		\ \\
+		\textcolor{jvert}{\bfseries julia>} \\
+		}
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Petit guide de survie dans le REPL}
+	% include ; en fin de ligne, flèches haut et bas, TAB
+	Dans le REPL, on peut écrire du code et l'exécuter en tapant ``Entrée''. Le résultat s'affiche juste après. Pour ne pas afficher le résultat, on peut terminer la ligne par un point-virgule :
+	\begin{repl}
+		£\jlREPL£ 17 + 3;
+
+		£\jlREPL£ 17 + 3
+		20
+	\end{repl}
+
+	Cliquer ne sert à rien dans le REPL. À la place, on utilise les flèches. Presser ``Ctrl'' en même temps qu'une flèche gauche ou droite permet de se déplacer d'un mot plutôt que d'une lettre.
+	\vfill
+
+	La touche ``Tab'' permet d'automatiquement compléter un mot en cours d'écriture. Si plusieurs mots sont possibles, ils sont affichés. Les mots suggérés sont toujours définis.
+	``Tab'' ne fait rien s'il n'y aucune autocomplétion possible. ``Tab'' ne fait rien non plus si le mot est déjà complet : retaper ``Tab'' permet alors d'avoir d'autres suggestions.
+\end{frame}
+
+\begin{frame}[fragile]{Petit guide de survie dans le REPL}
+	Le mode ``Documentation'' s'obtient en tapant \jl{?} au début d'une ligne. On peut alors entrer un nom pour lire la documentation à ce sujet :
+	\begin{repl}
+		£\helpREPL£ !=
+		search: != !== == ! <= .= >= =
+		
+		!=(x, y)
+		≠(x,y)
+		
+		Not-equals comparison operator. Always gives the opposite
+		answer as ==.
+		[...]
+	\end{repl}
+
+	Le mode ``Shell'' s'obtient en tapant \jl{;} au début d'une ligne. Ce qui y est entré est exécuté comme un script Bash.
+
+	Le mode ``Pkg'' s'obtient en tapant \jl{]} au début d'une ligne. Il permet d'installer des \emph{bibliothèques} (\textit{packages}), les mettre à jour, gérer ses environnements, \ldots
+	
+	Pour quitter un mode spécial et revenir au mode ``Julia'', taper ``Delete'' au début de la ligne.
+\end{frame}
+
+\begin{frame}{Inclusion de code -- \texttt{Revise.jl}}
+	Un code écrit dans un fichier \texttt{file.jl} peut être exécuté dans un autre fichier ou depuis le REPL par la commande \jl{include("file.jl")}
+	\vfill
+
+	La bibliothèque \texttt{Revise.jl} permet d'automatiquement recharger le contenu d'un fichier lorsque celui-ci est sauvegardé après avoir été modifié.
+
+	Pour installer \texttt{Revise.jl} :
+	\begin{itemize}
+		\item Soit exécuter le code \jl{import Pkg; Pkg.add("Revise")}.
+		\item Soit entrer dans le mode ``Pkg'' du REPL puis entrer \jl{add Revise}.
+	\end{itemize}
+	\vfill
+
+	Une fois \texttt{Revise.jl} installé et chargé (\jl{using Revise}), les fichiers à surveiller sont à inclure avec la commande \jl{includet("file.jl")}.
+	\vfill
+
+	Pour plus d'information : \url{https://timholy.github.io/Revise.jl/stable/}
+\end{frame}
+
+\section{Expressions élémentaires}
+
+\begin{frame}{Valeurs}
+	\begin{definition}
+		Un \emph{bit} est un 0 ou un 1.
+	
+		Une \emph{valeur} est quelque chose qui peut être représenté dans la mémoire d'un ordinateur par une suite de bits.
+
+		Le \emph{type} de la valeur indique ce que signifient ses bits.
+	\end{definition}
+
+	\pause
+
+	Exemples :
+	\begin{itemize}
+		\item Un booléen : \jl|true| (vrai, 1) et \jl|false| (faux, 0), de type \jl{Bool}.
+		\item Un nombre entier : \jl|17|, \jl/-32/, \ldots, de type \jl{Int}.
+		\item Un nombre flottant : \jl/0.3/, \jl/17e8/, \jl/-Inf/, \ldots, de type \jl{Float64}.
+		\item Un caractère : \jl/'e'/, \jl/'&'/, \jl/'ç'/, \jl/'°'/ \ldots, de type \jl{Char}.
+		\item Une chaîne de caractères : \jl{"Bonjour !"},  \jl{"0123456789"}, \ldots, de type \jl{String}.
+		\item Une liste ou un n-uplet de valeurs : \jl{[21.5, 12, -1]}, \jl{(1, 1)}, \ldots, de type \jl{Array} ou \jl{Tuple}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Expressions}
+	\begin{definition}
+		Une \emph{expression} est un morceau de code qui a une valeur.
+	\end{definition}
+
+	Exemple et contre-exemple :
+	\begin{itemize}
+		\item \jl|3 + 5| : c'est une expression dont la valeur est 8.
+		\item \jl|3 +| : ce n'est pas une expression car ce code est incomplet.
+	\end{itemize}
+	\vfill
+
+	\begin{definition}
+		Un \emph{littéral} est une expression dont l'écriture donne la valeur.
+	\end{definition}
+	Exemples : les exemples de la diapositive précédente (\jl{true}, \jl{-32}, \jl{'ç'}, \jl{"Bonjour !"}, \ldots)
+	
+\end{frame}
+
+\begin{frame}{Variables}
+	\begin{definition}
+		Une \emph{variable} est un nom qui est associée à une valeur.
+	\end{definition}
+	La variable elle-même est donc une expression (la plus simple, après les littéraux).
+	\vfill
+
+	\begin{definition}
+		L'\emph{affectation} d'une valeur à une variable consiste à donner cette valeur à cette variable. Elle s'écrit avec le signe \jl.=. :
+		\JLa|x = £\expr£|
+		\noindent avec \jl|x| le nom de la variable, et \expr l'expression correspondant à la valeur.
+	\end{definition}
+	Exemple :
+	\jl|toto = 0.0 / 0.0| \pause(la valeur de la variable \jl{toto} est \jl{NaN})
+\end{frame}
+
+\begin{frame}{Variables}
+	\begin{convention}
+		En général, les variables sont écrites en minuscules, éventuellement avec le signe \_ (\textit{underscore}) si nécessaire.
+	\end{convention}
+	Exemple et contre-exemple :
+	\begin{itemize}
+		\item \jl{youngestplayer} (éventuellement \jl{youngest_player})
+		\item Pas \jl{YoungestPlayer} (utilisé pour les types et les modules), ni \jl{YOUNGESTPLAYER} (utilisé pour les constantes), ni \jl{youngestPlayer}, \jl{youngest_Player}, \jl{Youngest_Player}, \ldots
+	\end{itemize}
+	\vfill
+
+	\begin{alertblock}{Important}
+		Les noms des variables doivent être clairs !
+		
+		N'utilisez pas \jl{x}, \jl{y}, \jl{l}, \jl{t}, \jl{aa}, \jl{a2}, \ldots à tout bout de champ, donnez des noms plus complets à vos variables dès que possible.
+	\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Opérations élémentaires}
+	\begin{definition}
+		Un \emph{opérateur} est un symbole qui se place entre des expressions pour exprimer une opération.
+	\end{definition}
+
+	Opérateurs arithmétiques :
+	\begin{itemize}
+		\item \jl{+} : addition. Exemple : \mintinline{julia}|14 + 3| (renvoie \jl{17})
+		\item \jl{-} : soustraction. Exemple : \mintinline{julia}|14 - 3| (renvoie \jl{11})
+		\item \jl{*} : multiplication. Exemple : \mintinline{julia}|14 * 3| (renvoie \jl{42})
+		\item \jl{/} : division flottante. Exemple : \mintinline{julia}|14 / 3| (renvoie \mintinline[fontsize=\scriptsize]{julia}|4.666666666666667|)
+		\item \jl{÷}\footnote[frame]{REPL : \jl{\div[TAB]}} : division entière. Exemple : \mintinline{julia}|14 ÷ 3| (renvoie \jl{4})
+		\item \jl{%} : modulo. Exemple : \jl{14 % 3} (renvoie \jl{2})
+		\item \jl{^} : puissance. Exemple : \jl|14 ^ 3| (renvoie \jl{2744})
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Opérations élémentaires}
+	Opérateurs de comparaisons :
+	\begin{itemize}
+		\item \jl{==} : égalité.
+		\item \jl{!=} : inégalité.
+		\item \jl{<} : inférieur strict.
+		\item \jl{<=} et \jl{≤}\footnote[frame]{REPL : \jl{\le[TAB]}} : inférieur ou égal.
+		\item \jl{>} : supérieur strict.
+		\item \jl{>=} et \jl{≥}\footnote[frame]{REPL : \jl{\ge[TAB]}} : supérieur ou égal. \pause
+		\item \jl{===} : égalité de pointeurs.
+		\item \jl{!==} : inégalité de pointeurs.
+	\end{itemize}
+
+	\jl{£\expra{a}£ == £\expra{b}£} renvoie \jl{true} si les valeurs $a$ de \expra{a} et $b$ de \expra{b} sont égales.
+	\jl{£\expra{a}£ === £\expra{b}£} renvoie \jl{true} si $a$ et $b$ ont la même adresse en mémoire. On n'utilise quasiment jamais \jl{===}.
+\end{frame}
+
+\begin{frame}{Opérations élémentaires}
+	Opérateurs logiques :
+	\begin{itemize}
+		\item \jl{&} : ET. Exemple : \mintinline{julia}|true & false| (renvoie \jl{false})
+		\item \jl{|} : OU. Exemple : \mintinline{julia}*true | false* (renvoie \jl{true})
+		\item \jl{⊻}\footnote[frame]{REPL: \jl{\xor[TAB]}} : XOR (ou exclusif). Exemple : \mintinline{julia}|true ⊻ true| (renvoie \jl{false})
+		\item \jl{~} : NON booléen (unaire). Exemple : \mintinline{julia}|~true| (renvoie \jl{false})
+	\end{itemize}
+	\vfill
+
+	Ces opérations peuvent être employées sur des entiers : elles sont alors effectuées bit à bit. Par exemple :
+	\begin{itemize}
+		\item \jl{11 & 5} (renvoie 1)
+		\item \jl{11 | 5} (renvoie 15)
+		\item \jl{11 ⊻ 5} (renvoie 14)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Opérations élémentaires}
+	Opérateurs booléens (\bexpr désigne une expression à valeur booléenne) :\vspace{0.5em}
+	\begin{itemize}
+		\item \jl{!} : NON logique. \jl{!£\bexpr£} renvoie \jl{false} si la valeur de \bexpr est \jl{true}, sinon \jl{true}. \vspace{0.5em}
+		\item \jl{?} : opérateur ternaire. Le code \jl{£\bexpr£ ? £\expra{u}£ : £\expra{v}£} exécute \bexpr : si la valeur est \jl{true} il renvoie la valeur de \expra{u}, sinon si la valeur de \bexpr est \jl{false} il renvoie la valeur de \expra{v}. \vspace{0.5em}
+		\item \jl{&&} : ET court-circuit. Le code \mintinline{julia}|£\bexpra{1}£ && £\bexpra{2}£| est équivalent à \jl{£\bexpra{1}£ ? £\bexpra{2}£ : false}.\vspace{0.2em}
+		\item \jl{||} : OU court-circuit. Le code \mintinline{julia}.£\bexpra{1}£ || £\bexpra{2}£. est équivalent à \jl{£\bexpra{1}£ ? true : £\bexpra{2}£}.		
+	\end{itemize}
+	\vspace{1em}
+
+	\jl{&&}, \jl{||} et \jl{?} sont des opérateurs \emph{court-circuits} : ils n'évaluent que les arguments nécessaires pour déterminer leur valeur. On parle aussi d'évaluation \emph{paresseuse} pour qualifier cette stratégie d'évaluation.
+\end{frame}
+
+\begin{frame}{Opérateurs d'affectation}
+	\begin{definition}
+		Tout opérateur \jl{£$\textit{op}$£} (hormis les comparaisons) peut être immédiatement suivi d'un \jl{=} pour le transformer en \emph{opérateur d'affectation}.
+		
+		La syntaxe \jl{x £$\textit{op}$£= y} signifie alors \jl{x = x £$\textit{op}$£ y}.
+	\end{definition}
+
+	\vspace{1em}
+
+	Exemples :
+	\begin{itemize}
+		\item \jl{x += 1} signifie \jl{x = x + 1}
+		\item \jl{y |= b} signifie \jl{y = y | b}
+	\end{itemize}
+
+	\vspace{1em}
+
+	Mais attention, \jl{x <= y} ne signifie pas \jl{x = x < y} !
+\end{frame}
+
+\begin{frame}[fragile]{Parenthésage}
+	L'ordre d'exécution des expressions est donnée par le parenthésage : \jl{1 + (3 * (5 - 7))} exécute \jl{5-7} (qui renvoie \jl{-2}), puis \jl{3 * -2} (qui renvoie \jl{-6}), et enfin \jl{1 + -6} (qui renvoie \jl{-5}).
+
+	Le parenthésage est parfois implicite. Dans ce cas-là, les opérations sont effectuées par ordre de \emph{précédence}, qui est :
+	\begin{enumerate}
+		\item \jl{^} (prioritaire sur tout)
+		\item \jl{+}, \jl{-} lorsqu'ils sont unaires (un seul argument)
+		\item \jl{*}, \jl{/}, \jl{&}, \jl{÷}, \jl|%|
+		\item \jl{+}, \jl{-}, \jl{|}, \jl{⊻}
+		\item \jl{>}, \jl{<}, \jl{>=}, \jl{<=}, \jl{==}, \jl{!=}
+		\item \jl{&&}
+		\item \jl{||}
+		\item \jl{?} (évalué en dernier)
+	\end{enumerate}
+	\vfill
+
+	Exercice : \jl{5 % 8 != 0 || 2 ÷ 9 + 7 - 1 < 6 && 3 > 4} =
+	\pause
+	\jl{true}
+\end{frame}
+
+
+\begin{frame}{Tuples et parenthésage implicite}
+	Un \emph{tuple} est créé en mettant des expressions entre parenthèses, séparées par des virgules, par exemple \jl{(-Inf, "cheese", 3.14,)}. La virgule suivant la dernière expression est optionnelle, sauf si le tuple n'a qu'un seul élément : \jl{(7,)} est un tuple, mais \jl{(7) == 7}.
+	\vfill
+
+	S'il n'y a pas d’ambiguïté, les parenthèses peuvent être omises : on peut par exemple définir \jl{t = 3, 4} et on a alors \jl{t == (3,4)}.
+	\vfill
+
+	Un tuple de variable peut aussi être défini ensemble, en les plaçant à gauche du signe \jl{=} : il s'agit de la \emph{syntaxe déstructurante}. Là encore, les parenthèses peuvent être omises. Ainsi, \jl{a, b, c = (3, 4, 5)} est équivalent à \jl{a = 3}, \jl{b = 4} et \jl{c = 5}.
+
+	Pour intervertir les valeurs de deux variables \jl{a} et \jl{b}, on peut ainsi écrire : \jl{a, b = b, a}.
+\end{frame}
+
+\begin{frame}[fragile]{Identifiant sans valeur}
+	Un identifiant constitué uniquement du signe \jl{_} (\textit{underscore}) peut être utilisé à gauche du signe \jl{=} comme le nom d'une variable. Il ne stocke cependant aucune valeur et ne peut pas être utilisé dans une expression :
+	\begin{repl}
+		£\jlREPL£ a, _, b = 12, 13, 14;
+
+		£\jlREPL£ b
+		14
+
+		£\jlREPL£ _
+		ERROR: all-underscore identifiers are write-only and their
+		values cannot be used in expressions
+	\end{repl}
+
+	\begin{convention}
+		La syntaxe déstructurante autorise le tuple à gauche du signe \jl{=} à avoir moins d'éléments qu'à droite. On marque par convention un signe \jl{_} pour signaler la différence de taille :\vspace{-0.6em}
+		\begin{minted}[linenos=false, xrightmargin=20pt]{julia}
+			£\jlREPL£ a, _ = (1, 2, 3) # a will be equal to 1
+		\end{minted}
+	\end{convention}
+\end{frame}
+
+\section{Blocs et flot de contrôle}
+
+\begin{frame}[fragile]{Conditions}
+	L'exécution conditionnelle de code s'écrit :
+	\begin{julia}
+		if £\bexpra{1}£
+			... # only executed if $\bexpra{1}$ is true
+		elseif £\bexpra{2}£
+			... # only executed if $\bexpra{2}$ is true and $\bexpra{1}$ is false
+		elseif ...
+		...
+		elseif £\bexpra{N}£
+			... # only executed if $\bexpra{N}$ is true and all the other
+			    # $\bexpr$ are false
+		else
+			... # only executed if all $\bexpr$ are false
+		end
+	\end{julia}
+
+	Les blocs \jl{elseif} et \jl{else} sont optionnels. Le mot-clé \jl{end} marque la fin de tous les blocs de contrôle.
+\end{frame}
+
+\begin{frame}[fragile]{Boucles}
+	Une boucle \jl{while} s'écrit :
+	\begin{julia}
+		while £\bexpr£
+		  ... # executed as long as $\bexpr$ is true
+		end
+	\end{julia}
+	\vfill
+
+	Une boucle \jl{for} sur l'intervalle (\textit{range}) \brack{\jl{a},\jl{b}} s'écrit :
+	\begin{julia}
+		for i in a:b
+		  ... # executed for each value of i between a and b (included)
+		end
+	\end{julia}
+	(\jl{in} peut être remplacé par \jl{=}, mais cette syntaxe est très peu utilisée)
+	\vspace{1em}
+	
+	Deux mots-clés permettent de changer le flot de contrôle dans une boucle :
+	\begin{itemize}
+		\item \jl{break} fait sortir de la boucle.
+		\item \jl{continue} fait passer à l'itération suivante de la boucle.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Boucles}
+	Exercice : par quelles valeurs le programme suivant fait-il passer la variable \jl{i}, en supposant que sa valeur initiale est un entier ?
+	\begin{julia}
+		i > 1 && i%2 == 1 && (i = 3i + 1)
+		while true
+			i > 1 || break
+			i ÷= 2
+			i % 2 == 0 && continue
+			i = 3i + 1
+		end
+	\end{julia}
+	Note : \jl{3i + 1} signifie \jl{3*i + 1} : l'opérateur \jl{*} peut être omis entre un littéral numérique et une expression ne commençant pas par un chiffre.
+	\pause\vfill
+
+	Réponse : si \jl|i<=0|, le programme ne fait rien, sinon il fait passer \jl|i| par les différentes valeurs de la suite de Syracuse, et s'arrête lorsqu'elle atteint 1.
+\end{frame}
+
+\begin{frame}[fragile]{Blocs de code}
+	\begin{definition}
+		Un \emph{bloc de code} est une région du code délimitée par un mot-clé et se terminant par \jl{end}.
+	\end{definition}
+
+	Exemple d'un bloc \jl{while} avec un sous-bloc \jl{if} :
+	\begin{julia}
+	while true      #                    ↑
+		if i > 0    #   ↑                |
+			break   #   | if sub-block   |
+		end         #   ↓                | while block
+		i += 3      #                    |
+	end             #                    ↓
+	\end{julia}
+
+	Ces blocs servent à marquer le \emph{flot de contrôle} du programme, c'est-à-dire le choix et l'ordre des instructions à exécuter.
+
+	\begin{convention}
+		On marque un bloc en indentant le code à l'intérieur, souvent de 4 espaces.
+	\end{convention}
+\end{frame}
+
+\begin{frame}[fragile]{Portée des variables}
+	\begin{definition}
+		Une variable est \emph{déclarée} lors de sa première affectation.
+		
+		La \emph{portée} (\textit{scope}) d'une variable est la portion du code dans laquelle elle peut être utilisée, à partir de sa déclaration.
+	\end{definition}
+
+	\begin{definition}
+		Une variable déclarée en dehors de tout bloc est une \emph{variable globale}.
+		
+		Si la valeur qui lui est affectée ne change jamais, elle peut être déclarée avec le mot-clé \jl{const} : il s'agit alors d'une \emph{constante}.
+	\end{definition}
+	
+	\begin{convention}
+		Les constantes sont écrites tout en majuscules.
+		L'utilisation de variables globales non-constantes est à proscrire autant que possible.
+	\end{convention}
+\end{frame}
+
+\begin{frame}[fragile]{Portée des variables}
+	\begin{alertblock}{Portée des variables en Julia}
+		Une variable déclarée dans un bloc ne peut être utilisée qu'au sein de ce bloc (et de ses sous-blocs).
+		
+		Les seules exceptions sont les blocs \jl{begin} et \jl{if}. Une variable déclarée dans un tel bloc peut être utilisée dans le bloc autour. Si le bloc autour est lui-même un \jl{begin} ou un \jl{if}, elle peut être utilisée encore autour, etc.
+	\end{alertblock}
+	\vfill
+
+	Note : au début d'un bloc \jl{for x in £\expr\!\!\!£}, \expr est évaluée avant le bloc et \jl{x} est une nouvelle variable déclarée au tout début du bloc.
+	\vfill
+
+	\begin{julia}
+		const PARAM = 12  # PARAM is declared as a constant
+		for i in 1:4  # i is declared
+			y = i + PARAM  # y is declared
+			if i > 2
+				x = y - 1  # x is (conditionally) declared
+			end
+			# i, y, PARAM and x are in scope ; x may not be declared
+		end # from this point, only PARAM is in scope
+	\end{julia}
+\end{frame}
+
+%\begin{frame}[fragile]{Portée des variables}
+%	\begin{definition}
+%	NON, c'est FAUX
+%		Une variable $b$ \emph{éclipse} (\textit{shadows}) une autre variable $a$ lorsque : \begin{itemize}
+%			\item $a$ et $b$ ont le même nom ;
+%			\item $b$ est déclarée dans un sous-bloc $Y$ du bloc $X$ dans lequel a été auparavant déclarée $a$, et $Y$ n'est ni pas un bloc \jl{if} ni \jl{begin}.
+%		\end{itemize}
+%		Dans ce cas, le nom commun à $a$ et $b$ se réfère à $b$ dans le bloc $Y$ à partir de sa déclaration, et à $a$ dans le reste du bloc $X$.
+%	\end{definition}
+%
+%	Exemple :
+%	\begin{julia}
+%		i = 39
+%		...  # i == 39
+%		for i in 1:4   # ↑
+%			...        # | i take values between 1 and 4
+%		end            # ↓
+%		...  # i == 39
+%	\end{julia}
+%\end{frame}
+%
+%\begin{frame}[fragile]{Portée des variables}
+%	Exercice : quelles sont les différentes variables et leur portée aux différents points du code suivant ?
+%	\begin{julia}
+%		const NUM = 12
+%
+%		i = if NUM < 0
+%			m = NUM
+%			NUM^NUM
+%		else
+%			m = 5
+%		end
+%
+%		while i > 0
+%			m = i - 1
+%			for m in m:(m+1)
+%				i -= m*NUM
+%				m += 2
+%			end
+%		end
+%	\end{julia}
+%\end{frame}
+
+\begin{frame}[fragile]{Expressions chaînées}
+	Les expressions sont généralement séparées par une nouvelle ligne. Elles peuvent aussi être séparées par un point-virgule.
+	\vfill
+
+	Plusieurs expressions peuvent être regroupées par des parenthèses ou dans un bloc \jl{begin}. La valeur du bloc est alors la valeur de la dernière expression exécutée :
+
+	\begin{julia}
+		x = (a = 2 + 2; b = a - 1; b*b^b)  # x == 3*3^3 == 91
+
+		y = begin
+			c = x - 100
+			-c + 3
+		end  # y == 12
+	\end{julia}
+\end{frame}
+
+\begin{frame}[fragile]{Expressions chaînées}
+	Les boucles et les blocs vides ou non exécutés ont pour valeur \jl{nothing} :
+	\begin{julia}
+		u = begin end  # u == nothing
+		v = while for i in 1:3
+			i + 7
+		end  # v == nothing
+		w = if false
+			43
+		end  # w == nothing
+	\end{julia}
+
+	\textbf{Tous les autres blocs de code ont pour valeur la dernière expression exécutée}\footnote[frame]{en oubliant le code exécuté dans le sous-bloc \jl{finally} d'un bloc \jl{try}} :
+	\begin{julia}
+		z = if 14 > 4
+			7
+		else
+			-2
+		end  # z == 7
+	\end{julia}
+\end{frame}
+
+\begin{frame}[fragile]{Expressions chaînées}
+	Lorsqu'une ligne se termine avant que l'expression ne soit terminée, Julia lit la ligne suivante comme si c'était la suite de l'expression. Exemple :
+	\begin{julia}
+		my_correct_operation = 12 +  # the expression is not finished$\ldots$
+								8 +  # idem$\ldots$
+								7    # finally the sum 27 is computed
+	\end{julia}
+	
+	\begin{alertblock}{Piège !}
+		Si une expression peut se terminer à la fin de la ligne, Julia suppose que c'est le cas, ce qui peut être contre-intuitif. Par exemple, le code
+		\begin{minted}[xleftmargin=20pt]{julia}
+			my_wrong_operation = 12
+							   +  8
+							   +  7
+		\end{minted}
+		s'exécute comme trois lignes indépendantes : \jl{my_wrong_operation = 12}, puis \jl{+8}, puis \jl{+7}. Donc à la fin \jl{my_wrong_operation == 12}.
+	\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Exceptions}
+	La forme générale du rattrapage d'une exception s'écrit :
+	\begin{julia}
+		try
+		... # code that may throw an exception
+		catch e # e is the name of the exception here (can be omitted)
+		... # code that can manipulate e and may call rethrow()
+		else
+		... # code executed only if no exception was caught
+		finally
+		... # code always executed after the previous ones
+		end
+	\end{julia}
+	Les blocs \jl{catch}, \jl{else} et \jl{finally} sont optionnels mais :
+	\begin{itemize}
+		\item Un \jl{else} ne peut pas exister sans un \jl{catch}.
+		\item Au moins un \jl{catch} ou un \jl{finally} doit être présent.
+	\end{itemize}
+	\vfill
+	
+	\begin{alertblock}{}
+		Les exceptions ont une mauvaise performance et doivent être évitées autant que possible.
+	\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Exceptions}
+	Une exception est lancée avec l'appel \jl{throw(£\expr\!\!\!£)}. La valeur de \expr sera alors stockée dans la variable du bloc \jl{catch} (\jl{e} dans l'exemple). L'appel \jl{rethrow()} relance l'exception et en préservant son origine.\vspace{0.6em}
+
+	Exercice : que fait le code suivant, selon la valeur initiale de \jl{i} ?
+	\begin{julia}
+		t = try
+			i < 0 && throw(i)
+			i + 2
+		catch j
+			j % 2 == 0 && rethrow()
+			j - 1
+		finally
+			println("Done")
+		end
+	\end{julia}
+
+	\pause
+	Réponse : si \jl|i < 0| et \jl|i| est pair, le code lance une exception de valeur \jl|i| ; sinon, si \jl|i < 0|, \jl{t} prend la valeur \jl|i - 1|, sinon \jl{t} prend la valeur \jl|i + 2|. Dans tous les cas, le code affiche \jl|"Done"|.
+\end{frame}
+
+\begin{frame}[fragile]{Modules}
+	Le code Julia est écrit dans des \emph{modules} :
+	\begin{julia}
+		module MyModule
+			x = 42
+		end
+	\end{julia}
+
+	Un module est un bloc qui sert à regrouper des noms : on parle de \textit{namespace}. Les variables définies dans un module peuvent être accédées en dehors de celui-ci en les préfixant du nom du module, par exemple \jl{MyModule.x}. Au sein du même module, il n'y a pas besoin de préfixe.
+	\vfill
+
+	Le module par défaut lorsqu'on exécute un fichier ou qu'on ouvre un REPL s'appelle \jl{Main}. Celui-ci charge le module \jl{Base}, qui contient tous les types et fonctions de base comme \jl{Int}, \jl{+}, \jl{println}, \ldots.
+	\vfill
+
+	On ne peut pas créer de module à l'intérieur d'une fonction.
+\end{frame}
+
+\begin{frame}[fragile]{Mauvais code}
+	Exercice : quels sont les problèmes du code suivant ?
+	\begin{julia}
+		const x = 12
+		i = 1
+		for i in i:(i+5); while y < 100
+			y = 1 + if i >= 2
+				j = 3
+			end
+			y += x + i + j
+			x += 1
+		end
+		y
+	\end{julia}
+	
+	\pause\scriptsize
+	Réponse : \jlscript{x} est en minuscules et est modifié ligne 9 alors qu'il est déclaré constant ligne 1 ; le début du bloc \jlscript{for i in i:(i+5)} ligne 4 est équivalent à \jlscript{for i in 1:5} ici (puisque \jlscript{i = 1} ligne 3) mais prête à confusion ; le bloc \jlscript{while} ligne 4 est mal indenté et il manque le \jlscript{end} correspondant ; \jlscript{y} n'a pas encore été déclarée dans \jlscript{y < 100} ligne 4 ; si la condition \jlscript{i >= 2} du \jlscript{if} ligne 5 n'est pas vérifiée alors il faut calculer \jlscript{1 + nothing}, ce qui va causer une erreur, et \jlscript{j} ne sera pas définie alors qu'il est utilisé ligne 8 ; et enfin, le nom des variables est trop court et il n'y a aucun commentaire, on n'y comprend rien !
+\end{frame}
+
+\section{Fonctions}
+
+\begin{frame}[fragile]{Appel de fonction}
+	\begin{definition}
+		Une \emph{fonction} est un objet qui prend des \emph{arguments} donnés en entrée, et qui \emph{renvoie} une valeur en sortie.\\
+
+		Une fonction \jl{f} qui accepte $N$ arguments est \emph{appelée} avec la syntaxe :
+		\JLa|f(£\expra{1}\!\!\!£, £\expra{2}\!\!\!£, £\ldots\!\!\!£, £\expra{N}\!\!\!£)|
+	\end{definition}
+	\vfill
+
+	Exemples :
+	\begin{itemize}
+		\item \jl{sin(π/2)} renvoie \jl{1.0}. Pour obtenir \jl{π} dans le REPL : \jl{\pi[TAB]}.
+		\item \jl{+(2,5,1)} renvoie \jl{8} (syntaxe alternative pour \jl{2 + 5 + 1}).
+		\item \jl{time()} renvoie le nombre de secondes depuis l'\emph{epoch}, une date de référence fixée au 1\ier janvier 1970.
+		\item \jl{println("Bonjour !")} affiche \jl{"Bonjour !"} et renvoie \jl{nothing}.
+		\item \jl{typeof(£\expr\!\!\!£)} renvoie le type de la valeur de \expr.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Définition de fonction}
+	Il existe deux syntaxes pour définir une fonction \jl{f} :
+	\begin{enumerate}
+		\item Soit la syntaxe longue :
+		\begin{julia}
+			function f(arg£$_1$£, arg£$_2$£, £\ldots£, arg£$_N$£)
+				...
+			end
+		\end{julia}
+		\item Soit la syntaxe courte : \JL{f(arg£$_1$£, arg£$_2$£, £\ldots£, arg£$_N$£) = ...}
+	\end{enumerate}
+
+	\begin{convention}
+		On utilise la syntaxe courte lorsque la définition de la fonction rentre sur une seule ligne. Sinon, on utilise la syntaxe longue.
+	\end{convention}
+
+	\pause
+	Une fonction peut aussi être \emph{anonyme}, définie avec l'opérateur \jl{->} :\vspace{-0.7em}
+	\JL{(arg£$_1$£, arg£$_2$£, £\ldots£, arg£$_N$£) -> ...}
+\end{frame}
+
+\begin{frame}[fragile]{Corps de fonction}
+	Le corps d'une fonction est constituée d'expressions. Comme dans tout bloc de code, la valeur renvoyée est celle de la dernière expression :\vspace{-0.6em}
+	\JL{norm(x) = (y = x*x; sqrt(y))}
+
+	Le mot-clé \jl{return} sert à renvoyer une valeur avant de devoir atteindre la dernière expression :
+	\begin{julia}
+		function max(x, y)
+			x > y && return x
+			return y
+		end
+	\end{julia}
+
+	\begin{convention}
+		On utilise \jl{return} explicitement à la dernière ligne si un autre \jl{return} est présent dans le corps de la fonction. Sinon, on l'omet.
+	\end{convention}
+	(Cette convention n'est pas officielle mais elle est utile)
+\end{frame}
+
+\begin{frame}[fragile]{Arguments optionnels}
+	Les derniers arguments d'une fonction peuvent être \emph{optionnels} : ils ont pour cela besoin d'une valeur par défaut qui est utilisée si l'argument n'est pas fourni. Cette valeur est donnée après un signe \jl{=} :
+	\begin{repl}
+		£\jlREPL£ function midpoint(x, y=0)
+			       (x + y)/2
+		       end;
+
+		£\jlREPL£ midpoint(12, 14)
+		13.0
+
+		£\jlREPL£ midpoint(12) # y is set to default value 0
+		6.0
+	\end{repl}
+
+	Un argument optionnel ne peut pas être déclaré avant un argument obligatoire.
+\end{frame}
+
+\begin{frame}[fragile]{Arguments nommés}
+	Certains arguments d'une fonction peuvent être \jl{nommés}. Ils doivent pour cela être déclarés après un point-virgule (un seul \jl{;} au total) :
+	\begin{julia}
+		plot_axes(arg=nothing; color, linesize=2) = ...
+	\end{julia}
+	Comme les autres arguments, ils peuvent être rendus optionnels en précisant une valeur par défaut (comme \jl{linesize} dans l'exemple).
+
+	\begin{convention}
+		Lors de l'appel d'une fonction avec des arguments nommés, on place ceux-ci après un point-virgule, comme lors de leur déclaration (mais sans nécessairement respecter l'ordre) :\vspace{-0.6em}
+		\begin{minted}[linenos=false,xrightmargin=20pt]{julia}
+			plot_line(; linesize=1, color="blue")
+		\end{minted}
+	\end{convention}
+
+	Si une variable existe avec le même nom qu'un argument nommé (par exemple \jl{color} ici), on peut la placer directement après le point-virgule :
+	\begin{repl}
+		plot_line(; color)  # equivalent to plot_line(; color=color)
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Opérateurs \texttt{|>} et \texttt{∘}}
+	L'opérateur \jl{|>} (\textit{pipe}) permet de mettre les arguments de la fonction avant le nom de celle-ci. Cela peut servir à exprimer des compositions plus naturellement :
+	\begin{repl}
+		£\jlREPL£ -19 |> (x -> x+3) |> abs |> sqrt
+		4.0
+
+		£\jlREPL£ sqrt(abs((x -> x+3)(-19))) # equivalent call
+		4.0
+	\end{repl}
+
+	La précédence de \jl{|>} est supérieure à celle de \jl{->} : il faut donc mettre les fonctions anonymes entre parenthèses.
+	\vfill
+
+	L'opérateur \jl{∘}\footnote[frame]{REPL : \jl{\circ[TAB]}} permet de créer des compositions de fonction :
+	\begin{repl}
+		£\jlREPL£ (sqrt ∘ abs ∘ (x -> x+3))(-19)
+		4.0
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Documentation d'une fonction}
+	Une fonction est documentée par une \emph{docstring}, qui est un bloc de texte Markdown placé entre triples guillemets juste avant le début de la fonction.
+
+	Ce bloc commence par la signature de la fonction, indentée, puis une ligne vide, et ensuite une explication de ce que fait la fonction.
+
+	\begin{julia}
+		"""
+			cis(x)
+		
+		More efficient method for `exp(im*x)` by using Euler's formula:
+		``\\cos(x) + i \\sin(x) = \\exp(i x)``.
+		
+		See also [`cispi`](@ref), [`sincos`](@ref), [`exp`](@ref)
+		
+		# Examples
+		```jldoctest
+		julia> cis(π) ≈ -1
+		true
+		```
+		"""
+		cis(x) = [...]
+	\end{julia}
+\end{frame}
+
+\section{Tableaux}
+
+\begin{frame}{Tableaux en général}
+	\begin{definition}
+		Un \emph{tableau} (\textit{array}) est une liste finie d'éléments, arrangés selon une ou plusieurs dimensions.
+
+		Un tableau unidimensionnel est un \emph{vecteur} (ou, simplement, une \emph{liste}).
+
+		Un tableau bidimensionnel est une \emph{matrice}. 
+
+		Au-delà, on parle de \emph{tenseur d'ordre $N$} pour un tableau de $N$ dimensions.
+	\end{definition}
+	\vfill
+
+	Les éléments du tableau sont stockés dans la mémoire de l'ordinateur les uns à la suite des autres et de façon contiguë. Un tableau est défini par :
+	\begin{itemize}
+		\item le type de ses éléments ;
+		\item sa taille, c'est-à-dire le nombre de dimensions et leurs tailles;
+		\item son adresse mémoire (l'adresse de son premier élément).
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Tableaux multidimensionnels en Julia}
+	En Julia, on utilise les crochets \jl{[]} pour définir un tableau. Les éléments sont séparés par des points-virgules : un point-virgule pour séparer les éléments selon la dimension 1, deux points-virgules selon la dimension 2, trois selon la dimension 3, etc. :
+	\begin{repl}
+		£\jlREPL£ a = [1; 2 ;; 3; 4 ;; 5; 6  ;;;  7; 8 ;; 9; 10 ;; 11; 12]
+		2×3×2 Array{Int64, 3}:
+		[:, :, 1] =
+		 1  3  5
+		 2  4  6
+		
+		[:, :, 2] =
+		 7   9  11
+		 8  10  12
+	\end{repl}
+
+	La première dimension correspond aux \emph{colonnes} du tableau, la seconde aux \emph{lignes}. Une dimension peut être vide.
+\end{frame}
+
+\begin{frame}[fragile]{Tableaux multidimensionnels en Julia}
+	La ligne \jl{2×3×2 Array{Int64, 3}:} signifie que :
+	\begin{itemize}
+		\item \jl{3} : le tableau a trois dimensions (s'obtient avec \jl{ndims});
+		\item \jl{Int64} : les éléments du tableau sont des entiers représentés sur 64 bits (s'obtient avec \jl{eltype});
+		\item \jl{2×3×2} : les trois dimensions ont pour tailles respectives 2, 3 et 2 (s'obtient avec \jl{size}).
+	\end{itemize}
+	\vfill
+
+	Le nombre d'éléments du tableau s'obtient avec \jl{length} :
+	\begin{repl}
+		£\jlREPL£ length(a)
+		12
+	\end{repl}
+
+	Il s'agit simplement du produit des tailles des dimensions :
+	\begin{repl}
+		£\jlREPL£ prod(size(a))
+		12
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Vecteurs et matrices}
+	Une matrice peut être déclarée ligne par ligne en utilisant séparant les colonnes par des espaces et les lignes par des points-virgules :
+	\begin{repl}
+		£\jlREPL£ [12 24 48; 1.5 2.5 3.5]
+		2×3 Matrix{Float64}:
+		 12.0  24.0  48.0
+		  1.5   2.5   3.5
+	\end{repl}
+
+	On peut inclure un saut de ligne pour écrire une telle matrice proprement :
+	\begin{julia}
+		[ 12  24  48;
+		 1.5 2.5 3.5]
+	\end{julia}
+	\vfill
+	
+	Un vecteur peut être déclaré en séparant ses éléments par des virgules (à la place de points-virgules) :
+	\begin{repl}
+		£\jlREPL£ x = [2, 4]
+		2-element Vector{Int64}:
+		 2
+		 4
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Définition par compréhension}
+	Un tableau peut être défini par \emph{compréhension}, c'est-à-dire en donnant une formule pour calculer chacun de ses éléments.
+
+	La syntaxe générale est \jl{[£\expra{elem}\!\!\!£ for x in £\expra{iter}\!\!\!£ if £\bexpr\!\!\!£]} où :
+	\begin{itemize}
+		\item \expra{iter} est un ensemble de valeurs possibles pour \jl{x} ;
+		\item les valeurs de \jl{x} pour lesquelles \bexpr est \jl{false} sont éliminées ;
+		\item les valeurs de \expra{elem} selon \jl{x} sont les éléments du tableau.
+	\end{itemize}
+	\vspace{1em}
+
+	Le sous-bloc \jl{if} est optionnel. Exemples :
+	\begin{repl}
+		£\jlREPL£ [2*(i+3) for i in 0:20 if i%8 == 0]
+		3-element Vector{Int64}:
+		  6
+		 22
+		 38
+
+		£\jlREPL£ [2*i + j/10 for i in [4,5], j in 1:7] # multidimensional¨
+		2×7 Matrix{Float64}:
+		  8.1   8.2   8.3   8.4   8.5   8.6   8.7
+		 10.1  10.2  10.3  10.4  10.5  10.6  10.7
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Accès aux éléments d'un tableau}
+	\begin{alertblock}{Important}
+		Les indices des tableaux en Julia commencent à \textbf{1} !
+	\end{alertblock}
+
+	Les éléments d'un tableau s'accèdent avec les crochets, en donnant un indice par dimension, séparés par des virgules :
+	\begin{repl}
+		£\jlREPL£ a[2,1,2]
+		8
+	\end{repl}
+
+	Il est aussi possible d'accéder à un élément par son unique indice dans la représentation plate du tableau (en oubliant les dimensions) :
+	\begin{repl}
+		£\jlREPL£ a[8]
+		8
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Accès aux éléments d'un tableau}
+	Un sous-tableau peut être extrait en spécifiant les indices à extraire :
+	\begin{repl}
+		£\jlREPL£ a
+		2×3×2 Array{Int64, 3}:
+		[:, :, 1] =
+		 1  3  5
+		 2  4  6
+		
+		[:, :, 2] =
+		 7   9  11
+		 8  10  12
+
+		£\jlREPL£ a[2, 2:3, [1]] # 2:3 is the interval $\brack{2,3}$
+		2×1 Matrix{Int64}:
+		 4
+		 6
+	\end{repl}
+
+	Si un des indices n'est pas un ensemble d'indice (le premier indice dans l'exemple), la dimension correspondante est supprimée.
+\end{frame}
+
+\begin{frame}[fragile]{Accès aux éléments d'un tableau}
+	Au sein de crochets, le mot-clé \jl{end} désigne le dernier indice selon l'axe :
+	\begin{repl}
+		£\jlREPL£ a[2,end,1]
+		6
+		
+		£\jlREPL£ a[1:end, 3, 1]
+		2-element Vector{Int64}:
+		 5
+		 6
+	\end{repl}
+
+	la plage d'indices \jl{1:end}, qui sélectionne un axe entier, peut être remplacée par un simple \jl{:} :
+	\begin{repl}
+		£\jlREPL£ a[:, 3, 1]
+		2-element Vector{Int64}:
+		5
+		6
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Affectation des éléments d'un tableau}
+	Un élément peut être affecté comme si c'était une variable :
+	\begin{repl}
+	£\jlREPL£ a[8] = -49
+	-49
+
+	£\jlREPL£ a
+	2×3×2 Array{Int64, 3}:
+	[:, :, 1] =
+	 1  3  5
+	 2  4  6
+
+	[:, :, 2] =
+	  7   9  11
+	-49  10  12
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Type d'un tableau}
+	Le type d'un tableau est \jl{Array{T,N}} où \jl{T} est le type des éléments et \jl{N} est le nombre de dimensions.
+
+	\begin{alertblock}{Important}
+		Le type d'une valeur ne peut pas changer !
+
+		Par conséquent, un tableau ne peut pas changer le nombre de ses dimensions, ni le type de ses éléments :\vspace{-0.6em}
+		\begin{minted}[xleftmargin=20pt]{julia}
+			£\jlREPL£ a[8] = 12.6
+			ERROR: InexactError: Int64(12.6)
+			Stacktrace:
+			 [1] Int64
+			  @ ./float.jl:994 [inlined]
+			 [2] convert
+			  @ ./number.jl:7 [inlined]
+			 [3] setindex!(A::Array{Int64, 3}, x::Float64, i::Int64)
+			  @ Base ./array.jl:976
+		\end{minted}
+	\end{alertblock}
+
+	Note : le type d'une variable, lui, peut changer (mais c'est à éviter).
+\end{frame}
+
+\begin{frame}[fragile]{Type d'un tableau}
+	Le type des éléments d'un tableau peut être précisé à sa création, en le plaçant juste avant les crochets :
+	\begin{repl}
+		£\jlREPL£ Float64[2, 5]
+		2-element Vector{Float64}:
+		 2.0
+		 5.0
+	\end{repl}
+	\vfill
+
+	S'il n'est pas précisé, le type le plus précis qui peut représenter les éléments du tableau est utilisé. Si le tableau est vide, ou qu'il n'y a pas de type précis pour ses éléments, le type par défaut est \jl{Any}, qui peut représenter toutes les valeurs :
+	\begin{repl}
+		£\jlREPL£ ["Nebuchadnezzar", 4, π]
+		3-element Vector{Any}:
+		  "Nebuchadnezzar"
+		 4
+		 π = 3.1415926535897...
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Redimensionnement des vecteurs}
+	Seuls les vecteurs peuvent changer de taille, pas les tableaux multidimensionnels. On utilise pour cela les fonctions \jl{push!} pour ajouter un ou des éléments à la fin, et \jl{pop!} pour enlever le dernier élément :
+	\begin{repl}
+		£\jlREPL£ push!(x, 17, 23)
+		4-element Vector{Int64}:
+		  2
+		  4
+		 17
+		 23
+		
+		£\jlREPL£ x == Int[2, 3, 17, 23]
+		true
+		
+		£\jlREPL£ pop!(x)
+		23
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Concaténation}
+	Il est possible de \emph{concaténer} des tableaux, c'est-à-dire de mettre leurs éléments dans un \underline{nouveau} tableau. On utilise pour cela les fonctions de la famille \jl{cat}: \jl{vcat}, \jl{hcat}, \jl{hvcat}, \jl{hvncat}. On peut aussi utiliser la syntaxe des tableaux multidimensionnels (qui en fait appelle \jl{hvncat}) :
+	\begin{repl}
+		£\jlREPL£ [[1, 2]; [3]] # along dimension 1
+		3-element Vector{Int64}:
+		 1
+		 2
+		 3
+
+		£\jlREPL£ [[1, 2, 3];; [4, 5, 6]] # along dimension 2
+		3×2 Matrix{Int64}:
+		 1  4
+		 2  5
+		 3  6
+	\end{repl}
+
+	La fonction \jl{stack} est utile pour transformer un tableau de tableaux en tableau multidimensionnel.
+\end{frame}
+
+\begin{frame}[fragile]{Diffusion}
+	En Julia, pour calculer le résultat de l'appel d'une fonction sur chaque élément d'un tableau, il est possible d'utiliser le mécanisme de \emph{diffusion} (\textit{broadcasting}) grâce à la ``syntaxe point'' (\textit{dot syntax}) qui consiste à ajouter un point entre le nom de fonction et la parenthèse de l'appel, ou juste avant le symbole d'un opérateur:
+	\vspace{1em}
+
+	\begin{repl}
+		£\jlREPL£ typeof.(["Nebuchadnezzar", 4, π])
+		3-element Vector{DataType}:
+		 String
+		 Int64
+		 Irrational{:π}
+
+		£\jlREPL£ x = [2*i for i in 1:4]; 2 .* x .+ 3
+		4-element Vector{Int64}:
+		  7
+		 11
+		 15
+		 19
+	\end{repl}
+\end{frame}
+
+\section{Chaînes de caractères}
+
+\begin{frame}[fragile]{Caractères}
+	\begin{definition}
+		\small
+		Un \emph{caractère} désigne l'unité élémentaire d'un texte : il peut s'agir d'une lettre, possiblement accentuée, un chiffre, une ponctuation, une espace, un symbole mathématique, un emoji, \ldots
+
+		Le standard \emph{Unicode} recense la liste des caractères représentable en informatique. Le sous-ensemble \emph{ASCII} est constitué de 128 caractères :
+		\begin{center}
+			\ssmall\verb.!"#\$\%\&'()*+,-.\verb!. /0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~!
+		\end{center}
+	\end{definition}
+
+	\small
+	En Julia, un caractère est une valeur de type \jl{Char} qui s'écrit entre deux guillemets simples :\vspace{-0.6em}
+	\begin{minted}[linenos=false,fontsize=\footnotesize]{julia}
+		£\jlREPL£ 'ℕ'
+		'ℕ': Unicode U+2115 (category Lu: Letter, uppercase)
+		
+		£\jlREPL£ Int('ℕ') == Int(0x2115) == 8469 # Unicode number of 'ℕ'
+		true
+		
+		£\jlREPL£ Char(8469) == Char(0x2115) == '\U2115' == 'ℕ' 
+		true
+	\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Encodage UTF-8 des caractères}
+	\begin{definition}
+		L'\emph{encodage} d'un caractère est la séquence de bits qui le représente.
+	\end{definition}
+	Julia utilise l'encodage UTF-8, qui est le plus répandu. Cet encodage utilise 1 octet pour représenter chaque caractère ASCII, et entre 2 et 4 octets pour les autres :
+	\begin{repl}
+		£\jlREPL£ ncodeunits('\n') # ASCII (newline character)
+		1
+		
+		£\jlREPL£ ncodeunits('é')  # non-ASCII
+		2
+		
+		£\jlREPL£ ncodeunits('♮')  # non-ASCII
+		3
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Chaîne de caractères}
+	\begin{definition}
+		Une \emph{chaîne de caractères} désigne simplement un texte.
+	\end{definition}
+	\vfill
+
+	En Julia, une chaîne de caractère est une valeur de type \jl{String}, qui s'écrit entre deux guillemets doubles :
+	\begin{repl}
+		£\jlREPL£ s = "⊂(≧ω≦)⊃"
+		"⊂(≧ω≦)⊃"
+
+		£\jlREPL£ length(s) # number of characters in s
+		7
+
+		£\jlREPL£ ncodeunits(s) # number of bytes in s
+		16
+
+		£\jlREPL£ typeof(s)
+		String
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Indexation d'une chaîne de caractères}
+	Un caractère peut s'obtenir en indexant la chaîne par sa position :\vspace{-0.6em}
+	\begin{minted}[linenos=false,fontsize=\footnotesize]{julia}
+		£\jlREPL£ s = "⊂(≧ω≦)⊃";
+
+		£\jlREPL£ s[1]
+		'⊂': Unicode U+2282 (category Sm: Symbol, math)
+
+		£\jlREPL£ s[2] # only starting character positions are valid!
+		ERROR: StringIndexError: invalid index [2], valid nearby
+		indices [1]=>'⊂', [4]=>'('
+		Stacktrace:
+		 [1] string_index_err(s::String, i::Int64)
+		   @ Base ./strings/string.jl:12
+		 [2] getindex_continued(s::String, i::Int64, u::UInt32)
+		   @ Base ./strings/string.jl:472
+		 [3] getindex(s::String, i::Int64)
+		   @ Base ./strings/string.jl:464
+		 [4] top-level scope
+		   @ REPL[150]:1
+		   
+		£\jlREPL£ ncodeunits('⊂')
+		3
+	\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Indexation d'une chaîne de caractères}
+	Une \jl{String} peut être considérée comme un tableau de caractères (aux indices près pour les chaînes non-ASCII). On peut donc extraire des sous-chaînes de caractères avec la même syntaxe :
+	\begin{repl}
+		£\jlREPL£ s = "⊂(≧ω≦)⊃"; s[1:4]
+		"⊂("
+	\end{repl}
+	\vfill
+
+	Pour trouver les indices valides, on utilise les fonctions \jl{nextind}, \jl{prevind} et \jl{thisind}, par exemple :
+	\begin{repl}
+		£\jlREPL£ nextind(s, 1) # next valid index after 1
+		4
+	\end{repl}
+	\vfill
+
+	Le mot-clé \jl{end} entre crochets désigne toujours le dernier indice :
+	\begin{repl}
+		£\jlREPL£ s[end]
+		'⊃': Unicode U+2283 (category Sm: Symbol, math)
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Itération sur une chaîne de caractères}
+	Un moyen plus simple d'obtenir les caractères d'une chaîne consiste à itérer directement sur la chaîne :
+	\begin{repl}
+		£\jlREPL£ for c in "≧ω≦"; println(c); end
+		≧
+		ω
+		≦
+	\end{repl}
+	\vfill
+
+	La fonction \jl{collect} permet de transformer n'importe quel itérateur en \jl{Array}. On peut aussi utiliser une compréhension :\vspace{-0.4em}
+	\begin{minted}[linenos=false,fontsize=\footnotesize]{julia}
+		£\jlREPL£ collect("≧ω≦") == [c for c in "≧ω≦"] == ['≧', 'ω', '≦']
+		true
+	\end{minted}
+	\vfill
+
+	Il est aussi possible de garder les indices avec \jl{pairs} :
+	\begin{repl}
+		£\jlREPL£ for (i, c) in pairs("≧ω≦"); println(i, " : ", c); end
+		1 : ≧
+		4 : ω
+		6 : ≦
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Opérations sur les chaînes de caractères}
+	Une chaîne de caractère ne ne peut pas être modifiée :
+	\begin{repl}
+		£\jlREPL£ "abc"[2] = 'i'  # forbidden
+		ERROR: MethodError:[...]
+	\end{repl}
+
+	Il est en revanche possible de créer une nouvelle \jl{String} en \emph{concaténant} deux chaîne de caractères avec l'opérateur \jl{*} :
+	\begin{repl}
+		£\jlREPL£ "abc" * "xyz"  # string concatenation
+		"abcxyz"
+	\end{repl}
+
+	Plus généralement, la fonction \jl{string} (en minuscules) permet de créer une chaîne de caractères à partir de n'importes quelles valeurs :
+	\begin{repl}
+		£\jlREPL£ string(42, '*', 2/3, "\t=\n28 !")
+		"42*0.6666666666666666\t=\n28 !"
+	\end{repl}
+
+	Attention : créer une \jl{String} n'est pas la même chose que l'afficher ! Pour afficher des valeurs, on utilise la fonction \jl{println} :\vspace{-0.5em}
+	\begin{minted}[linenos=false]{julia}
+		£\jlREPL£ println(42, '*', 2/3, "\t=\n28 !")
+		42*0.6666666666666666   =
+		28 !
+	\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Opérations sur les chaînes de caractères}
+	La fonction \jl{split} permet de découper une \jl{String} autour d'une sous-chaîne ou d'un caractère donné. \jl{join} fait l'opération inverse :
+	\begin{repl}
+		£\jlREPL£ t = split("What a wonderful world!", 'w')
+		3-element Vector{SubString{String}}:
+		 "What a "
+		 "onderful "
+		 "orld!"
+
+		£\jlREPL£ pop!(t) # pop! returns the last element and removes it
+		"orld!"
+
+		£\jlREPL£ join(t, "|W>")
+		"What a |W>onderful "
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Interpolation}
+	Un moyen pratique pour inclure la valeur d'une expression dans une \jl{String} consiste à l'\emph{interpoler}, c'est-à-dire précéder l'expression d'un symbole \mintinline{julia}|$| dans la \jl{String} :
+	\begin{minted}[linenos=false]{julia}
+		£\jlREPL£ x = 12;
+
+		£\jlREPL£ s = "The value of x is $x. Next is $(x+1) !"
+		"The value of x is 12. Next is 13 !"
+	\end{minted}
+	\vfill
+
+	Cette syntaxe est équivalente à un appel à \jl{string} :
+	\begin{repl}
+		£\jlREPL£ string("The value of x is ", x, ". Next is ", x+1, " !")
+		"The value of x is 12. Next is 13 !"
+	\end{repl}
+	\vfill
+
+%	\begin{alertblock}{Performance}
+%		Si la \jl{String} a seulement pour vocation d'être affichée, mieux vaut directement passer les arguments à \jl{println} que de créer la \jl{String} avec interpolation ou \jl{string}, cela évitera une allocation supplémentaire.
+%	\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Lecture de valeurs}
+	Une valeur numérique peut être lue depuis une chaîne de caractères avec la fonction \jl{parse}, à laquelle il faut donner le type numérique attendu :
+	\begin{repl}
+		£\jlREPL£ parse(Int, "3")
+		3
+
+		£\jlREPL£ parse(Float64, "3")
+		3.0
+	\end{repl}
+
+	Si la \jl{String} n'est pas lisible, \jl{parse} lance une erreur. On peut utiliser \jl{tryparse} à la place, qui renvoie \jl{nothing} si la lecture est impossible :
+	\begin{repl}
+		£\jlREPL£ tryparse(Int, "12")
+		12
+
+		£\jlREPL£ x = tryparse(Int, "12.5") # returns nothing
+		
+		£\jlREPL£ x == nothing
+		true
+	\end{repl}
+\end{frame}
+
+\section{Ensembles et dictionnaires}
+
+\begin{frame}[fragile]{Dictionnaires}
+	\begin{definition}
+		Un \emph{dictionnaire} est un ensemble de paires (clé, valeur).
+	\end{definition}
+
+	En Julia, les dictionnaires sont de type \jl{Dict{K,V}} avec \jl{K} le type des clés et \jl{V} le type des valeurs. Les paires elles-mêmes sont de type \jl{Pair{K,V}} et représentées sous la forme \jl{key => value}.
+
+	On utilise les crochets sur un dictionnaire pour accéder aux valeurs à partir des clés, ou pour affecter une valeur à une clé :
+	\begin{repl}
+		£\jlREPL£ d = Dict("hello" => 2, "goodbye" => 0)
+		Dict{String, Int64} with 2 entries:
+		  "goodbye" => 0
+		  "hello"   => 2
+
+		£\jlREPL£ d["goodbye"]  # access key "goodbye" from Dict d
+		0
+
+		£\jlREPL£ d["hey"] = 1  # or equivalently: push!(d, "hey" => 1)
+		1
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Dictionnaires}
+	Quelques fonctions utiles :
+	\begin{itemize}
+		\item \jl{haskey(d, k)} renvoie \jl{true} si la clé \jl{k} a une valeur dans \jl{d}
+		\item \jl{get(d, k, default)} renvoie \jl{d[k]} si la clé \jl{k} existe dans \jl{d}, sinon renvoie \jl{default}
+		\item \jl{delete!(d, k)} enlève la clé \jl{k} du dictionnaire.
+	\end{itemize}
+	\vspace{0.5em}
+
+	Il est possible d'itérer sur un dictionnaire :
+	\begin{repl}
+		£\jlREPL£ for (k, v) in d; println(k, " : ", v); end
+		goodbye : 0
+		hello : 2
+		hey : 1
+	\end{repl}
+
+	Comme tout itérateur, on peut aussi le transformer en \jl{Array} avec \jl{collect} ou par compréhension. Le type des éléments du tableau sera \jl{Pair{K,V}}.
+\end{frame}
+
+\begin{frame}[fragile]{Ensembles}
+	On peut construire un \emph{ensemble} de valeurs de type \jl{K} avec le type \jl{Set{K}}, le manipuler avec \jl{push!} et \jl{delete!}, et l'inspecter avec \jl{in} :
+	\begin{repl}
+		£\jlREPL£ s = Set() # untyped empty set
+		Set{Any}()
+
+		£\jlREPL£ push!(s, 13) # add an element to the set
+		Set{Any} with 1 element:
+		  13
+
+		£\jlREPL£ push!(s, 13) # adding an existing element does nothing
+		Set{Any} with 1 element:
+		  13
+
+		£\jlREPL£ 13 in s # check whether an element is present
+		true
+
+		£\jlREPL£ delete!(s, 13); # remove an element
+	\end{repl}
+
+	On peut aussi itérer sur un \jl{Set}.
+\end{frame}
+
+%\begin{frame}[fragile]{}
+%	\begin{itemize}
+%		\item Un point-virgule. Exemple : \jl|£\expra1£; £\expra2£|
+%		\item Un caractère de fermeture de bloc : \jl{)}, \jl{]}, \jl|}| ou \jl{end}. L
+%		\item Un retour à la ligne
+%	\end{itemize}
+%	\begin{definition}
+%		Un \emph{programme} est une suite d'instruction qui sert à exécuter un calcul.
+%	\end{definition}
+%	En Julia, tout morceau de code complet (\textit{i.e.} exécutable) est aussi une expression. Exemples plus tard.
+%\end{frame}
+
+
+
+%\begin{frame}[fragile]{Environnement de développement}
+%	Comme en Python, il existe deux façons d'exécuter du code Julia :
+%	\begin{enumerate}
+%		\item Exécuter un fichier avec \texttt{julia}:
+%		\begin{jlcode}
+%			x = 1+4
+%		\end{jlcode}
+%	note that \mintinline{julia}|x = 2+3|
+%	
+%	\begin{jlcode}
+%		using Base.ScopedValues
+%		import Base.Threads: @spawn
+%		
+%		const scoped_val = ScopedValue(1)
+%		@sync begin
+%			with(scoped_val => 2) do
+%				@spawn @show scoped_val[] # 2
+%			end
+%			if £code écrit en \LaTeX: $\left<\frac12\right>$£
+%				# $f(x) = \sum_{i=1}^xx$
+%				println(s"fooγ₀µ$bar.2$qux")
+%			end
+%		end
+%	\end{jlcode}
+%	\end{enumerate}
+%\end{frame}
+
+\end{document}

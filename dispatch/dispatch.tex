@@ -1,0 +1,742 @@
+\documentclass[12pt, aspectratio=141]{beamer}
+
+\definecolor{jrouge}{HTML}{CB3C33}
+\definecolor{jvert}{HTML}{389826}
+\definecolor{jbleu}{HTML}{4063D8}
+\definecolor{jviolet}{HTML}{9558B2}
+\definecolor{lightred}{HTML}{fcf3f3}
+\definecolor{lightgreen}{HTML}{e1f6db}
+\definecolor{lightpurple}{HTML}{f4eef7}
+\definecolor{lightgrey}{gray}{0.95}
+
+\mode<presentation>
+{
+	\usetheme{default}
+	\usecolortheme{rose}
+	%	\useoutertheme{smoothbars}
+	\useinnertheme{circles}
+	
+	\definecolor{beamer@blendedblue}{HTML}{4063D8}
+	%\definecolor{titlemustard}{rgb}{0.6,0.6,0.0}
+	%\setbeamercolor{title}{bg=titlemustard}
+	\setbeamercolor{normal text}{fg=black}
+	\setbeamercolor{alerted text}{fg=jrouge}
+	\setbeamerfont{title}{shape=\bfseries}
+	\setbeamercolor{example text}{fg=jvert}
+	
+	%\setbeamercolor{structure}{fg=beamer@blendedblue}
+	\setbeamertemplate{navigation symbols}{}
+	\setbeamertemplate{footline}{\color{black!50}\hfill\scriptsize\insertpagenumber\hspace{2em}\vspace{2em}}
+}
+
+\usepackage{natbib}
+%\renewcommand{\citenumfont}[1]{{\tiny#1}}
+\renewcommand{\citenumfont}[1]{}
+\bibpunct{}{};s;;
+
+\usepackage[french]{babel}
+\usepackage[mathletters]{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+% Alternative for XeLaTeX:
+%\usefonttheme{professionalfonts}
+%\usepackage{fontspec}
+%\setmonofont{JuliaMono}
+%\setdefaultlanguage{french}
+%\usepackage{unicode-math}
+
+\usepackage{subcaption}
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{soul}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{bbm}
+\usepackage{svg}
+
+\usepackage{tikz}
+\usetikzlibrary{scopes, backgrounds, arrows, automata, positioning, patterns, calc, decorations.pathmorphing, decorations.pathreplacing, arrows.meta}
+
+\usepackage{hyperref}
+\usepackage{ragged2e}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{aeguill}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{stmaryrd}
+\usepackage{moresize}
+
+\newcommand{\llbra}{\left\llbracket}
+\newcommand{\rrbra}{\right\rrbracket}
+\renewcommand{\brack}[1]{\ensuremath{\llbra#1\rrbra}}
+\newcommand{\der}[2]{#1^{\ensuremath{\left(#2\right)}}}
+\newcommand{\paren}[1]{\ensuremath{\left(#1\right)}}
+\newcommand{\abs}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\interval}[1]{\ensuremath{\left[#1\right]}}
+\newcommand{\set}[2]{\ensuremath{\left\{#1\,\middle|\,#2\right\}}}
+\newcommand{\cont}[1]{\mathcal{C}^{#1}}
+\newcommand{\tends}[2]{\underset{#1\to #2}{\longrightarrow}}
+\newcommand{\seq}[3]{\ensuremath{\left(#1_{#2}\right)_{#2\in#3}}}
+\newcommand{\matr}[2]{\mathcal{M}_{#1}\paren{#2}}
+\newcommand{\matrRect}[3]{\mathcal{M}_{#1,#2}\paren{#3}}
+\newcommand{\Id}{\text{Id}}
+\newenvironment{disj}[1]{\left\{\begin{array}{#1}} {\end{array}\right.}
+
+
+\newenvironment{changemargin}[2]{%
+	\begin{list}{}{%
+			%\setlength{\topsep}{0pt}%
+			\setlength{\leftmargin}{#1}%
+			\setlength{\rightmargin}{#2}%
+			\setlength{\listparindent}{\parindent}%
+			\setlength{\itemindent}{\parindent}%
+			\setlength{\parsep}{\parskip}%
+		}%
+		\item[]}{\end{list}}
+
+\defbeamertemplate{section page}{mruffel}[1][]{%
+	\begin{centering}
+		{\usebeamerfont{section name}\usebeamercolor[fg]{section name}#1
+			\vskip1em\par
+			
+			\begin{beamercolorbox}[sep=12pt,center,rounded=true,shadow=true]{part title}
+				\usebeamerfont{section title}\insertsection\par
+		\end{beamercolorbox}}
+	\end{centering}
+}
+
+
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+\pgfdeclareimage[height=0.5cm]{Mines}{../figures/Mines.pdf}
+\logo{\begin{tikzpicture}[overlay,remember picture]
+		\node[left=0.2cm] at (current page.31){
+			\pgfuseimage{Mines}
+		};
+\end{tikzpicture}}
+
+
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+%\AtBeginSubsection[]
+%{
+	%  \begin{frame}<beamer>
+		%    \tableofcontents[currentsection,currentsubsection]
+		%  \end{frame}
+	%}
+
+\AtBeginSection[]
+{
+	\begin{frame}
+		\sectionpage
+	\end{frame}
+}
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+
+%\beamerdefaultoverlayspecification{<+->}
+
+\usepackage{minted}
+\usemintedstyle{paraiso-light}
+\setminted[julia]{mathescape,linenos,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightred,escapeinside=££}
+\setminted[bash]{mathescape,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightgrey,escapeinside=££}
+
+\usepackage{lmodern}
+%\newcommand{\jl}[1]{\colorbox{lightred}{\small\ttfamily #1}}
+\newmintinline[jl]{julia}{}
+\newmintinline[jlscript]{julia}{fontsize=\scriptsize}
+\newmint[JL]{julia}{}
+\newmint[JLa]{julia}{linenos=false}
+\newminted{julia}{}
+\newenvironment{julia}{\vspace{-0.6em}\VerbatimEnvironment\begin{juliacode}}{\end{juliacode}}
+\newminted[jlrepl]{julia}{linenos=false}
+\newenvironment{repl}{\vspace{-0.6em}\VerbatimEnvironment\begin{jlrepl}}{\end{jlrepl}}
+\newcommand{\q}{\textquotesingle}
+\newcommand{\qq}{\textquotedbl}
+\newcommand{\jlREPL}{\textcolor{jvert}{\bfseries julia>}}
+
+\DeclareTextFontCommand{\emph}{\color{jrouge}\bfseries}
+
+\newenvironment<>{definition}[1]{%
+	\setbeamercolor{block title}{bg=lightgreen}%
+	\begin{block}{Définition}{#1}}{\end{block}}
+
+\newenvironment<>{convention}[1]{%
+	\setbeamercolor{block title}{bg=lightpurple}%
+	\begin{block}{Convention}{#1}}{\end{block}}
+
+\usepackage{xspace}
+\newcommand{\expr}{\ensuremath{\left\langle\textit{expr}\right\rangle}\xspace}
+\newcommand{\expra}[1]{\ensuremath{\left\langle\textit{expr}_{#1}\right\rangle}\xspace}
+\newcommand{\bexpr}{\ensuremath{\left\langle\textit{bexpr}\right\rangle}\xspace}
+\newcommand{\bexpra}[1]{\ensuremath{\left\langle\textit{bexpr}_{#1}\right\rangle}\xspace}
+\newcommand{\type}{\ensuremath{\left\langle\textit{type}\right\rangle}\xspace}
+\newcommand{\typea}[1]{\ensuremath{\left\langle\textit{type}_{#1}\right\rangle}\xspace}
+
+
+\title{Apprentissage de la programmation en Julia}
+
+\subtitle{Hiérarchie des types et dispatch multiple}
+
+\author{Lionel~Zoubritzky\inst{}}
+
+\institute{Mines Paris -- PSL}
+
+\date{11/2024}
+
+\begin{document}
+	\setbeamertemplate{section page}[mruffel]
+	
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\section{Sous-typage}
+
+\begin{frame}{Relation de sous-typage}
+	\begin{definition}
+		Il existe une relation d'ordre sur les types, notée \jl{<:} et appelée relation de \emph{sous-typage}.
+	\end{definition}
+	\vfill
+
+	Comme toute relation d'ordre, la relation de sous-typage est
+	\begin{itemize}
+		\item Réflexive : pour tout type \jl{T}, \jl{T <: T}.
+		\item Transitive : si \jl{T <: S} et \jl{S <: R} alors \jl{T <: R}.
+		\item Antisymétrique : si \jl{T <: S} et \jl{S <: T} alors \jl{S == T}.
+	\end{itemize}
+	\vfill
+
+	De plus, \jl{<:} dispose d'un élémént maximal, \jl{Any}, et d'un élément minimal, \jl{Union{}}. En d'autres termes, \jl{Union{}} est un sous-type de n'importe quel autre type, et tout type est un sous-type de \jl{Any}.
+\end{frame}
+
+\begin{frame}[fragile]{Opérateur \texttt{isa}}
+	L'opérateur \jl{isa} (lire ``\textit{is a}'') permet de savoir si une valeur est l'instance d'un type. Il est défini par la relation :
+	\[\jl{x isa T} \Leftrightarrow \jl{typeof(x) <: T}\]
+	
+	Exemples :
+	\begin{repl}
+		£\jlREPL£ 37.5 isa Float64
+		true
+
+		£\jlREPL£ 37.5 isa Int
+		false
+
+		£\jlREPL£ 37.5 isa Any  # true of all values
+		true
+
+		£\jlREPL£ 37.5 isa Union{Float64,String}
+		true
+	\end{repl}
+	
+	%	\begin{convention}
+		%		Pour savoir si une valeur est l'instance d'un type, on préfère utiliser \jl{£\expr{}£ isa £\type{}£} plutôt que \jl{typeof(£\expr{}£) == £\type{}£}
+		%	\end{convention}
+\end{frame}
+
+\begin{frame}{Relation de sous-typage}
+	Le sous-typage peut se voir comme une relation d'inclusion dans l'interprétation ensembliste des types :
+	\begin{itemize}
+		\item \jl{Any} représente l'univers, l'ensemble de tous les types.
+		\item Pour tout type \jl{T} on a la propriété : \jl{T <: Union{T, ...}}.
+		\item \jl{Union{}} représente l'ensemble vide.
+	\end{itemize}
+	\vfill
+
+	Le sous-typage vérifie aussi la propriété que pour tout type paramétrique \jl{SomeType}, \jl{SomeType{...} <: SomeType}. On a par conséquent la hiérarchie \jl{Array{Int,3} <: Array{Int} <: Array}, et de même pour tout type avec plusieurs paramètres.
+\end{frame}
+
+\begin{frame}[fragile]{Types abstraits et super-type}
+	Lors de la définition d'un type composite, il est possible de spécifier un \emph{super-type} avec le symbole \jl{<:} :
+	\begin{julia}
+		struct HalfInteger <: AbstractRational
+			n::Int
+		end
+	\end{julia}
+	\vfill
+
+	Le super-type doit préalablement avoir été introduit avec le mot-clé \jl{abstract type} :
+	\begin{julia}
+		abstract type AbstractRational end
+	\end{julia}
+	\vfill
+
+	\begin{definition}
+		Un type introduit par \jl{abstract type} est un \emph{type abstrait}.
+	\end{definition}
+	\vfill
+
+	Un type abstrait peut lui-même avoir un super-type :
+	\begin{julia}
+		abstract type AbstractRational <: Number end
+	\end{julia}
+\end{frame}
+
+\begin{frame}[fragile]{Types abstraits et super-type}
+	Un type n'a qu'un seul super-type immédiat : c'est celui introduit par \jl{<:}. Celui-ci peut être obtenu avec la fonction \jl{supertype} :
+	\begin{repl}
+		£\jlREPL£ supertype(Float64)
+		AbstractFloat
+	\end{repl}
+
+	Comme \jl{Any} est maximal pour \jl{<:}, il existe une hiérarchie de super-types qui remonte à \jl{Any} à partir de n'importe quel type, en passant à chaque fois par le super-type immédiat. Celle-ci peut être obtenue avec \jl{supertypes} :
+	\begin{repl}
+		£\jlREPL£ supertypes(Int)
+		(Int64, Signed, Integer, Real, Number, Any)
+	\end{repl}
+
+	Chaque type abstrait peut avoir un nombre quelconque de sous-types immédiats. Ceux-ci s'obtiennent avec \jl{subtypes} :
+	\begin{repl}
+		£\jlREPL£ subtypes(Integer)
+		3-element Vector{Any}:
+		 Bool
+		 Signed
+		 Unsigned
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Contraintes sur les variables de types}
+	La relation de sous-typage peut servir à contraindre les valeurs possibles de certaines variables de types. Ces contraintes sont exprimées à l'endroit où la variable de type est déclarée.
+	\begin{itemize}
+		\item Dans un \jl{struct}, dans l'accolade suivant le nom du \jl{struct} :
+		\begin{julia}
+			struct HoldOneInteger{T<:Integer}
+				x::T
+			end
+		\end{julia}
+		
+		\item De même pour la définition d'un alias :
+		\begin{julia}
+			const IntegerArray{T<:AbstractInteger} = Array{T}
+		\end{julia}
+		
+		\item Dans les autres cas, dans l'accolade après le \jl{where} :
+		\begin{julia}
+			HomogeneousStringDict = Dict{T,T} where {T<:AbstractString}
+		\end{julia}
+	\end{itemize}
+	
+	Il est possible de spécifier une borne inférieure avec la syntaxe \jl{T>:LowerBound} ou bien deux bornes avec \jl{LowerBound<:T<:UpperBound}, mais il est rare de devoir exprimer ces contraintes.
+\end{frame}
+
+\begin{frame}[fragile]{Types abstraits paramétriques}
+	Les types abstraits peuvent avoir des paramètres de type, par exemple :
+	\begin{julia}
+		abstract type Polygon{NAngles, PositionTypes} end
+	\end{julia}
+	\vfill
+
+	Lors de sa déclaration, le super-type peut alors avoir ses variables de types remplacées par des types ou des valeurs \jl{bitstype}, comme tout autre type. Les variables de types déclarées par le \jl{struct} peuvent aussi être utilisées. Par exemple :
+	\begin{julia}
+		struct Triangle2D{T} <: Polygon{3, T}
+			xyz::NTuple{3, Tuple{T,T}}
+		end
+	\end{julia}
+
+	\begin{alertblock}{Piège}
+		Un type n'a qu'un seul super-type déclaré : par exemple, le super-type immédiat de \jl{Triangle2D{Int}} est \jl{Polygon{3,Int}}. Mais \jl{Triangle2D{Int}} a aussi pour super-type (implicite) \jl{Triangle2D}, qui n'a aucune relation de sous-typage avec \jl{Polygon{3,Int}}.
+	\end{alertblock}
+\end{frame}
+
+\begin{frame}[fragile]{Types abstraits paramétriques}
+	\begin{alertblock}{Piège important}
+		La relation de sous-typage est \emph{invariante} pour les paramètres des types \jl{struct} et des types abstraits. En d'autres termes, pour \jl{A} un type paramétrique composé ou bien abstrait :\vspace{-0.6em}
+		\[\jl{T <: S £$\not\Rightarrow$£ A{T} <: A{S}}\]\vspace{-1.6em}
+	\end{alertblock}
+
+	Par exemple, \jl{Vector{Int}} n'est pas un sous-type de \jl{Vector{Any}}. Pour le retenir, il suffit d'observer que dans ce cas particulier, les deux types sont concrets ce qui rend la relation de sous-typage impossible.
+
+	\begin{alertblock}{Attention}
+		La relation de sous-typage est en revanche \emph{covariante} pour les paramètres des \jl{Union} et \jl{Tuple}, pour lesquels on a :\vspace{-0.6em}
+		\[\jl{T <: S £$\Rightarrow$£ Union{T, X...} <: Union{S, X...}}\]\vspace{-1.6em}
+		\[\jl{T <: S £$\Rightarrow$£ Tuple{X..., T, Y...} <: Tuple{X..., S, Y...}}\]\vspace{-1em}
+	\end{alertblock}
+\end{frame}
+
+\begin{frame}{Règle diagonale}
+	\begin{definition}
+		\noindent\emph{Règle diagonale} : si une variable de type n'apparaît qu'en position covariante (c'est-à-dire comme paramètres de seulement \jl{Tuple} et d'\jl{Union}) et au moins deux fois, alors cette variable est \emph{diagonale} et ne peut représenter qu'un type \underline{concret} ou une valeur \jl{isbits}.
+	\end{definition}
+	
+	Exemples et contre-exemples :
+	\begin{itemize}
+		\item \jl{Tuple{T,T} where T} admet pour sous-type \jl{Tuple{Int,Int}} mais pas \jl{Tuple{Integer,Integer}} car \jl{Integer} n'est pas concret.
+		\item \jl{Dict{Integer,Integer} <: Dict{T,T} where T} car \jl{T} n'est pas en position covariante.
+		\item Dans \jl{Union{T, Tuple{T}, Vector{T}} where {T}}, la variable \jl{T} n'est pas diagonale car elle apparaît une fois en position invariante.
+	\end{itemize}
+	\vspace{1em}
+
+	\footnotesize La règle diagonale au-dessus est en fait simplifiée, voir documentation.
+\end{frame}
+
+\section{Dispatch multiple}
+
+\begin{frame}[fragile]{Type des arguments d'une fonction}
+	Rappel : lors de la déclaration des arguments d'une fonction, l'opérateur \jl{::} sert à contraindre leur type :
+	\begin{repl}
+		£\jlREPL£ half(x::AbstractFloat) = x/2;
+
+		£\jlREPL£ half(1.6)
+		0.8
+
+		£\jlREPL£ half(4)
+		ERROR: MethodError: no method matching half(::Int64)
+	\end{repl}
+
+	Il est possible de capturer des variables de type représentant des paramètres de types des arguments en utilisant le mot-clé \jl{where} après la déclaration des arguments :
+	\begin{repl}
+		£\jlREPL£ typeofarray(::Array{T,N}) where {T,N} = (T, N);
+
+		£\jlREPL£ typeofarray([14, 15])
+		(Int64, 1)
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Fonctions et méthodes}
+	En utilisant des contraintes de type différentes ou un nombre d'arguments différent, on peut définir plusieurs \emph{méthodes} correspondant à la même \emph{fonction}, c'est-à-dire avec le même nom :
+	\begin{repl}
+		£\jlREPL£ foo(n::Int) = n + 1;
+
+		£\jlREPL£ foo(s::String) = s * '.';
+
+		£\jlREPL£ foo(x, y) = x - y
+		foo (generic function with 3 methods)
+
+		£\jlREPL£ foo(12)
+		13
+
+		£\jlREPL£ foo("hello")
+		"hello."
+
+		£\jlREPL£ foo(12, 0.5)
+		11.5
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Signature}
+	\begin{definition}
+		Chaque méthode est identifiée par sa \emph{signature}, qui est un type \jl{Tuple} dont les paramètres sont les types des arguments acceptés par la méthode.
+		
+		Le premier paramètre de la signature est le type de la fonction elle-même.
+	\end{definition}
+
+	Par exemple, pour la méthode déclarée comme \jl{+(a::Int, b::Float64)}, sa signature est \jl{Tuple{typeof(+), Int, Float64}}.
+	\vfill
+
+	La signature reflète aussi les variables de type requise à la déclaration de la méthode. Par exemple, \jl{min(a::T, b::T) where T} a pour signature \jl{Tuple{typeof(min), T, T} where T}.
+	\vfill
+
+	Par abus de langage, on parlera parfois de ``signature'' pour désigner la ligne de définition de la méthode, par exemple \jl{min(a::T, b::T) where T}. Cette ligne contient en plus l'information du nom des arguments, qui est perdue dans la signature à proprement parler.
+\end{frame}
+
+\begin{frame}[fragile]{Signature}
+	Il est défini autant de méthodes que d'arguments optionnels plus 1 :
+	\begin{repl}
+		£\jlREPL£ foo(x, y::Int, z::Float64=0.3, k=2) = (x+y*z)/k
+		foo (generic function with 3 methods)
+		
+		£\jlREPL£ methods(foo)
+		# 3 methods for generic function "foo" from Main:
+		 [1] foo(x, y::Int64, z::Float64, k)
+		     @ REPL[35]:1
+		 [2] foo(x, y::Int64, z::Float64)
+		     @ REPL[35]:1
+		 [3] foo(x, y::Int64)
+		     @ REPL[35]:1
+		
+		£\jlREPL£ methods(foo)[2].sig
+		Tuple{typeof(foo), Any, Int64, Float64}
+	\end{repl}
+	
+	Les arguments nommés ne font pas partie de la signature.
+\end{frame}
+
+\begin{frame}[fragile]{Objet appelable}
+	En Julia, n'importe quel objet peut être appelé comme une fonction, pourvu qu'il existe une méthode dont la signature commence par le type de l'objet. Par exemple :
+	\begin{julia}
+		struct PlusN  # a custom struct
+			n::Int
+		end
+		
+		# create a method of signature Tuple{PlusN, Any}
+		function (pn::PlusN)(x)
+			x + pn.n
+		end
+		
+		pn = PlusN(12) # an instance of the custom struct
+		pn(8) # == 20  # the instance has been made callable
+	\end{julia}
+
+	Les fonctions usuelles ne sont qu'un cas particulier de cette constructions : chaque définition de fonction \jl{f} revient à créer un type singleton de la forme \jl{struct "typeof(f)" end} et à ajouter des méthodes dessus.
+\end{frame}
+
+\begin{frame}[fragile]{Dispatch multiple}
+	\begin{definition}
+		Lors d'un appel de fonction, la \emph{signature de l'appel} est le type du tuple des arguments de la fonction (hormis les arguments nommés). Le type de la fonction est ajouté comme premier argument de la signature de l'appel.
+
+		La signature d'un appel est toujours d'un type concret.
+	\end{definition}
+
+	Exemples :
+	\begin{itemize}
+		\item Dans l'expression \jl{min(2, 3.5)}, l'appel a pour signature \jl{Tuple{typeof(min), Int, Float64}}.
+		\item Dans l'expression \jl{parse(Float64, "3.6e12")}, l'appel a pour signature \jl{Tuple{typeof(parse), Type{Float64}, String}}.
+		\item Dans la construction de type \jl{Char(48)}, l'appel a pour signature \jl{Tuple{Type{Char}, Int}}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Dispatch multiple}
+	\begin{definition}
+		La méthode à exécuter lors d'un appel est choisie comme celle ayant la signature la plus spécifique, parmi toutes celles dont la signature de l'appel est un sous-type.
+
+		Le choix de la méthode à exécuter lors d'un appel dépend donc du type de \underline{tous} les arguments. On parle de \emph{dispatch multiple}.
+	\end{definition}
+	
+
+	\begin{repl}
+		£\jlREPL£ bar(_, _) = nothing; # no type requirement means ::Any
+
+		£\jlREPL£ bar(a::Number, b::Integer) = a*b;
+
+		£\jlREPL£ bar(x::Integer, _::Int) = x;
+
+		£\jlREPL£ bar(s::AbstractString, i::Int) = i;
+
+		£\jlREPL£ bar(-7, 3) # most specific is bar(x::Integer, _::Int)
+		-7
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Dispatch multiple}
+	La signature la plus spécifique n'est pas toujours bien définie : il peut y avoir \emph{ambiguïté} entre deux méthodes compatibles ou plus. Par exemple :
+	\begin{repl}
+		£\jlREPL£ qux(a::Real, b::Integer) = a + 2b;
+
+		£\jlREPL£ qux(x::Signed, y::Number) = y - x;
+
+		£\jlREPL£ qux(12, 7)
+		ERROR: MethodError: qux(::Int64, ::Int64) is ambiguous.
+		Candidates:
+		  qux(x::Signed, y::Number)
+		    @ Main REPL[2]:1
+		  qux(a::Real, b::Integer)
+		    @ Main REPL[1]:1
+		
+		Possible fix, define
+		  qux(::Signed, ::Integer)
+	\end{repl}
+
+	Une solution consiste à définir une méthode pour l'intersection des signatures, comme suggéré.
+\end{frame}
+
+\begin{frame}[fragile]{Piratage de type}
+	\begin{convention}
+		Le \emph{piratage de type} (\textit{type piracy}) consiste à créer une méthode dont la signature ne contient que des types définis ailleurs. Ceci est à proscrire.
+	\end{convention}
+
+	\begin{itemize}
+		\item Exemple 1 : définir \jl{Base.:/(a::Integer, b::Int) = a * inv(b)} comme nouvelle méthode de \jl{/} est un piratage de type, qui cause une ambiguïté sur un appel comme \jl{3 / 2}.
+		\item Exemple 2 : A définit une méthode \jl{Base.:-(s::String)}, tandis que B définit une méthode \jl{Base.:-(a::AbstractString)} qui fait autre chose. \jl{typeof(-)}, \jl{String} et \jl{AbstractString} ne sont pas définis dans A ni dans B donc il s'agit de piratage de type. Si les deux bibliothèques A et B sont utilisées en même temps, alors tout appel de \jl{-(::String)} dans le code de B se mettra à appeler la méthode définit en A au lieu de celle de B ! Cela peut causer des exceptions ou, plus grave, des faux résultats.
+	\end{itemize}
+\end{frame}
+
+\section{Interfaces}
+
+\begin{frame}[fragile]{Extensibilité -- \textit{duck typing}}
+	% rien de spécial, juste des appels de fonction à identifier
+	L'avantage principal du dispatch multiple est l'extensibilité qu'il procure.
+
+	Par exemple :
+	\begin{itemize}
+		\item Vous développez un code qui exécute des simulations physiques. Une des formules à calculer est la force due à la gravitation :
+		\begin{repl}
+			£\jlREPL£ F(G, m₁, m₂, r) = -G*m₁*m₂/r^2;
+		\end{repl}
+
+		\item La bibliothèque \texttt{Unitful.jl} contient des types qui permettent de représenter des nombres dimensionnés :
+		\begin{repl}
+			£\jlREPL£ using Unitful
+
+			£\jlREPL£ 12u"L" + 0.05u"m^3" # 12 liters + 3 metres cube
+			0.062 m^3
+		\end{repl}
+
+		\item Sans avoir rien à programmer de plus, vous pouvez effectuer :
+		\begin{repl}
+			£\jlREPL£ F(Unitful.G, 5.9722e27u"g", 7.342e22u"kg", 384400u"km")
+			-1.9805585650280283e29 g m^3 km^-2 s^-2
+
+			£\jlREPL£ uconvert(u"N", ans) # last answer in newtons
+			-1.9805585650280284e20 N
+		\end{repl}
+	\end{itemize}
+	
+%	Pour en profiter, le code doit être conçu autour d'\emph{interfaces}.
+
+%	Prenons un exemple :
+%	
+%	la fonction \jl{sum} est définie par
+%	\begin{julia}
+%		function sum(l)
+%			total = zero(eltype(x))
+%			# total is a zero of the same type as the elements of l
+%			for x in l
+%				total += x
+%			end
+%			total
+%		end
+%	\end{julia}
+%
+%	Considérons un nouveau type numérique \jl{T}. On pourrait vouloir définir une méthode spécifique pour \jl{sum(::Array{T})}
+\end{frame}
+
+\begin{frame}{Extensibilité -- \textit{duck typing}}
+	Pour que cet exemple fonctionne, la bibliothèque \texttt{Unitful.jl} a seulement eu besoin d'implémenter des nouvelles méthodes pour quelques fonctions élémentaires (\jl{-}, \jl{*}, \jl{/}, \jl{^}) sur les nouveaux types qu'il introduit.
+
+	Votre code, qui n'est pas conçu spécifiquement pour fonctionner avec \texttt{Unitful.jl}, est automatiquement compatible avec.\\
+	
+	Pour profiter de cette extensibilité, le code doit être conçu autour d'\emph{interfaces}. Dans cet exemple précédent, l'interface implicite utilisée est celle de \jl{Number} : tous les types créés par \texttt{Unitful.jl} sont des sous-types de \jl{Number}. Comme il est attendu que tous les \jl{Number} puissent subir des opérations mathématiques, il est attendu qu'un certain nombre de méthodes de base soient implémentées, notamment \jl{+}, \jl{*}, \ldots
+\end{frame}
+
+\begin{frame}[fragile]{Interface explicite}
+	Dans de nombreux cas, les interfaces sont explicitement documentées. Par exemple, \texttt{Graphs.jl} contient de nombreux algorithmes sur les graphes. Ces algorithmes peuvent être utilisés même sur un nouveau type de graphe \jl{MyGraph}, non prévu par \texttt{Graphs.jl}, à condition que ce type implémente un certain nombre de méthodes comme par exemple \jl{Graphs.has_edge(g::MyGraph, s, d)} qui détermine s'il existe une arête entre les nœuds \jl{s} et \jl{d} dans \jl{g}.\\
+
+	Ces interfaces sont écrites dans la documentation des bibliothèques. On les trouve souvent sous l'acronyme anglais \emph{API} pour \textit{application programming interface}.\\
+
+	On se concentre maintenant sur quelques interfaces définis dans \jl{Base} même (inclut dans tout code Julia).
+\end{frame}
+
+\begin{frame}{Affichage}
+	Plusieurs fonctions sont impliquées dans l'affichage des valeurs :
+	\begin{itemize}
+		\item \jl{display(x)} est la fonction qui affiche une valeur dans le REPL. Elle appelle \jl{show} et en général on ne la spécialise pas.
+		\item \jl{show(::IO, x)} affiche une représentation de \jl{x} qui, en général, doit pouvoir être exécutable et renvoyer une valeur égale à \jl{x}. C'est souvent la seule fonction à spécialiser.
+		\item \jl{show(::IO, ::MIME("text/plain"), x)} affiche par défaut la même chose que \jl{show(::IO, x)}, mais peut être spécialisée pour afficher un rendu plus lisible.
+		\item \jl{print(::IO, x)} affiche par défaut la même chose que \jl{show(::IO, x)}, mais peut être spécialisée pour afficher une représentation plus compacte et ``canonique'' (qui ne dépend pas de Julia)
+	\end{itemize}
+
+	Note : \jl{string} crée une \jl{String} à partir de l'affichage de \jl{print}, tandis que \jl{repr} utilise l'affichage de \jl{show}.
+\end{frame}
+
+\begin{frame}[fragile]{Affichage}
+	Exemple : on considère un type \jl{Polar} qui représente un nombre complexe et possède deux champs : \jl{r} pour le module et \jl{Θ} pour l'argument.
+
+	On peut surcharger \jl{show} de la sorte :
+	\begin{julia}
+		Base.show(io::IO, z::Polar) = print(io, z.r,"*exp(",z.Θ,"im)")
+		Base.show(io::IO, ::MIME"text/plain", z::Polar) =
+			print(io, "Polar complex number:\n    ", z)
+	\end{julia}
+
+	On aura alors l'affichage suivant :
+	\begin{repl}
+		# REPL calls display -> show(::IO, ::MIME("text/plain"), x)
+		£\jlREPL£ Polar(12.0, 0.7) 
+		Polar complex number:
+		    12.0*exp(0.7im)
+
+		£\jlREPL£ println(ans) # print -> show(::IO, x)
+		12.0*exp(0.7im)
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Itération}
+	En Julia, tout type peut être rendu itérable en spécialisant la fonction \jl{iterate}. En effet, la boucle  \jl{for x in l; [...]; end} n'est qu'une réécriture du code suivant :
+	\begin{julia}
+		iter = iterate(l)
+		while iter !== nothing
+			x, state = iter
+			[...]
+			iter = iterate(l, state)
+		end
+	\end{julia}
+
+	\jl{state} est une valeur qui caractérise l'état courant de l'itérateur. Par exemple, lors de l'itération d'une liste, \jl{state} est l'index de l'élément courant. Si \jl{l} est de type \jl{T}, il faut donc spécialiser :
+	\begin{itemize}
+		\item \jl{iterate(l::T)} qui doit renvoyer une valeur qui vaut \jl{nothing} si \jl{l} est vide, ou bien un tuple \jl{(x, state)} avec \jl{x} le premier élément de \jl{l} et \jl{state} une valeur de type \jl{S} à choisir ;
+		\item \jl{iterate(l::T, state::S)} qui fait de même mais non plus pour le premier élément de \jl{l} mais pour celui correspondant à l'état \jl{state}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Itération}
+	Exemple : on considère un type \jl{Attendance} qui représente la liste des élèves présents à une classe avec deux champs : \jl{students} pour la liste des noms d'élèves, et \jl{present} une liste booléenne indiquant si l'élève est présent ou non. Pour itérer seulement sur les noms des élèves présents, on peut déclarer :
+	\begin{julia}
+		function Base.iterate(att::Attendance, i=1)
+			# the state is i, the index of the next student to check
+			while i <= length(att.students)
+				att.present[i] && return (att.students[i], i+1)
+				i += 1
+			end
+			return nothing
+		end
+	\end{julia}
+
+	On peut vérifier le comportement sur un exemple :
+	\begin{repl}
+		£\jlREPL£ att = Attendance(["A", "B", "C"], Bool[0, 1, 1]);
+			   for x in att; println(x); end
+		B
+		C
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Itération}
+	Le protocole d'itération complets demande quelques spécialisations supplémentaires sur le type \jl{T} de l'itérable \jl{l} :
+	\begin{itemize}
+		\item \jl{eltype(::Type{T})} doit renvoyer le type des éléments de \jl{l}.
+		\item \jl{length(l::T)} doit renvoyer le nombre d'éléments de \jl{l}.
+	\end{itemize}
+	\vfill
+
+	Si la taille d'un itérateur ne peut pas être connue facilement, il faut créer la méthode \jl{Base.IteratorSize(::Type{T}) = Base.SizeUnknown()}. Les autres valeurs possibles pour \jl{IteratorSize(::Type{T})} sont \jl{HasLength()} (par défaut, suppose qu'une méthode \jl{length(::T)} existe), \jl{IsInfinite()} pour les itérateurs infinis, ou bien \jl{HasShape{N}()}. Ce dernier cas correspond aux itérateurs en plusieurs dimensions, par exemple sur un tableau \jl{N}-dimensionnel : il faut alors aussi spécialiser \jl{size(l::T)} qui doit renvoyer un \jl{NTuple{N,Int}} approprié.
+\end{frame}
+
+\begin{frame}[fragile]{Itération}
+	En ajoutant les méthodes \jl{Base.eltype(::Type{Attendance}) = String} et \jl{Base.IteratorSize(::Type{Attendance}) = Base.SizeUnknown()} à notre exemple précédent, on obtient ainsi le comportement suivant :
+	\begin{repl}
+		£\jlREPL£ att = Attendance(["A", "B", "C"], Bool[0, 1, 1]);
+
+		£\jlREPL£ collect(att)
+		2-element Vector{String}:
+		"B"
+		"C"
+
+		£\jlREPL£ [i for (i, x) in enumerate(att) if x == "B"]
+		1-element Vector{Int64}:
+		1
+	\end{repl}
+
+	Le protocole d'itération complet est détaillé sur :
+	
+	\scriptsize \url{https://docs.julialang.org/en/v1/manual/interfaces/#man-interface-iteration}
+\end{frame}
+
+\begin{frame}[fragile]{Tableaux}
+	La syntaxe entre crochets \jl{[]} utilisée pour les tableaux et les dictionnaires peut aussi servir à indexer n'importe quel autre type :
+	\begin{itemize}
+		\item \jl{a[i, ...]} est réécrit en \jl{getindex(a, i, ...)}.
+		\item \jl{a[i, ...] = x} est réécrit en \jl{setindex!(a, x, i, ...); x}.
+	\end{itemize}
+
+	Pour un nouveau type \jl{T}, il suffit donc d'ajouter une méthod \jl{Base.getindex(::T, ...)} pour bénéficier de l'indexation, ainsi que \jl{Base.setindex!(::T, ...)} si approprié.
+	\vspace{1em}
+
+	Exemple : la syntaxe \jl{MyType[]} est utilisée pour créer un vecteur vide dont les éléments sont de type \jl{MyType}. Cela provient de la méthode \jl{getindex(::Type{X}) where {X} = Vector{X}(undef, 0)} de \jl{Base}.
+	\vspace{1em}
+
+	Si les indices utilisés sont des entiers consécutifs, le type mérite peut-être d'être déclaré comme un sous-type de \jl{AbstractArray}. Il est alors demandé de créer une méthode pour \jl{getindex(::T, ::Int)} spécifiquement, et une pour \jl{size(::T)}. La convention complète est sur :
+	\scriptsize\url{https://docs.julialang.org/en/v1/manual/interfaces/#man-interface-array}
+\end{frame}
+
+\end{document}
