@@ -33,19 +33,25 @@
 %\renewcommand{\citenumfont}[1]{{\tiny#1}}
 \renewcommand{\citenumfont}[1]{}
 \bibpunct{}{};s;;
-
-\usepackage[french]{babel}
-\usepackage[mathletters]{ucs}
-\usepackage[utf8x]{inputenc}
-\usepackage[T1]{fontenc}
-% Or whatever. Note that the encoding and the font should match. If T1
-% does not look nice, try deleting the line with the fontenc.
+	
 % Alternative for XeLaTeX:
-%\usefonttheme{professionalfonts}
-%\usepackage{fontspec}
-%\setmonofont{JuliaMono}
-%\setdefaultlanguage{french}
-%\usepackage{unicode-math}
+\usepackage{ifxetex}
+
+\ifxetex
+	\usefonttheme{professionalfonts}
+	\usepackage{fontspec}
+	\setmonofont{JuliaMono}
+	\usepackage{polyglossia}
+	\setmainlanguage{french}
+	\usepackage{unicode-math}
+\else
+	\usepackage[french]{babel}
+	\usepackage[mathletters]{ucs}
+	\usepackage[utf8x]{inputenc}
+	\usepackage[T1]{fontenc}
+	% Or whatever. Note that the encoding and the font should match. If T1
+	% does not look nice, try deleting the line with the fontenc.
+\fi
 
 \usepackage{subcaption}
 
@@ -117,7 +123,7 @@
 % is a graphic format that can be processed by latex or pdflatex,
 % resp., then you can add a logo as follows:
 
-\pgfdeclareimage[height=0.5cm]{Mines}{../figures/Mines.pdf}
+\pgfdeclareimage[height=0.5cm]{Mines}{figures/Mines.pdf}
 \logo{\begin{tikzpicture}[overlay,remember picture]
 		\node[left=0.2cm] at (current page.31){
 			\pgfuseimage{Mines}
