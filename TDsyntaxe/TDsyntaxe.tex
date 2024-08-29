@@ -16,18 +16,6 @@
 \bibpunct{}{};s;;
 
 \usepackage[top=1.5cm,bottom=1.5cm, left=2.5cm,right=2.5cm]{geometry}
-\usepackage[french]{babel}
-\usepackage[mathletters]{ucs}
-\usepackage[utf8x]{inputenc}
-\usepackage[T1]{fontenc}
-% Or whatever. Note that the encoding and the font should match. If T1
-% does not look nice, try deleting the line with the fontenc.
-% Alternative for XeLaTeX:
-%\usefonttheme{professionalfonts}
-%\usepackage{fontspec}
-%\setmonofont{JuliaMono}
-%\setdefaultlanguage{french}
-%\usepackage{unicode-math}
 
 \usepackage{subcaption}
 
@@ -39,6 +27,26 @@
 \usepackage{mathrsfs}
 \usepackage{bbm}
 \usepackage{svg}
+
+% unicode-math better loaded after amssymb and other maths packages
+% Alternative for XeLaTeX:
+\usepackage{ifxetex}
+
+\ifxetex
+	% \usefonttheme{professionalfonts}
+	\usepackage{fontspec}
+	\setmonofont{JuliaMono}
+	\usepackage{polyglossia}
+	\setmainlanguage{french}
+	\usepackage{unicode-math}
+\else
+	\usepackage[french]{babel}
+	\usepackage[mathletters]{ucs}
+	\usepackage[utf8x]{inputenc}
+	\usepackage[T1]{fontenc}
+	% Or whatever. Note that the encoding and the font should match. If T1
+	% does not look nice, try deleting the line with the fontenc.
+\fi
 
 \usepackage{tikz}
 \usetikzlibrary{scopes, backgrounds, arrows, automata, positioning, patterns, calc, decorations.pathmorphing, decorations.pathreplacing, arrows.meta}
