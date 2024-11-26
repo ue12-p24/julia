@@ -165,6 +165,8 @@
 \usepackage{lmodern}
 %\newcommand{\jl}[1]{\colorbox{lightred}{\small\ttfamily #1}}
 \newmintinline[jl]{julia}{}
+\newmintinline[jlsmall]{julia}{fontsize=\small}
+\newmintinline[jlfootnotesize]{julia}{fontsize=\footnotesize}
 \newmintinline[jlscript]{julia}{fontsize=\scriptsize}
 \newmint[JL]{julia}{}
 \newmint[JLa]{julia}{linenos=false}
@@ -204,7 +206,40 @@
 	\titlepage
 \end{frame}
 
+\begin{frame}{Règles du cours}
+	\small
+	À chaque cours théorique correspond une série d'exercices de TD. La feuille de TD sera commencée en cours, et doit être terminée à la maison, puis rendue par mail dans la semaine qui suit le cours. La date butoir est 7 jours exactement après le début du cours (un mardi ou un jeudi à 13h45 donc).
+	\vfill
+
+	La note du cours est la moyenne des notes des différents TD.
+	\vfill
+
+	Tous les TDs ne seront pas corrigés, mais chaque élève aura au moins 3 TDs corrigés. Un TD non rendu vaut automatiquement 0 ; un TD rendu en retard est considéré comme non rendu et vaut donc aussi 0.
+	\vfill
+
+	Vous disposez chacun de 2 jokers :\vspace{-0.5em}
+	\begin{itemize}
+		\item Vous pouvez demander à ce qu'un TD fasse partie de votre moyenne.\vspace{-0.5em}
+		\item Vous pouvez demander à ce qu'un TD n'en fasse pas partie.\vspace{-0.5em}
+	\end{itemize}
+	Chaque joker ne peut être utilisé qu'une fois par élève dans l'année. Pour ce faire, il faut par ailleurs me le préciser par mail dans la semaine.
+	\vfill
+
+	Les retards et absences non justifiées à l'avance ne sont pas tolérées, et conduiront à des pénalités sur votre moyenne.
+\end{frame}
+
 \section{Mise en place}
+
+\begin{frame}{Ressources}
+	Quelques liens utiles :
+	\begin{itemize}
+		\item Documentation officielle de Julia : \url{https://docs.julialang.org/}
+		\item Site officiel de Julia : \url{https://julialang.org/}
+
+		L'onglet ``Learning'' possède d'autres liens utiles.
+		\item Liste de bibliothèques : \url{https://juliapackages.com}
+	\end{itemize}
+\end{frame}
 
 \begin{frame}[fragile]{Environnement de développement}
 	Comme en Python, il existe deux façons d'exécuter du code Julia :
@@ -214,7 +249,8 @@
 $ julia /chemin/vers/mon_programme.jl
 \end{minted}
 
-		Par convention, les fichiers de code Julia portent l'extension \texttt{.jl}
+		Par convention, les fichiers de code Julia portent l'extension \texttt{.jl}\vspace{1em}
+
 		\item Exécuter du code depuis le REPL (Read-Eval-Print-Loop, la console Julia), lancée avec la commande \mintinline{bash}|julia|:
 
 		{\ttfamily\scriptsize
@@ -246,7 +282,7 @@ $ julia /chemin/vers/mon_programme.jl
 		20
 	\end{repl}
 
-	Cliquer ne sert à rien dans le REPL. À la place, on utilise les flèches. Presser ``Ctrl'' en même temps qu'une flèche gauche ou droite permet de se déplacer d'un mot plutôt que d'une lettre.
+	Cliquer ne positionne pas le curseur dans le REPL. À la place, on utilise les flèches. Presser ``Ctrl'' en même temps qu'une flèche gauche ou droite permet de se déplacer d'un mot plutôt que d'une lettre.
 	\vfill
 
 	La touche ``Tab'' permet d'automatiquement compléter un mot en cours d'écriture. Si plusieurs mots sont possibles, ils sont affichés. Les mots suggérés sont toujours définis.
@@ -275,6 +311,7 @@ $ julia /chemin/vers/mon_programme.jl
 \end{frame}
 
 \begin{frame}{Inclusion de code -- \texttt{Revise.jl}}
+	\label{revise}
 	Un code écrit dans un fichier \texttt{file.jl} peut être exécuté dans un autre fichier ou depuis le REPL par la commande \jl{include("file.jl")}
 	\vfill
 
@@ -416,9 +453,9 @@ $ julia /chemin/vers/mon_programme.jl
 
 	Ces opérations peuvent être employées sur des entiers : elles sont alors effectuées bit à bit. Par exemple :
 	\begin{itemize}
-		\item \jl{11 & 5} (renvoie 1)
-		\item \jl{11 | 5} (renvoie 15)
-		\item \jl{11 ⊻ 5} (renvoie 14)
+		\item \jl{11 & 5} \only<2>{(renvoie 1)}
+		\item \jl{11 | 5} \only<2>{(renvoie 15)}
+		\item \jl{11 ⊻ 5} \only<2>{(renvoie 14)}
 	\end{itemize}
 \end{frame}
 
@@ -437,7 +474,7 @@ $ julia /chemin/vers/mon_programme.jl
 
 \begin{frame}{Opérateurs d'affectation}
 	\begin{definition}
-		Tout opérateur \jl{£$\textit{op}$£} (hormis les comparaisons) peut être immédiatement suivi d'un \jl{=} pour le transformer en \emph{opérateur d'affectation}.
+		Tout opérateur \jl{£$\textit{op}$£} (hormis les comparaisons et les opérateurs booléens) peut être immédiatement suivi d'un \jl{=} pour le transformer en \emph{opérateur d'affectation}.
 		
 		La syntaxe \jl{x £$\textit{op}$£= y} signifie alors \jl{x = x £$\textit{op}$£ y}.
 	\end{definition}
@@ -571,7 +608,7 @@ $ julia /chemin/vers/mon_programme.jl
 	Note : \jl{3i + 1} signifie \jl{3*i + 1} : l'opérateur \jl{*} peut être omis entre un littéral numérique et une expression ne commençant pas par un chiffre.
 	\pause\vfill
 
-	Réponse : si \jl|i<=0|, le programme ne fait rien, sinon il fait passer \jl|i| par les différentes valeurs de la suite de Syracuse, et s'arrête lorsqu'elle atteint 1.
+	Réponse : si \jl|i<=0|, le programme ne fait rien, sinon il fait passer \jl|i| par les différentes valeurs de la suite de Syracuse, et s'arrête lorsqu'elle atteint 1\linebreak(sauf dans certains cas... ce code sera à corriger en TD).
 \end{frame}
 
 \begin{frame}[fragile]{Blocs de code}
@@ -701,7 +738,7 @@ $ julia /chemin/vers/mon_programme.jl
 	Les boucles et les blocs vides ou non exécutés ont pour valeur \jl{nothing} :
 	\begin{julia}
 		u = begin end  # u == nothing
-		v = while for i in 1:3
+		v = for i in 1:3
 			i + 7
 		end  # v == nothing
 		w = if false
@@ -709,7 +746,7 @@ $ julia /chemin/vers/mon_programme.jl
 		end  # w == nothing
 	\end{julia}
 
-	\textbf{Tous les autres blocs de code ont pour valeur la dernière expression exécutée}\footnote[frame]{en oubliant le code exécuté dans le sous-bloc \jl{finally} d'un bloc \jl{try}} :
+	\textbf{Tous les autres blocs de code ont pour valeur celle de la dernière expression exécutée}\footnote[frame]{en oubliant le code exécuté dans le sous-bloc \jl{finally} d'un bloc \jl{try}} :
 	\begin{julia}
 		z = if 14 > 4
 			7
@@ -759,7 +796,7 @@ $ julia /chemin/vers/mon_programme.jl
 	\vfill
 	
 	\begin{alertblock}{}
-		Les exceptions ont une mauvaise performance et doivent être évitées autant que possible.
+		Les exceptions ont une mauvaise performance et doivent être évitées autant que possible lorsque le code est valide.
 	\end{alertblock}
 \end{frame}
 
@@ -781,24 +818,38 @@ $ julia /chemin/vers/mon_programme.jl
 
 	\pause
 	Réponse : si \jl|i < 0| et \jl|i| est pair, le code lance une exception de valeur \jl|i| ; sinon, si \jl|i < 0|, \jl{t} prend la valeur \jl|i - 1|, sinon \jl{t} prend la valeur \jl|i + 2|. Dans tous les cas, le code affiche \jl|"Done"|.
+
+	\pause
+	Note : ce genre de code est à proscrire !
 \end{frame}
 
-\begin{frame}[fragile]{Modules}
-	Le code Julia est écrit dans des \emph{modules} :
+\begin{frame}[fragile]{Exceptions}
+	Les exceptions sont utiles pour traiter des situations qui ne devraient pas se produire. En particulier, elles servent :
+	\begin{itemize}
+		\item à signaler à l'utilisateur des entrées invalides.
+		\item à vérifier des hypothèses du programme.
+	\end{itemize}
+	\vspace{1em}
+
+	\textbf{Les messages d'erreur doivent être aussi informatifs que possible.}
+	On peut utiliser pour cela un des types d'erreurs prédéfinis comme :
 	\begin{julia}
-		module MyModule
-			x = 42
-		end
+		throw(ArgumentError("Cannot set x and y at the same time"))
+		throw(DomainError(3, "foo only accepts even arguments"))
 	\end{julia}
 
-	Un module est un bloc qui sert à regrouper des noms : on parle de \textit{namespace}. Les variables définies dans un module peuvent être accédées en dehors de celui-ci en les préfixant du nom du module, par exemple \jl{MyModule.x}. Au sein du même module, il n'y a pas besoin de préfixe.
-	\vfill
-
-	Le module par défaut lorsqu'on exécute un fichier ou qu'on ouvre un REPL s'appelle \jl{Main}. Celui-ci charge le module \jl{Base}, qui contient tous les types et fonctions de base comme \jl{Int}, \jl{+}, \jl{println}, \ldots.
-	\vfill
-
-	On ne peut pas créer de module à l'intérieur d'une fonction.
+	Ou on peut utiliser la fonction \jl{error} avec le message d'erreur :
+	\begin{repl}
+		julia> error("Result ", x, " is not \"> 0\"")
+		ERROR: Result -0.6283185307179586 is not "> 0"
+		Stacktrace:
+		 [1] error(::String, ::Float64, ::String)
+		   @ Base ./error.jl:44
+		 [2] top-level scope
+		   @ REPL[18]:1
+	\end{repl}
 \end{frame}
+
 
 \begin{frame}[fragile]{Mauvais code}
 	Exercice : quels sont les problèmes du code suivant ?
@@ -814,7 +865,7 @@ $ julia /chemin/vers/mon_programme.jl
 		end
 		y
 	\end{julia}
-	
+
 	\pause\scriptsize
 	Réponse : \jlscript{x} est en minuscules et est modifié ligne 9 alors qu'il est déclaré constant ligne 1 ; le début du bloc \jlscript{for i in i:(i+5)} ligne 4 est équivalent à \jlscript{for i in 1:5} ici (puisque \jlscript{i = 1} ligne 3) mais prête à confusion ; le bloc \jlscript{while} ligne 4 est mal indenté et il manque le \jlscript{end} correspondant ; \jlscript{y} n'a pas encore été déclarée dans \jlscript{y < 100} ligne 4 ; si la condition \jlscript{i >= 2} du \jlscript{if} ligne 5 n'est pas vérifiée alors il faut calculer \jlscript{1 + nothing}, ce qui va causer une erreur, et \jlscript{j} ne sera pas définie alors qu'il est utilisé ligne 8 ; et enfin, le nom des variables est trop court et il n'y a aucun commentaire, on n'y comprend rien !
 \end{frame}
@@ -833,7 +884,7 @@ $ julia /chemin/vers/mon_programme.jl
 	Exemples :
 	\begin{itemize}
 		\item \jl{sin(π/2)} renvoie \jl{1.0}. Pour obtenir \jl{π} dans le REPL : \jl{\pi[TAB]}.
-		\item \jl{+(2,5,1)} renvoie \jl{8} (syntaxe alternative pour \jl{2 + 5 + 1}).
+		\item \jl{+(2, 5, 1)} renvoie \jl{8} (syntaxe alternative pour \jl{2 + 5 + 1}).
 		\item \jl{time()} renvoie le nombre de secondes depuis l'\emph{epoch}, une date de référence fixée au 1\ier janvier 1970.
 		\item \jl{println("Bonjour !")} affiche \jl{"Bonjour !"} et renvoie \jl{nothing}.
 		\item \jl{typeof(£\expr\!\!\!£)} renvoie le type de la valeur de \expr.
@@ -872,6 +923,7 @@ $ julia /chemin/vers/mon_programme.jl
 			return y
 		end
 	\end{julia}
+	\pause
 
 	\begin{convention}
 		On utilise \jl{return} explicitement à la dernière ligne si un autre \jl{return} est présent dans le corps de la fonction. Sinon, on l'omet.
@@ -897,7 +949,7 @@ $ julia /chemin/vers/mon_programme.jl
 \end{frame}
 
 \begin{frame}[fragile]{Arguments nommés}
-	Certains arguments d'une fonction peuvent être \jl{nommés}. Ils doivent pour cela être déclarés après un point-virgule (un seul \jl{;} au total) :
+	Certains arguments d'une fonction peuvent être \emph{nommés}. Ils doivent pour cela être déclarés après un point-virgule (un seul \jl{;} au total) :
 	\begin{julia}
 		plot_axes(arg=nothing; color, linesize=2) = ...
 	\end{julia}
@@ -909,6 +961,7 @@ $ julia /chemin/vers/mon_programme.jl
 			plot_line(; linesize=1, color="blue")
 		\end{minted}
 	\end{convention}
+	\pause
 
 	Si une variable existe avec le même nom qu'un argument nommé (par exemple \jl{color} ici), on peut la placer directement après le point-virgule :
 	\begin{repl}
@@ -959,6 +1012,22 @@ $ julia /chemin/vers/mon_programme.jl
 		cis(x) = [...]
 	\end{julia}
 \end{frame}
+
+%\begin{frame}[fragile]{Prédicats}
+%	\begin{definition}
+%		Un \emph{prédicat} est une fonction qui renvoie une valeur booléenne.
+%	\end{definition}
+%	
+%	\begin{convention}
+%		Si une fonction prend un prédicat comme argument, celui-ci est placé en premier. Un prédicat omis est souvent remplacé par \jl{identity}.
+%	\end{convention}
+%
+%	Exemples :
+%	\begin{itemize}
+%		\item \jl{findfirst(==(14), (1, 2, 5, 9, 14, 100))}
+%		\item \jl{argmin(last, ((2, 6), (3, 1), (5, 4)))}
+%	\end{itemize}
+%\end{frame}
 
 \section{Tableaux}
 
@@ -1065,7 +1134,7 @@ $ julia /chemin/vers/mon_programme.jl
 		 22
 		 38
 
-		£\jlREPL£ [2*i + j/10 for i in [4,5], j in 1:7] # multidimensional¨
+		£\jlREPL£ [2*i + j/10 for i in [4,5], j in 1:7] # multidimensional
 		2×7 Matrix{Float64}:
 		  8.1   8.2   8.3   8.4   8.5   8.6   8.7
 		 10.1  10.2  10.3  10.4  10.5  10.6  10.7
@@ -1115,7 +1184,7 @@ $ julia /chemin/vers/mon_programme.jl
 \begin{frame}[fragile]{Accès aux éléments d'un tableau}
 	Au sein de crochets, le mot-clé \jl{end} désigne le dernier indice selon l'axe :
 	\begin{repl}
-		£\jlREPL£ a[2,end,1]
+		£\jlREPL£ a[2, end, 1]
 		6
 		
 		£\jlREPL£ a[1:end, 3, 1]
@@ -1123,8 +1192,7 @@ $ julia /chemin/vers/mon_programme.jl
 		 5
 		 6
 	\end{repl}
-
-	la plage d'indices \jl{1:end}, qui sélectionne un axe entier, peut être remplacée par un simple \jl{:} :
+	Inversement, \jl{begin} désigne le premier indice selon l'axe (généralement 1 donc). La plage d'indices \jl{begin:end}, qui sélectionne un axe entier, peut être remplacée par un simple \jl{:} :
 	\begin{repl}
 		£\jlREPL£ a[:, 3, 1]
 		2-element Vector{Int64}:
@@ -1149,6 +1217,49 @@ $ julia /chemin/vers/mon_programme.jl
 	  7   9  11
 	-49  10  12
 	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Affectation des éléments d'un tableau}
+	\begin{convention}
+		Si une fonction modifie le contenu d'un de ses arguments, alors :
+		\begin{itemize}
+			\item Le nom de la fonction se termine par un \jl{!}
+			\item L'argument modifié est placé en premier
+		\end{itemize}
+	\end{convention}
+
+	Par exemple, \jl{circshift!(a::AbstractVector, shift::Integer)} est une fonction qui prend une liste \jl{a} et la modifie en décalant de \jl{shift} rangs chaque élément vers la droite.
+	
+	\begin{convention}
+		La plupart des fonctions de \jl{Base} qui se terminent par \jl{!} ont aussi une version sans \jl{!}, qui effectue une copie au lieu de modifier en place.
+	\end{convention}
+
+	Par exemple, \jl{circshift(a, shift)} renvoie une nouvelle liste, mais ne modifie pas \jl{a}.
+\end{frame}
+
+\begin{frame}[fragile]{Vue sur un tableau}
+	L'extraction d'un sous-tableau crée un tableau indépendant du premier :
+	\begin{repl}
+		£\jlREPL£ b = a[:, 2:3, 1]; # b in an independent copy of a slice
+		
+		£\jlREPL£ b[1] = -99; # first element of b is modified
+		
+		£\jlREPL£ a[1, 2, 1]
+		1
+	\end{repl}
+	
+	On peut créer une \emph{vue} sur un sous-tableau en préfixant l'indexation par la macro \jl{@view}. Cette vue ne crée pas de nouveau tableau :
+	\begin{repl}
+		£\jlREPL£ c = @view a[:, 2:3, 1];
+		
+		£\jlREPL£ c[1] = -99; a[1, 2, 1]    # modifying c changes a
+		-99
+		
+		£\jlREPL£ a[2, 3, 1] = 74; c[2, 2]  # modifying a changes c
+		74
+	\end{repl}
+	
+	Il faut parenthéser en cas d'ambiguïté : \jl{x = (@view a[:,2]), false}.
 \end{frame}
 
 \begin{frame}[fragile]{Type d'un tableau}
@@ -1212,6 +1323,25 @@ $ julia /chemin/vers/mon_programme.jl
 	\end{repl}
 \end{frame}
 
+\begin{frame}[fragile]{Redimensionnement des vecteurs}
+	Il est aussi possible d'ajouter ou d'enlever des éléments au début d'un vecteur avec \jl{pushfirst!} et \jl{popfirst!}.
+	\vfill
+	
+	Un élément peut être ajouté n'importe où dans un tableau avec \jl{insert!} et supprimé n'importe où avec \jl{popat!}. Ces deux fonctions ont pour complexité $O(n)$ la taille du vecteur, donc doivent être évitées si possible.
+	\vfill
+	
+	Il est aussi possible de supprimer d'un coup plusieurs éléments d'un tableau avec \jl{deleteat!} (aussi de complexité $O(n)$). Cette option est préférable à plusieurs \jl{popat!}. \jl{keepat!} effectue l'opération inverse de \jl{deletat!}.
+	
+	\begin{repl}
+		£\jlREPL£ x = [2, 3, 17, 23];
+		
+		£\jlREPL£ deleteat!(x, [1, 4]); x
+		2-element Vector{Int64}:
+		  3
+		 17
+	\end{repl}
+\end{frame}
+
 \begin{frame}[fragile]{Concaténation}
 	Il est possible de \emph{concaténer} des tableaux, c'est-à-dire de mettre leurs éléments dans un \underline{nouveau} tableau. On utilise pour cela les fonctions de la famille \jl{cat}: \jl{vcat}, \jl{hcat}, \jl{hvcat}, \jl{hvncat}. On peut aussi utiliser la syntaxe des tableaux multidimensionnels (qui en fait appelle \jl{hvncat}) :
 	\begin{repl}
@@ -1229,6 +1359,29 @@ $ julia /chemin/vers/mon_programme.jl
 	\end{repl}
 
 	La fonction \jl{stack} est utile pour transformer un tableau de tableaux en tableau multidimensionnel.
+\end{frame}
+
+\begin{frame}[fragile]{Initialisation d'un tableau}
+	Un tableau rempli de 0 de type \jl{T} et de taille \jl{n} peut être construit avec \jl{zeros(T, n)}. De même avec des 1 grâce à \jl{ones(T, n)}. Plusieurs dimensions peuvent aussi être fournies :
+	\begin{repl}
+		£\jlREPL£ zeros(Float32, 2, 7)
+		2×7 Matrix{Float32}:
+		 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+		 0.0  0.0  0.0  0.0  0.0  0.0  0.0
+	\end{repl}
+
+	Un tableau peut aussi être créé sans initialisation avec la syntaxe :
+	\begin{repl}
+		£\jlREPL£ x = Array{Int8, 3}(undef, 1, 4, 1)
+		1×4×1 Array{Int8, 3}:
+		[:, :, 1] =
+		 0  -45  -58  -111
+		 
+		£\jlREPL£ x = Matrix{Int}(undef, 1, 6) # Matrix{T} == Array{T,2}
+		1×6 Matrix{Int64}:
+		 140181412695  140181412695  140181412695  140181412695  0  0
+	\end{repl}
+	Les valeurs non initialisées sont quelconques, elles ne doivent pas être lues.
 \end{frame}
 
 \begin{frame}[fragile]{Diffusion}
@@ -1249,6 +1402,42 @@ $ julia /chemin/vers/mon_programme.jl
 		 15
 		 19
 	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Diffusion}
+	La diffusion peut aussi être utilisée pour affecter un résultat avec la syntaxe \jl{.=}. Chaque élément du terme à gauche du \jl{.=} est remplacé par celui de même indice à droite du \jl{.=}.
+
+	On peut aussi combiner la diffusion avec n'importe quel opérateur d'affectation en utilisant la syntaxe \jl{.£$\textit{op}$£=} comme \jl{.*=} ou \jl{.-=}.
+	\vfill
+	
+	Exemples :
+	\begin{itemize}
+		\item \jl{a = b .+ c} \textbf{crée} un nouveau tableau \jl{a} dont le \jl{i}-ème élément vaut \jl{b[i] + c[i]}.
+		\item \jl{a .= b .+ c} \textbf{modifie} un tableau \jl{a} \textbf{pré-existant} pour affecter à chaque élément d'indice \jl{i} la valeur \jl{b[i] + c[i]}
+		\item \jl{x .+= 1} ajoute 1 à chaque élément de \jl{x}. Cette opération est équivalente à \jl{x .= x .+ 1} ; \jl{x} est modifié en place.
+		\item \jl{y .*= y} met au carré chaque élément de \jl{y}. Cette opération est équivalente à \jl{y .= y .* y} ; \jl{y} est modifié en place.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Quelques fonctions utiles}
+	\small
+	\begin{itemize}
+		\item \jlfootnotesize{sort!} trie une liste. \jlfootnotesize{sortperm} permet d'avoir la liste des indices triés.
+
+		\item \jlfootnotesize{minimum(l)} donne le minimum de \jlfootnotesize{l}. Ne pas confondre avec \jlfootnotesize{min}, qui prend en entrée deux nombres (et non un tableau).\\
+		Idem pour \jlfootnotesize{maximum}/\jlfootnotesize{max}.\\
+		\jlfootnotesize{minimum}/\jlfootnotesize{maximum} acceptent aussi un premier argument optionnel sous la forme d'une fonction :
+		\jlfootnotesize{minimum(f, l)} est alors égal à \jlfootnotesize{minimum(f.(l))}, mais est plus efficace.
+
+		\item \jlfootnotesize{findmin(l)} renvoie \jlfootnotesize{(val, i)} tel que \jlfootnotesize{minimum(l) == val == t[i]}. \jlfootnotesize{findmin} accepte aussi une fonction comme premier argument optionnel. Idem pour \jlfootnotesize{findmax}. Voir aussi \jlfootnotesize{argmin}/\jlfootnotesize{argmax}.
+
+		\item \jlfootnotesize{reverse!} retourne la liste. Pour itérer sur une liste retournée sans la créer explicitement, on peut utiliser \jlfootnotesize{Iterators.reverse}.
+		
+		\item \jlfootnotesize{first} renvoie le premier élément, \jlfootnotesize{last} le dernier.
+
+		\item \jlfootnotesize{findfirst(f, l)} renvoie l'indice \jlfootnotesize{i} du premier élément pour lequel \jlfootnotesize{f(l[i])} est \jlfootnotesize{true}.\\
+		Idem pour \jlfootnotesize{findlast}. \jlfootnotesize{findall} renvoie la liste des \jlfootnotesize{i} correspondant.
+	\end{itemize}
 \end{frame}
 
 \section{Chaînes de caractères}
@@ -1479,6 +1668,7 @@ $ julia /chemin/vers/mon_programme.jl
 	\end{repl}
 \end{frame}
 
+
 \section{Ensembles et dictionnaires}
 
 \begin{frame}[fragile]{Dictionnaires}
@@ -1546,45 +1736,164 @@ $ julia /chemin/vers/mon_programme.jl
 	On peut aussi itérer sur un \jl{Set}.
 \end{frame}
 
-%\begin{frame}[fragile]{}
-%	\begin{itemize}
-%		\item Un point-virgule. Exemple : \jl|£\expra1£; £\expra2£|
-%		\item Un caractère de fermeture de bloc : \jl{)}, \jl{]}, \jl|}| ou \jl{end}. L
-%		\item Un retour à la ligne
-%	\end{itemize}
-%	\begin{definition}
-%		Un \emph{programme} est une suite d'instruction qui sert à exécuter un calcul.
-%	\end{definition}
-%	En Julia, tout morceau de code complet (\textit{i.e.} exécutable) est aussi une expression. Exemples plus tard.
-%\end{frame}
+
+\section{Fichiers}
+
+\begin{frame}{Systèmes de fichiers}
+	Un \emph{fichier} (\textit{file}) est un bloc de données enregistré sur le périphérique de stockage à long terme de l'ordinateur (disque dur ou SSD). Les fichiers sont placés dans des \emph{dossiers} ou \emph{répertoires} (\textit{folder}), eux-mêmes placés dans d'autres répertoires, etc.
+	\vfill
+
+	Le \emph{chemin} (\textit{path}) d'un fichier désigne son emplacement dans la hiérarchie des répertoires. Un symbole \texttt{/} sépare les noms des répertoires et du fichier. Le chemin peut être :
+	\begin{itemize}
+		\item \emph{relatif} s'il part du répertoire courant : par exemple \texttt{./file}, directement \texttt{file} ou encore \texttt{subpath/file}.
+		\item \emph{absolu} s'il part de la racine du système fichier, symbolisée par un \texttt{/} au début du chemin : \texttt{/home/username/subpath/file}.
+	\end{itemize}
+	\vfill
+
+	\small
+	Le système de fichiers (c'est-à-dire le mode de stockage des répertoires et fichiers sur le disque) dépend du système d'exploitation : Windows utilise NTFS, Linux utilise ext4, MacOS utilise APFS, les clés USB utilisent souvent exFAT, et d'autres systèmes plus vieux existent encore comme FAT32, HFS, \ldots
+\end{frame}
+
+\begin{frame}{Lecture simple d'un fichier}
+	En Julia, il existe plusieurs manières de lire un fichier. Pour les fichiers contenant du texte, le plus simple est de les lire ligne par ligne :
+	\begin{itemize}
+		\item \jl{readlines(path)} renvoie une liste dont chaque élément est une ligne du fichier dont le chemin est la chaîne de caractères \jl{path}.
+		\item \jl{eachline(path)} renvoie un itérateur sur les lignes du fichier. Les code \jl{for l in readlines(x) ...} et \jl{for l in eachline(x) ...} sont équivalents (mais la seconde version est plus efficace).
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Lecture d'un fichier}
+	Pour faire des opérations plus complexes sur un fichier, il faut procéder en plusieurs temps :
+	\begin{enumerate}
+		\item Ouvrir le fichier avec \jl{open} et un mode d'ouverture :
+		\begin{itemize}
+			\item \jl{"r"} pour lecture seule (\textit{read}).
+			\item \jl{"w"} pour écriture seule (\textit{write}). \textbf{Attention :} s'il existait déjà, le fichier est écrasé !
+			\item \jl{"a"} pour écriture à la fin du fichier existant (\textit{append}).
+			\item \jl{"r+"}, \jl{"w+"}, \jl{"a+"} font la même chose que sans le \jl{"+"}, mais permettent de plus d'écrire (pour \jl{"r+"}) ou de lire (pour \jl{"w+"} et \jl{"a+"})
+		\end{itemize}
+
+		\jl{open} renvoie un \emph{descripteur de fichier} : \jl{io = open(path, "a")}
+
+		\item Lire avec \jl{read} ou écrire avec \jl{write}/\jl{show}/\jl{print}/\jl{println} sur le descripteur de fichier. Exemple : \jl{println(io, "Hello world!")}.
+
+		\item Refermer le fichier avec l'appel \jl{close(io)}.
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Ouverture usuelle de fichiers}
+	L'appel \jl{open(func, path, mode)} est équivalent aux trois lignes
+	\begin{julia}
+		io = open(path, mode)
+		func(io)
+		close(io)
+	\end{julia}
+
+	\pause
+
+	\begin{block}{Syntaxe \texttt{do}}
+		En Julia, le mot-clé \jl{do} suivant un appel \jl{foo(args...)} permet d'ajouter une fonction comme premier argument de l'appel. Ainsi, un appel de la forme \jl{foo((x, y) -> [...], args...)} peut être réécrit :
+		\begin{repl}
+			foo(args...) do x, y
+				[...]
+			end
+		\end{repl}
+	\end{block}
+
+	Pour ouvrir un fichier avec \jl{open} sans oublier le \jl{close}, on écrira donc :
+	\begin{julia}
+		open(path, mode) do io
+			# code with read(io) or print(io, ...), etc.
+		end
+	\end{julia}
+\end{frame}
+
+\begin{frame}[fragile]{Lecture et écriture hors texte}
+	Pour lire et écrire du texte, on utilise donc principalement \jl{eachline} et \jl{println}. Un nombre peut être écrit sous forme de texte avec \jl{print} : on le retransforme en nombre avec \jl{parse} (voir diapositive ``Lecture de valeurs'').
+	\vfill
+
+	Il est aussi possible d'écrire dans des fichiers des valeurs qui ne sont pas du texte : on utilise pour cela la fonction \jl{write}. Inversement, pour lire une valeur non-textuelle, on utilise \jl{read} en précisant le type de la valeur (pour savoir combien de bits lire).
+	\vfill
+
+	\begin{julia}
+		open("/tmp/test.txt", "w+") do io
+			println(io, "this is a text")
+			write(io, 21.7)
+			seekstart(io) # put back io to the start of the file
+			display(readline(io)) # read one line and display it
+			display(read(io, Float64)) # read one float and display it
+		end
+	\end{julia}
+\end{frame}
 
 
+\section{Bibliothèques}
 
-%\begin{frame}[fragile]{Environnement de développement}
-%	Comme en Python, il existe deux façons d'exécuter du code Julia :
-%	\begin{enumerate}
-%		\item Exécuter un fichier avec \texttt{julia}:
-%		\begin{jlcode}
-%			x = 1+4
-%		\end{jlcode}
-%	note that \mintinline{julia}|x = 2+3|
-%	
-%	\begin{jlcode}
-%		using Base.ScopedValues
-%		import Base.Threads: @spawn
-%		
-%		const scoped_val = ScopedValue(1)
-%		@sync begin
-%			with(scoped_val => 2) do
-%				@spawn @show scoped_val[] # 2
-%			end
-%			if £code écrit en \LaTeX: $\left<\frac12\right>$£
-%				# $f(x) = \sum_{i=1}^xx$
-%				println(s"fooγ₀µ$bar.2$qux")
-%			end
-%		end
-%	\end{jlcode}
-%	\end{enumerate}
-%\end{frame}
+\begin{frame}[fragile]{Modules}
+	Le code Julia est écrit dans des \emph{modules} :
+	\begin{julia}
+		module MyModule
+			x = 42
+		end
+	\end{julia}
+	
+	Un module est un bloc qui sert à regrouper des noms : on parle de \textit{namespace}. Les variables définies dans un module peuvent être accédées en dehors de celui-ci en les préfixant du nom du module, par exemple \jl{MyModule.x}. Au sein du même module, il n'y a pas besoin de préfixe.
+	\vfill
+	
+	Le module par défaut lorsqu'on exécute un fichier ou qu'on ouvre un REPL s'appelle \jl{Main}. Celui-ci charge le module \jl{Base}, qui contient tous les types et fonctions de base comme \jl{Int}, \jl{+}, \jl{println}, \ldots.
+	\vfill
+	
+	On ne peut pas créer de module à l'intérieur d'une fonction.
+\end{frame}
+
+\begin{frame}[fragile]{Définition et installation}
+	\begin{definition}
+		Une \emph{bibliothèque} (\textit{package}) est un code contenu dans un module téléchargeable depuis Internet.
+	\end{definition}
+
+	\begin{convention}
+		Comme tous les modules, les bibliothèques sont écrites en ``Pascal case'' : majuscule au début de chaque mot, pas d'\textit{underline}. Les bibliothèques se terminent par un ``.jl''.
+	\end{convention}
+
+	Les bibliothèques de Julia sont généralement disponibles sur GitHub : une liste est accessible sur \url{https://juliapackages.com/}.
+	\vfill
+
+	Pour être utilisée, une bibliothèque doit préalablement avoir été installée (voir exemple de Revise.jl à la diapositive \ref{revise}).
+\end{frame}
+
+\begin{frame}[fragile]{Chargement d'une bibliothèque}
+	Pour utiliser une bibliothèque, il faut la charger dans son code.
+	\begin{itemize}
+		\item \jl{using FooBar} rend accessible \jl{FooBar} ainsi que tous les noms exportés par \jl{FooBar}. À éviter en production.%Cela peut être utile pour le développement rapide (dans le REPL) mais c'est fortement déconseillé dans du code de production car cela peut conduire à des ambiguïtés.
+		\item \jl{import FooBar} rend accessible \jl{FooBar} seulement. Le code de \jl{FooBar} peut ainsi être obtenu comme \jl{FooBar.qux}, etc.
+		\item \jl{using FooBar: qux, mee, zat} rend accessible les noms \jl{qux}, \jl{mee} et \jl{zat} seulement.
+		\item \jl{import FooBar: qux, mee, zat} rend accessible les noms \jl{qux}, \jl{mee}, \jl{zat} seulement, mais permet aussi leur surcharge (voir cours sur le dispatch multiple).
+	\end{itemize}
+
+	Les noms peuvent être changés lors du chargement avec le mot-clé \jl{as} :
+	\begin{repl}
+		£\jlREPL£ using Revise: Revise as ReviseModuleRenamed
+
+		£\jlREPL£ ReviseModuleRenamed
+		Revise
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Bibliothèques standards}
+	Les \emph{bibliothèques standards} sont des bibliothèques installées par défaut avec Julia. Elles s'utilisent comme les autres bibliothèques.
+	\vfill
+
+	Les principales :
+	\begin{itemize}
+		\item \jl{Pkg} : gestion des bibliothèques ;
+		\item \jl{Random} : nombres aléatoires ;
+		\item \jl{Statistics} : fonctions statistiques élémentaires ;
+		\item \jl{LinearAlgebra} : algèbre linéaire élémentaire ;
+		\item \jl{SparseArrays} : matrices creuses ;
+		\item \jl{Printf} : affichage paramétré de nombres ;
+		\item \jl{Test} : tests unitaires ;
+		\item \jl{Serialization} : archivage de données Julia.
+	\end{itemize}
+\end{frame}
 
 \end{document}

@@ -1,0 +1,302 @@
+\documentclass{article}
+
+\usepackage{xcolor}
+\definecolor{jrouge}{HTML}{CB3C33}
+\definecolor{jvert}{HTML}{389826}
+\definecolor{jbleu}{HTML}{4063D8}
+\definecolor{jviolet}{HTML}{9558B2}
+\definecolor{lightred}{HTML}{fcf3f3}
+\definecolor{lightgreen}{HTML}{e1f6db}
+\definecolor{lightpurple}{HTML}{f4eef7}
+\definecolor{lightgrey}{gray}{0.95}
+
+\usepackage{natbib}
+%\renewcommand{\citenumfont}[1]{{\tiny#1}}
+\renewcommand{\citenumfont}[1]{}
+\bibpunct{}{};s;;
+
+\usepackage[top=1.5cm,bottom=1.5cm, left=2.5cm,right=2.5cm]{geometry}
+\usepackage[french]{babel}
+\usepackage[mathletters]{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+% Alternative for XeLaTeX:
+%\usefonttheme{professionalfonts}
+%\usepackage{fontspec}
+%\setmonofont{JuliaMono}
+%\setdefaultlanguage{french}
+%\usepackage{unicode-math}
+
+\usepackage{subcaption}
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{soul}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{bbm}
+\usepackage{svg}
+
+\usepackage{tikz}
+\usetikzlibrary{scopes, backgrounds, arrows, automata, positioning, patterns, calc, decorations.pathmorphing, decorations.pathreplacing, arrows.meta}
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	breaklinks=true,
+}
+\usepackage{ragged2e}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{aeguill}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{stmaryrd}
+\usepackage{siunitx}
+
+\usepackage{forloop}
+\newcounter{loop}
+\newcounter{numEx}
+\newcommand{\exo}[1]{
+	\stepcounter{numEx}
+	\setcounter{loop}{0}
+	\subsection*{Exercice \arabic{numEx} -- #1}
+}
+\newcommand{\correction}{\textsl{\\Correction de l'exercice \arabic{numEx}\\}}
+\newenvironment{corr}{
+	\correction	\begin{enumerate}}
+	{\end{enumerate}
+}
+
+\usepackage{enumitem}
+\renewlist{itemize}{itemize}{4}
+\setlist[itemize,1]{label={$\bullet$}}
+\setlist[itemize,2]{label={$\triangleright$}}
+\setlist[itemize,4]{label={$\circ$}}
+
+\newcommand{\llbra}{\left\llbracket}
+\newcommand{\rrbra}{\right\rrbracket}
+\renewcommand{\brack}[1]{\ensuremath{\llbra#1\rrbra}}
+\newcommand{\der}[2]{#1^{\ensuremath{\left(#2\right)}}}
+\newcommand{\paren}[1]{\ensuremath{\left(#1\right)}}
+\newcommand{\abs}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\interval}[1]{\ensuremath{\left[#1\right]}}
+\newcommand{\set}[2]{\ensuremath{\left\{#1\,\middle|\,#2\right\}}}
+\newcommand{\cont}[1]{\mathcal{C}^{#1}}
+\newcommand{\tends}[2]{\underset{#1\to #2}{\longrightarrow}}
+\newcommand{\seq}[3]{\ensuremath{\left(#1_{#2}\right)_{#2\in#3}}}
+\newcommand{\matr}[2]{\mathcal{M}_{#1}\paren{#2}}
+\newcommand{\matrRect}[3]{\mathcal{M}_{#1,#2}\paren{#3}}
+\newcommand{\Id}{\text{Id}}
+\newenvironment{disj}[1]{\left\{\begin{array}{#1}} {\end{array}\right.}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\eps}{\varepsilon}
+
+
+
+\title{TD -- Apprentissage de la programmation en Julia}
+
+\author{Lionel~Zoubritzky}
+
+\date{11/2024}
+
+\usepackage{minted}
+\usemintedstyle{paraiso-light}
+\setminted[julia]{mathescape,linenos,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightred,escapeinside=££}
+\setminted[bash]{mathescape,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightgrey,escapeinside=££}
+
+\usepackage{lmodern}
+%\newcommand{\jl}[1]{\colorbox{lightred}{\small\ttfamily #1}}
+\newmintinline[jl]{julia}{}
+\newmintinline[jlscript]{julia}{fontsize=\scriptsize}
+\newmint[JL]{julia}{}
+\newmint[JLa]{julia}{linenos=false}
+\newminted{julia}{}
+\newenvironment{julia}{\vspace{-0.6em}\VerbatimEnvironment\begin{juliacode}}{\end{juliacode}}
+\newminted[jlrepl]{julia}{linenos=false}
+\newenvironment{repl}{\vspace{-0.6em}\VerbatimEnvironment\begin{jlrepl}}{\end{jlrepl}}
+\newcommand{\q}{\textquotesingle}
+\newcommand{\qq}{\textquotedbl}
+\newcommand{\jlREPL}{\textcolor{jvert}{\bfseries julia>}}
+
+\DeclareTextFontCommand{\emph}{\bfseries}
+
+\usepackage{xspace}
+\newcommand{\expr}{\ensuremath{\left\langle\textit{expr}\right\rangle}\xspace}
+\newcommand{\expra}[1]{\ensuremath{\left\langle\textit{expr}_{#1}\right\rangle}\xspace}
+\newcommand{\bexpr}{\ensuremath{\left\langle\textit{bexpr}\right\rangle}\xspace}
+\newcommand{\bexpra}[1]{\ensuremath{\left\langle\textit{bexpr}_{#1}\right\rangle}\xspace}
+
+
+
+\begin{document}
+	
+\begin{center}
+	\Large Apprentissage de la programmation en Julia
+	
+	TD \no4 : Équations différentielles
+	\vspace{2em}
+\end{center}
+
+Il n'est pas exigé que toutes les questions et tous les exercices soient traités. En particulier, les questions et exercices annotés du symbole $(*)$ ne sont à traiter qu'après avoir résolu les autres.
+
+À chaque question pour laquelle il faut programmer une fonctionnalité, il est implicitement demandé d'inclure un ou plusieurs tests pour s'assurer que l'implémentation est correcte.
+
+Toute fonction non-auxiliaire doit aussi inclure une docstring. Les commentaires sont partout bienvenus.\\
+
+\textsl{Cette feuille de TD doit être réalisée dans un calepin électronique (Pluto ou Jupyter notebook).}
+
+
+\exo{Dynamique proie-prédateur}
+
+
+Les équations de Lotka-Volterra modélisent les populations de proie $x(t)$ et de prédateurs $y(t)$, étant donné quatre paramètres :
+\begin{itemize}
+	\item $\alpha$ le taux de reproduction des proies ;
+	\item $\beta$ le taux de mortalité des proies dû à la prédation ;
+	\item $\delta$ le taux de reproduction des prédateurs dû à l'abondance de gibier ;
+	\item $\gamma$ le taux de mortalité intrinsèque des prédateurs.
+\end{itemize}
+
+Ces paramètres étant donnés la dynamique des population est donnée par :
+\[\begin{disj}{rl}
+	\text dx/\text dt &= x\times(\alpha - \beta y)\\
+	\text dy/\text dt &= y\times(\delta x - \gamma)
+\end{disj}\]
+
+\begin{enumerate}
+	\item Définir les valeurs des paramètres $\alpha$, $\beta$, $\gamma$ et $\delta$ de façon interactive entre 0 et 2. Faire de même pour la valeur $N_0$ de la population initiale, que l'on considérera égale pour les proies et les prédateurs entre 0.5 et 2.5.
+	
+	\item Implémenter le calcul de la solution de l'équation différentielle dans une fonction.
+
+	\item $(*)$ Dessiner l'évolution de $x(t)$ et $y(t)$ au cours de la simulation.
+
+	\item On suppose que $x(0) = y(0) = 2$, $\alpha = 2/3$, $\beta = 4/3$, $\gamma=1$ et $\delta=1$ et on résout le problème entre $t_{\min} = 0$ et $t_{\max} = 30$ avec l'intégrateur \jl{Tsit5()}.
+	
+	 en sauvegardant le résultat tous les $0.1$ unités de temps.
+	\begin{enumerate}
+		\item On utilise les arguments \jl{dt=5, saveat=5} dans la fonction \jl{solve}. Que valent $x(20)$ et $y(20)$ ?
+		
+		\item Même question en remplaçant \jl{5} par \jl{0.01}. Commenter.
+	\end{enumerate}
+
+	\item $(*)$ Dessiner le graphe des points de coordonnées $(x(t), y(t))$. On appelle ce graphe ``l'orbite'' de la solution.
+	
+	\item $(*)$ Expliquer le comportement limite de l'orbite dans le cas $\delta = 0$.
+
+%	\item $(*)$ Pour $N_0 = 1$, y a-t-il une valeur des paramètres $\alpha$, $\beta$, $\delta$ et $\gamma$ dans la gamme prescrite telle que 
+\end{enumerate}
+
+\exo{Un peu d'épidémiologie}
+
+On considère la propagation d'une épidémie au sein d'une populations de taille fixée à \jl{N} individus. Dans le modèle SIR, les individus ont trois états possibles :
+\begin{itemize}
+	\item S désigne les individus sains mais \textbf{S}usceptibles d'être infectés ;
+	\item I désigne les individus \textbf{I}nfectés ;
+	\item R désigne les individus \textbf{R}etirés, c'est-à-dire soit guéris et immunisés contre la maladie, soit morts.
+\end{itemize}
+La propagation de la maladie est liée à deux paramètres : le facteur de transmission $p$ et le temps moyen $\tau$ durant lequel un individu infecté est contagieux, de sorte que la dynamique des trois populations S, I et R est contrôlée par les équations :
+\[\frac{\text dS}{\text dt} = - p\cdot I\cdot S\qquad\text{et}\qquad\frac{\text dR}{\text dt} = I/\tau\]
+
+
+\begin{enumerate}
+	\item Justifier que $\text dS/\text dt + \text dI/\text dt + \text dR/\text dt = 0$. En déduire l'équation qui régit l'évolution de $I$ en fonction de $R$ et $S$.
+
+	\item Écrire une fonction \jl{simulate_epidemy(N, p, τ, Δt, S₀=N-1, R₀=0)} qui simule l'évolution des populations S, I et R dans ce modèle durant un temps \jl{Δt}, en supposant que les populations initiales sont données par $S(t=0) = \jl{S₀}$, $R(t=0) = \jl{R₀}$ et $I(t = 0) = \jl{N} - \jl{S₀} - \jl{R₀}$.
+
+	\item $(*)$ Écrire une fonction qui dessine l'évolution dans le temps des populations S, I et R.
+	
+	\item $(*)$ Illustrer la dynamique des populations en fonction des valeurs de $p$ et $\tau$, choisies de façon interactive.
+
+	\item Pour $p = \qty{2.73e-5}{h^{-1} individu^{-1}}$, $\tau = \qty{56.2}{h}$, $\jl{N} = \num{10000}$ et avec les valeurs par défaut de \jl{S₀}, \jl{I₀} et \jl{R₀}, quelle est la proportion d'individus encore S au bout de 2 jours ? Au bout d'une semaine ? Au bout d'un mois ?
+	
+	\item $(*)$ Pour ces mêmes valeurs de $p$ et $\tau$, quelle fraction de la population aurait-il fallu avoir vacciné avant le début de l'épidémie pour que la fraction maximale d'individus infectés ne dépasse pas \qty{20}\% ?
+\end{enumerate}
+
+
+%\section{Équations au dérivées partielles}
+%
+%\exo{Le soliton temporel}
+%
+%On considère l'équation de Korteweg--de Vries qui décrit l'évolution de la hauteur $\phi$ d'une vague scélérate :
+%\[\frac{\partial\phi}{\partial t} + \frac{\partial^3\phi}{\partial x^3} - 6\phi\frac{\partial\phi}{\partial x} = 0\]
+
+\exo{Cuisson d'une galette}
+
+On modélise une galette par un pavé droit, de base carrée de côté $l = \qty{30}{cm}$ et de hauteur $h$. La galette est initialement à la température $T_{\text{init}} = \qty{300}K$.
+
+La galette est plongée à l'instant $t = 0$ dans un four à la température $T_{\text{oven}}(t, z)$, que l'on modélise comme une simple température extérieure dépendant potentiellement du temps $t$ et la hauteur $z$, au contact de laquelle les trois surfaces de la galette se réchauffent\footnote{Un vrai four agit surtout par radiation mais on ignore cet aspect dans ce modèle}.
+
+On rappelle l'équation de la chaleur :
+\[\frac{\partial T}{\partial t} = \alpha\Delta T\]
+avec $\alpha$ la diffusivité thermique, fixée à \qty{0.2}{mm^2/s} pour l'exercice, et $\Delta f = \frac{\partial^2f}{\partial x^2} + \frac{\partial^2f}{\partial y^2} + \frac{\partial^2f}{\partial z^2}$.
+
+Pour simplifier le problème, on considère celui-ci symétrique selon les axes $x$ et $y$. On résout donc l'équation :
+\[\frac{\partial T}{\partial t} = \alpha\times\paren{2\frac{\partial^2f}{\partial x^2} + \frac{\partial^2f}{\partial z^2}}\]
+
+%On rappelle l'expression du laplacien en coordonnées cylindriques :
+%\[\begin{split}\Delta f &= \frac1r\frac{\partial}{\partial r}\paren{r\frac{\partial f}{\partial r}} + \frac1{r^2}\frac{\partial^2f}{\partial\theta^2} + \frac{\partial^2f}{\partial z^2}
+%\\&= \frac{\partial^2 f}{\partial r^2} + \frac1r\frac{\partial f}{\partial r} \hspace{0.33em}+ \frac1{r^2}\frac{\partial^2f}{\partial\theta^2} + \frac{\partial^2f}{\partial z^2}
+%\end{split}\]
+
+On fixe la température au bord de la galette comme valant
+\[T_{\text{border}}(t, z) = T_{\text{init}} + \paren{T_{\text{oven}}(t, z)}\exp\paren{-t/\tau}\] avec $\tau = \qty{5}{minutes}$.
+
+\begin{enumerate}
+	\item Écrire une fonction qui renvoie les paramètres du problème, leurs domaines, la discrétisation spatiale, l'équation de la chaleur et les conditions au bord en fonction de $h$ et de la fonction $T_{\text{oven}}$, et qui renvoie un \jl{ODEProblem} (le résultat de \jl{discretize}).
+	
+	On simulera les 40 premières minutes de cuisson, on prendra 1 pas temporel par minute et 20 pas de discrétisation spatiale selon $(Ox)$ et selon $(Oz)$.
+	
+	\textit{Attention, les calculs peuvent demander un peu de temps, une vingtaine de secondes. La première exécution peut mettre plusieurs minutes.}
+\end{enumerate}
+
+On regarde la cuisson de la tarte \textbf{en oubliant la couche superficielle} : pour toutes les questions suivantes, il est demandé de ne pas prendre en compte les températures au bord de la galette, c'est-à-dire celles fixées par $T_{\text{border}}$.
+
+Un élément de volume de la galette est cuit lorsqu'il a passé 20 minutes ou plus à \qty{140}{\degreeCelsius} ou plus. La galette est cuite lorsque chaque élément de volume est cuit.
+
+Un élément de volume de la galette est brûlé lorsqu'il a passé 30 minutes ou plus à \qty{170}{\degreeCelsius} ou plus. La galette est brûlée s'il existe au moins un élément de volume brûlé.
+
+\begin{enumerate}[resume]
+	\item Écrire une fonction \jl{time_cooked} qui prend le résultat de la simulation et détermine le premier instant à partir duquel la galette est cuite.
+	
+	\item Faire de même qu'à la question précédente avec \jl{time_burnt}
+
+	\item $(*)$ Afficher l'évolution de la température dans la galette en fonction de la position et du temps, sur une coupe de la galette qui passe par le centre de la galette.
+
+	\item On fixe $h = \qty{3}{cm}$. On considère un four parfaitement homogène et préchauffé, de sorte que sa température est fixée à $T_{\text{oven}}(t, z) = T_0$ indépendamment du temps et de l'espace.
+	\begin{enumerate}
+		\item Si $T_0 = \qty{180}{\degreeCelsius}$, au bout de combien de temps la galette est-elle cuite ?
+		\item Si $T_0 = \qty{200}{\degreeCelsius}$, au bout de combien de temps la galette est-elle brûlée ?
+		\item $(*)$ Dans quelle gamme de température $T_0$ la galette peut-elle cuire en moins d'une heure sans brûler ?
+	\end{enumerate}
+
+	\item On fixe toujours $h = \qty{3}{cm}$, mais on considère maintenant un four initialement à température ambiante, et dont la répartition de la chaleur n'est pas homogène. La température du four est donnée par l'expression :
+	\[T_{\text{oven}}(t, z) = \qty{300}K + \frac{\min(t, \qty{10}{minutes})}{\qty{10}{minutes}}\times\paren{T_0 - T_{\text{init}} - \qty{30}{\degreeCelsius}\times(1 - z/h)}\]
+	
+	Reprendre la question précédente dans ces conditions.
+	
+	\item $(*)$ Est-il plus facile de réussir sa galette dans le premier ou dans le second four ?
+	
+	\item $(*)$ Pour quelle gamme de hauteurs $h$ la galette peut-elle cuire en moins d'une heure sans brûler avec $T_0 = \qty{200}{\degreeCelsius}$, dans les deux types de four ?
+	
+%	\item $(*)$ On fixe $h =  \qty{3}{cm}$ et on reprend le four préchauffé à température uniforme $T_0$.
+%	
+%	Notre galette contient désormais une fève : celle-ci est modélisée par l'élément de volume située entre les hauteurs $h_{\text{inf}} = \qty{1.2}{cm}$ et $h_{\text{sup}} = \qty{1.5}{cm}$, entre les rayons $r_{\text{inf}} = \qty{4}{cm}$ et $r_{\text{sup}} = \qty{5.5}{cm}$ et entre les angles $\theta_{\text{inf}} = \qty{0}{\degree}$ et $\theta_{\text{sup}} = \qty{1}{\degree}$.
+%	
+%	Cette fève a pour diffusivité thermique $\alpha_{\text{fève}} = \qty{1.2}{mm^2/s}$ et on supposera que le bord de la fève est constamment à la température des éléments de volume de galette qui l'environnent.
+%	\begin{enumerate}
+%		\item Quelle est la température moyenne dans la fève au bout de 30 minutes de cuisson à $T_0 = \qty{200}{\degreeCelsius}$ ?
+%		\item La galette met-elle plus ou moins de temps à cuire avec la fève ?
+%	\end{enumerate}
+\end{enumerate}
+
+\end{document}

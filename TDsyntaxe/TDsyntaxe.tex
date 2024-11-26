@@ -162,21 +162,25 @@ La suite de Syracuse est définie comme la suite d'entiers de premier terme $u_0
 	\item sinon, $u_{i+1} = 3u_i + 1$.
 \end{itemize}
 
-Écrire une fonction \jl{syracuse(n)} qui renvoie le premier indice $\jl{m}\in\N$ tel que la suite de Syracuse définie par $u_0 = \jl{n}$ vérifie $u_{\jl{m}} = 1$. La conjecture de Syracuse affirme que ce $\jl{m}$ existe toujours.
-
-\exo{Nombres premiers}
-
-Écrire une fonction \jl{isprime(n)} qui renvoie \jl{true} si \jl{n} est premier, et \jl{false} sinon.
+Écrire une fonction \jl{syracuse(n)} qui renvoie le premier indice $\jl{m}\in\N$ tel que la suite de Syracuse définie par $u_0 = \jl{n}$ vérifie $u_{\jl{m}} = 1$. La conjecture de Syracuse, à ce jour non démontrée, affirme que ce $\jl{m}$ existe toujours.
 
 \exo{La conjecture de Goldbach}
 
-La conjecture de Goldbach, à ce jour non démontrée, affirme que tout nombre entier pair supérieur à 3 peut s’écrire comme une somme de deux nombres premiers. La conjecture faible de Goldbach affirme, elle, que tout nombre entier impair supérieur à 9 peut s'écrire comme une somme de trois nombres premiers impairs.
+\begin{enumerate}
+	\item Écrire une fonction \jl{isprime_naive(n)} qui renvoie \jl{true} si \jl{n} est premier, et \jl{false} sinon.
 
-Écrire une fonction \jl{goldbach(n)} qui pour tout $\jl{n} \ge 9$ renvoie un triplets d'entiers \jl{(a,b,c)} tel que :
-\begin{itemize}
-	\item Si \jl{n} est pair, alors \jl{c == 0}, \jl{a} et \jl{b} sont premiers et \jl{n == a + b}.
-	\item Sinon, alors \jl{a}, \jl{b} et \jl{c} sont premiers et impairs, et \jl{n == a + b + c}.
-\end{itemize}
+	\textsl{On pourra si besoin utiliser la fonction \jl{round(Int, x)} qui renvoie le nombre entier le plus proche du nombre flottant \jl{x}.}
+
+	\item La conjecture de Goldbach, à ce jour non démontrée, affirme que tout nombre entier pair supérieur à 3 peut s’écrire comme une somme de deux nombres premiers. La conjecture faible de Goldbach affirme, elle, que tout nombre entier impair supérieur à 9 peut s'écrire comme une somme de trois nombres premiers impairs.
+
+	Écrire une fonction \jl{goldbach(isprime, n)} qui prend comme argument la fonction \jl{isprime_naive} précédente, ansi qu'un entier $\jl{n} \ge 9$, et qui renvoie un triplets d'entiers \jl{(a,b,c)} tel que :
+	\begin{itemize}
+		\item Si \jl{n} est pair, alors \jl{c == 0}, \jl{a} et \jl{b} sont premiers et \jl{n == a + b}.
+		\item Sinon, alors \jl{a}, \jl{b} et \jl{c} sont premiers et impairs, et \jl{n == a + b + c}.
+	\end{itemize}
+
+	On prendra soin de ne jamais appeler la fonction \jl{isprime_naive} dans le corps de \jl{goldbach}, mais de toujours appeler \jl{isprime} à la place. Cela permettra de remplacer \jl{isprime_naive} par une meilleure implémentation plus tard.
+\end{enumerate}
 
 \exo{La conjecture d'Euler}
 
@@ -184,12 +188,59 @@ La conjecture de Goldbach, à ce jour non démontrée, affirme que tout nombre e
 	\item La conjecture d'Euler affirme que pour tout $n>2$, la somme de $n-1$ puissances $n$-ièmes n'est jamais une puissance $n$-ième. En d'autres termes :\vspace{-0.5em}
 	\[\forall n>2,\ \forall b\in\N,\ \forall (a_1, \ldots, a_{n-1})\in\paren{\N^*}^{n-1},\ a_1^n + \ldots + a_{n-1}^n \neq b^n\]
 	Cette conjecture s'est finalement révélée fausse. Trouver numériquement un contre-exemple pour $n = 5$.
-	
-	\textsl{On pourra si besoin utiliser la fonction \jl{round(Int, x)} qui renvoie le nombre entier le plus proche du nombre flottant \jl{x}.}
 
-	\item $(*)$ Le problème de trouver des sommes de $n$ (et non pas $n-1$) puissances $n$-ièmes égales à une puissance $n$-ième est plus simple. Écrire une fonction \jl{noteuler(n)} qui renvoie un entier naturel \jl{b} tel qu'il existe un $n$-uplet $(a_1, \ldots, a_n)\in\paren{\N^*}^n$ pour lequel $a_1^n + \ldots + a_n^n = \jl{b}$. La fonction doit aussi afficher les valeurs de $a_1$, \ldots, $a_n$ correspondantes.
+	\item $(*)$ Le problème de trouver des sommes de $n$ (et non pas $n-1$) puissances $n$-ièmes égales à une puissance $n$-ième est plus simple. Écrire une fonction \jl{noteuler(n)} qui renvoie un entier naturel \jl{b} tel qu'il existe un $n$-uplet $(a_1, \ldots, a_n)\in\paren{\N^*}^n$ pour lequel $a_1^n + \ldots + a_n^n = \jl{b}^n$. La fonction doit aussi afficher les valeurs de $a_1$, \ldots, $a_n$ correspondantes.
 
 	Tester cette fonction pour $n = $ 1, 2, 3 et 5.
+\end{enumerate}
+
+\exo{Suite de Conway}
+
+La suite de Conway (\textit{Look and Say sequence}) est la suite d'entiers commençant par $u_1 = 1$ et tel que $u_{n+1}$ a pour chiffre ceux issus de la lecture à voix haute de $u_n$. Les premiers termes sont donc :
+\begin{itemize}
+	\item $u_1 = 1$
+	\item $u_2 = 11$ ($u_1 = 1$ contient \textbf{un} 1)
+	\item $u_3 = 21$ ($u_1 = 11$ contient \textbf{deux} 1)
+	\item $u_4 = 1211$ ($u_1 = 21$ contient \textbf{un} 2 suivi d'\textbf{un} 1)
+	\item $u_5 = 111221$ ($u_1 = 21$ contient \textbf{un} 1 suivi d'\textbf{un} 2 suivi de \textbf{deux} 1)
+\end{itemize}
+
+\begin{enumerate}
+	\item Écrire une fonction \jl{conway(n)} qui renvoie $u_{\jl{n}}$ sous la forme d'un \jl{Int}.
+
+	$(*)$ La solution ne doit pas utiliser de tableau ni de chaîne de caractères.
+	
+	\item Le comportement de \jl{conway(n)} pour $\jl{n} \ge 10$ est anormal : expliquer.
+\end{enumerate}
+
+
+\exo{$(*)$ Série des $1/i^4$}
+
+Dans cet exercice, on cherche à comparer la précision et le temps d'exécution de différentes façon de calculer la série tronquée $\sum_{i=1}^n 1/i^4$.
+
+\textsl{Pour mesurer la performance d'une fonction, on pourra utiliser la macro \jl{@be} de la bibliothèque \jl{Chairmarks.jl}. Celle-ci s'utilise en entrant dans le REPL \jl{@be £\expr\!\!\!£} où \expr est l'expression dont on souhaite mesurer le temps d'exécution.}
+
+\begin{enumerate}
+	\item Écrire une fonction \jl{zeta4(T, n; reverse=false, power=:inner)} qui prend un type \jl{T} et un entier \jl{n} en entrée, et qui renvoie la somme des \begin{itemize}
+		\item \jl{inv(T(i^4))} si \jl{power === :inner}, ou bien
+		\item \jl{inv(T(i)^4)} si \jl{power === :outer}, ou bien
+		\item \jl{T(i)^(-4)} sinon ;
+	\end{itemize}
+	pour \jl{i} allant
+	\begin{itemize}
+		\item de \jl{1} à \jl{n} si \jl{reverse == false}
+		\item de \jl{n} à \jl{1} sinon.
+	\end{itemize}
+	
+	\textsl{Note : on pourra utiliser la fonction \jl{zero(T)} pour obtenir la valeur de zéro correspondant au type \jl{T}.}
+	
+	La tester pour \jl{n = 1_000_000} avec \jl{T = Float64} et \jl{T = Float32}. Comparer les performances et les précisions selon les différentes options. La valeur théorique lorsque \jl{n} tend vers $+\infty$ est \jl{£$\pi$£^4/90}.
+
+	\item Tester avec \jl{T = Rational{Int}}. Expliquer le comportement.
+
+	\textsl{Note: un nombre rationnel s'écrit en Julia comme \jl{a//b}.}
+
+	\item Tester avec \jl{T = BigFloat} et \jl{T = Rational{BigInt}}. Que signifient ces types ? Comparer aux types précédents.
 \end{enumerate}
 
 
@@ -224,7 +275,13 @@ Déterminer la limite empirique de $u_n/n$ lorsque $n\to\infty$. À quel point l
 
 \exo{$(*)$ Nombres premiers mémoïsés}
 
-Réécrire la fonction \jl{isprime} de l'exercice 2 en mémoïsant le caractère premier ou non-premier des nombres rencontrés au fur et à mesure. Quantifier l'accélération résultante pour la fonction \jl{goldbach} de l'exercice 3.
+\begin{enumerate}
+	\item Réécrire la fonction \jl{isprime_naive} de l'exercice 2 en une fonction \jl{isprime_memoize} qui mémoïse le caractère premier ou non-premier des nombres rencontrés au fur et à mesure. 
+
+	\item 16372007 est-il un nombre premier ? 16372009 ? 16372011 ?
+
+	\item Quantifier l'accélération de la fonction \jl{goldbach} appelée avec \jl{isprime_memoize} comparée à \jl{isprime_naive}.
+\end{enumerate}
 
 \exo{Problème du sac à dos}
 
@@ -233,15 +290,17 @@ Le problème du sac à dos (\textit{knapsack problem}) consiste à choisir quels
 
 Pour tester les solutions au problème, on prendre des objets tels que le \jl{i}-ème a pour valeur \jl{3i} et pour poids \jl{i + i÷2 + 2(i%2) - i%3}, pour différentes valeurs de \jl{N} et avec \jl{wmax == N^2÷2}.
 
+\textsl{On pourra utiliser les fonctions \jl{sort} et \jl{sortperm} au besoin.}
+
 \begin{enumerate}
-	\item Implémenter les trois algorithmes gloutons\footnote{Un algorithme est dit ``glouton'' lorsqu'il procède en choisissant à chaque étape le choix localement optimal. Un tel algorithme peut être globalement optimal mais ne l'est pas nécessairement.} suivants :
+	\item Implémenter les trois algorithmes gloutons\footnote{Un algorithme est dit ``glouton'' (\textit{greedy}) lorsqu'il procède en choisissant à chaque étape le choix localement optimal. Un tel algorithme peut être globalement optimal mais ne l'est pas nécessairement.} suivants :
 	\begin{enumerate}
 		\item Ajouter les objets par ordre décroissant de valeur jusqu'à remplir le sac.
 		\item Ajouter les objets par ordre croissant de poids jusqu'à remplir le sac.
 		\item Ajouter les objets par ordre décroissant de valeur / poids jusqu'à remplir le sac.
 	\end{enumerate}
 
-	Lequel des trois algorithmes donne la meilleure valeur totale ? Est-il optimal ?
+	Lequel des trois algorithmes donne la meilleure valeur totale ?
 
 	\item On cherche maintenant une solution exacte. Pour cela, remarquons que si l'on dispose de la solution exacte pour les \jl{i - 1} premiers objets pour tout poids maximal inférieur ou égal à \jl{wmax}, alors on peut en déduire la solution exacte pour les \jl{i} premiers objets:
 	\begin{itemize}
@@ -249,7 +308,7 @@ Pour tester les solutions au problème, on prendre des objets tels que le \jl{i}
 		\item soit l'objet \jl{i} fait partie de la solution optimale, donc celle-ci est constituée d'une part du dernier objet et d'autre part de la solution optimale pour les \jl{i - 1} premiers objets et le poids maximal \jl{wmax - weights[i]}.
 	\end{itemize}
 
-	Implémenter un algorithme de programmation dynamique\footnote{La programmation dynamique est une méthode algorithmique qui consiste à découper le problème en sous-problèmes et à les résoudre par ordre croissant de taille, en mémoïsant les résultats intermédiaires.} qui exploite ce raisonnement en construisant au fur et à mesure la matrice \jl{opt} dont chaque case \jl{opt[i,w]} contient la liste des objets à garder pour avoir la solution optimale sur les \jl{i} premiers objets avec un poids maximal \jl{w}.
+	Implémenter un algorithme de programmation dynamique\footnote{La programmation dynamique est une méthode algorithmique qui consiste à découper le problème en sous-problèmes et à les résoudre par ordre croissant de taille, en mémoïsant les résultats intermédiaires.} qui exploite ce raisonnement en construisant au fur et à mesure la matrice \jl{opt} dont chaque case \jl{opt[i,w]} contient d'une part la liste des objets à garder pour avoir la solution optimale sur les \jl{i} premiers objets avec un poids maximal \jl{w}, et d'autre part le coût total de cette liste d'objet.
 \end{enumerate}
 
 \section{Traitement de texte}
@@ -263,15 +322,19 @@ Pour tester les solutions au problème, on prendre des objets tels que le \jl{i}
 
 	Que fait la fonction \jl{randstring} ? L'utiliser pour générer une chaîne de caractères \jl{str₀} de taille \num{100000000} dont les caractères sont pris dans \jl{REFCHARS}.
 
-	\item Écrire une fonction qui prend en argument une chaîne de caractères et qui identifie la plus longue sous-chaîne ne contenant aucun chiffre. Quelle est sa taille dans \jl{str₀} ?
+	\item Écrire une fonction qui prend en argument une chaîne de caractères et qui renvoie la plus longue sous-chaîne ne contenant aucun chiffre. Quelle est sa taille dans \jl{str₀} ?
 
 	\item Écrire une fonction qui calcule le nombre de caractères ASCII dans une chaîne de caractères. On rappelle que les caractères ASCII sont ceux que l'on peut obtenir comme \jl{Char(i)} où $\jl{i}\in\brack{0, 127}$. Quelle est la proportion de caractères ASCII dans \jl{str₀} ? $(*)$ Quelle est la proportion théorique si la taille de \jl{str₀} tend vers $+\infty$ ?
 
-	\item Écrire une fonction qui calcule le nombre d'occurrences où deux lettres consécutives sont identiques. On comptera par exemple deux telles occurrences dans la sous-chaîne ``axxxb"". Quel est le nombre de telles occurrences dans \jl{str₀} ? $(*)$ À quel nombre pouvait-on s'attendre ?
+	\item Écrire une fonction qui calcule le nombre d'occurrences où deux lettres consécutives sont identiques. On comptera par exemple deux telles occurrences dans la sous-chaîne ``axxxb''. Quel est le nombre de telles occurrences dans \jl{str₀} ? $(*)$ À quel nombre pouvait-on s'attendre ?
+	
+	\textsl{On pourra utiliser la fonction \jl{Iterators.peel} au besoin.}
 
 	\item Un palindrome est un mot qui peut se lire identiquement dans les deux sens comme par exemple ``kayak'' ou bien ``engagelejeuquejelegagne''.
 	\begin{enumerate}
-		\item Écrire une fonction \jl{ispalindrome} qui détermine si une chaîne de caractères est un palindrome. On pourra utiliser la fonction \jl{Iterators.reverse} au besoin.
+		\item Écrire une fonction \jl{ispalindrome} qui détermine si une chaîne de caractères est un palindrome.
+		
+		\textsl{On pourra utiliser les fonctions \jl{zip} et \jl{Iterators.reverse} au besoin.}
 
 		\item $(*)$ Écrire une fonction \jl{maxpalindrome} qui extrait le plus long palindrome d'une chaîne de caractères. Quel est le plus long palindrome obtenu sur \jl{str₀} ?
 	\end{enumerate}
@@ -280,10 +343,12 @@ Pour tester les solutions au problème, on prendre des objets tels que le \jl{i}
 \exo{$(*)$ Un peu de bio-informatique}
 
 On considère des séquences d'ADN constituées d'un enchaînement de caractères \jl{'A'}, \jl{'T'}, \jl{'G'} et \jl{'C'}. On peut diviser virtuellement une telle séquence en codons, c'est-à-dire en triplets consécutifs. Le chaîne \jl{AAGCTC} est par exemple constituée des deux codons \jl{AAG} et \jl{CTC}.
+
+Attention : même si les sous-séquences \jl{AGC} et \jl{GCT} apparaissent, ce ne sont pas des codons car elles ne respectent pas l'alignement (\textit{i.e.} la position du dernier caractère dans le texte n'est pas un multiple de 3).
 \begin{enumerate}
 	\item Écrire une fonction qui calcule la fréquence d'apparition de chaque codon dans une chaîne de caractères. La valeur renvoyée est un dictionnaire qui associe à chaque codon possible sa fréquence.
 
-	\item Une sous-chaîne \jl{s} est répétée lorsqu'il existe deux sous-chaînes de la séquence \jl{s₁} et \jl{s₂} \underline{disjointes} toutes deux égales à \jl{s}. Écrire une fonction qui identifie la sous-chaîne de \jl{n} codons le plus souvent répété dans une séquence, où \jl{n} est un argument de la fonction. La fonction doit renvoyer la sous-chaîne ainsi que les positions de ses occurrences.
+	\item Une sous-chaîne \jl{s} est répétée lorsqu'il existe deux sous-chaînes de la séquence \jl{s₁} et \jl{s₂} \underline{disjointes} toutes deux égales à \jl{s}. Écrire une fonction qui identifie la sous-chaîne de \jl{n} codons la plus souvent répétée dans une séquence, où \jl{n} est un argument de la fonction. La fonction doit renvoyer la sous-chaîne ainsi que les positions de ses occurrences.
 
 	\item Écrire une fonction qui identifie la sous-chaîne la plus longue qui est répétée dans la séquence (on ne considère que les sous-chaînes constituées de codons, donc de taille multiple de 3).
 \end{enumerate}

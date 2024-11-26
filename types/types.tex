@@ -333,7 +333,7 @@
 	\end{repl}
 	\vfill
 
-	Si l'argument n'est pas typé, on utilise \jl{_} à la place pour indiquer un argument inutilisé :
+	Si l'argument n'est pas non plus typé, on utilise \jl{_} à la place pour indiquer un argument inutilisé :
 	\begin{repl}
 		£\jlREPL£ ignorefirst(_, x) = x;
 
@@ -346,6 +346,7 @@
 	\begin{definition}
 		Un \emph{type composite} est un type dont les valeurs ont zéro, un ou plusieurs \emph{champs} (\textit{field}) nommés, chacun associé à son propre type.
 	\end{definition}
+	\vfill
 
 	En Julia, un type composite est défini à l'aide du mot-clé \jl{struct} :
 	\begin{julia}
@@ -355,6 +356,9 @@
 			information  # no type indication is equivalent to ::Any
 		end
 	\end{julia}
+	\vfill
+
+	Une définition de type ne peut pas être effectuée dans une fonction.
 \end{frame}
 
 \begin{frame}[fragile]{Construction d'une instance d'un type composite}
@@ -632,7 +636,7 @@
 	\begin{itemize}
 		\item \jl{Union} pour les types de la forme \jl{Union{...}}.
 		\item \jl{UnionAll} pour les types se terminant par un \jl{where {...}}, c'est-à-dire les types paramétriques dont tous les paramètres ne sont pas fixés. Exemples : \jl{Vector}, \jl{Dict{Int}}, \jl{Tuple{T,T} where T}.
-		\item \jl{DataType} pour tous les autres. Exemples : \jl{Int}, Dict{String,Int}, \jl{Vector{String}}, \jl{Tuple{Float64,Float64}}.
+		\item \jl{DataType} pour tous les autres. Exemples : \jl{Int}, \jl{Dict{String,Int}}, \jl{Vector{String}}, \jl{Tuple{Float64,Float64}}.
 	\end{itemize}
 	\vfill
 
@@ -742,7 +746,7 @@
 		£\jlREPL£ x = Reference()          # x.val contains garbage
 		Reference{Int}(139910970766752)
 		
-		£\jlREPL£ isdefined(x, :val)        # isdefined does not know this
+		£\jlREPL£ isdefined(x, :val)       # isdefined does not know this
 		true
 	\end{repl}
 	
@@ -812,7 +816,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{Représentation mémoire}
-	Dans l'exemple précédent, \texttt{0x00007f5208a90de0} est un l'adresse de la chaîne \jl{"hic"}. Celle-ci est représentée en mémoire à cette adresse par les quatre caractères \jl{'h'}, \jl{'i'}, \jl{'c'} et \jl{'\0'} (qui indique la fin d'une chaîne de caractères) consécutifs.
+	Dans l'exemple précédent, \texttt{0x00007f5208a90de0} est l'adresse de la chaîne \jl{"hic"}. Celle-ci est représentée en mémoire à cette adresse par les quatre caractères \jl{'h'}, \jl{'i'}, \jl{'c'} et \jl{'\0'} (qui indique la fin d'une chaîne de caractères) consécutifs.
 
 	\begin{repl}
 		£\jlREPL£ Char(unsafe_load(Ptr{Int8}(pointer("hic")) + 0))
