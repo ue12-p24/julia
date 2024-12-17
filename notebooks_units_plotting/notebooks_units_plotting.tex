@@ -223,8 +223,8 @@
 \begin{frame}{Cellules}
 	Un calepin est divisée en \emph{cellules}. Il en existe généralement deux sortes :
 	\begin{itemize}
-		\item Une cellule de code contient du code.
-		\item Une cellule de \emph{Markdown} contient du texte, au format Markdown :
+		\item[$\triangleright$] Une cellule de code contient du code.
+		\item[$\triangleright$] Une cellule de \emph{Markdown} contient du texte, au format Markdown :
 		\begin{itemize}
 			\item \texttt{\LARGE \# Premier niveau de titre},\\ \texttt{\Large \#\# Deuxième}, \texttt{\large \#\#\# Troisième}, \texttt{\#\#\#\# Quatrième}, \ldots
 			\vspace{0.4em}
@@ -263,8 +263,7 @@
 
 	Jupyter est facile à prendre en main, et très utilisé dans la communauté Python (en particulier pour les sciences des données).\\
 
-	Pour inclure du code Julia dans un Jupyter notebook, il faut installer l'environnement de développement Jupyter, inclus dans Anaconda par exemple, ainsi que la bibliothèque IJulia.jl en Julia.
-	\vfill
+	Pour inclure du code Julia dans un Jupyter notebook, il faut installer l'environnement de développement Jupyter, inclus dans Anaconda par exemple, ainsi que la bibliothèque IJulia.jl en Julia. Il est aussi possible d'éditer des Jupyter notebook directement dans VSCode.
 \end{frame}
 
 \begin{frame}{Pluto}
@@ -301,7 +300,7 @@
 	
 	\begin{minted}{julia}
 		md"""
-		This is my Markdown comment. I can do interpolation: `x = $x`
+		This is my Markdown comment. It can do interpolation: `x = $x`
 		"""
 	\end{minted}
 	\vfill
@@ -438,7 +437,7 @@
 
 	On suppose dans le reste du cours que la commande suivante a été exécutée (il faut donc l'inclure dans le fichier \texttt{***.jl}) : \vspace{-0.6em}
 	\JL{using GLMakie}
-	(On peut aussi utiliser \jl{using GLMakie} ou \jl{using WGLMakie} à la place.)
+	(On peut aussi utiliser \jl{using CairoMakie} ou \jl{using WGLMakie} à la place.)
 \end{frame}
 
 \begin{frame}{Données linéaires simples}

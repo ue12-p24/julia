@@ -143,7 +143,7 @@
 \begin{center}
 	\Large Apprentissage de la programmation en Julia
 	
-	TD \no4 : Dessin scientifique et bases de données
+	TD \no3 : Dessin scientifique et bases de données
 	\vspace{2em}
 \end{center}
 
@@ -158,9 +158,9 @@ Toute fonction non-auxiliaire doit aussi inclure une docstring. Les commentaires
 On cherche à afficher la fonction $f:t\mapsto A\times\sin(\omega t) + B$ en fonction des paramètres $A$, $B$ et $\omega$.
 
 \begin{enumerate}
-	\item Créer un Pluto notebook dans lequel définir trois variables $A$, $B$ et $\omega$, liées à des curseurs de sélection sur $\brack{0, 5}$.
+	\item Créer un Pluto notebook dans lequel définir trois variables $A$, $B$ et $\omega$, liées à des curseurs de sélection sur $\brack{0, 10}$, $\brack{-5, 5}$ et $\brack{0, 20}$ respectivement.
 	\item Afficher la fonction $f$ sur l'intervalle $t\in\left[-5, 5\right]$ et limiter les ordonnées à $\left[-6, 11\right]$.
-	\item Trouver des valeurs de $A$, $B$ et $\omega$ telles que $f(-3) \le -1$, $3\le f(2) \le 4$ et $f(4) \ge 5$.
+	\item Trouver des valeurs de $A$, $B$ et $\omega$ telles que $f(-3) \le -1$, $3 < f(2) < 5$ et $f(4) \ge 5$.
 \end{enumerate}
 
 \exo{Un peu de mécanique du point}
@@ -185,7 +185,7 @@ On va simuler l'évolution temporelle d'un tel pendule élastique en intégrant 
 	\item Implémenter ce protocole en une fonction qui renvoie la listes des paires formées par la position et la vitesse de la masse à chaque pas de la simulation. La signature de la fonction est :
 	
 	\jl{euler_integration(::Pendulum, initial_point, initial_velocity, δt, total_time)}.
-	\item En utilisant $k = ??$, $l_0 = \qty{20}{cm}$, $m = \qty{1}{kg}$, $\delta t = \qty{1}{ms}$, une vitesse initiale nulle, et pour point de départ $(-l_0, 0)$, dessiner l'évolution de la coordonnée $x$ du système au cours du temps pendant une minute simulée.
+	\item En utilisant $k = \qty{100}{J/m^2}$, $l_0 = \qty{20}{cm}$, $m = \qty{1}{kg}$, $\delta t = \qty{1}{ms}$, une vitesse initiale nulle, et pour point de départ $(-l_0, 0)$, dessiner l'évolution de la coordonnée $x$ du système au cours du temps pendant une minute simulée.
 	\item Dessiner l'évolution de l'énergie totale du système au cours du temps. Qu'observe-t-on ?
 \end{enumerate}
 
@@ -198,7 +198,7 @@ On utilise plutôt un schéma d'intégration qui s'appelle \textit{velocity Verl
 \begin{enumerate}[resume]
 	\item $(*)$ En utilisant des développements de Taylor, calculer l'erreur sur $f(t+\delta t)$ exprimée en grand $O$ d'une puissance de $\delta t$. Comparer au schéma d'intégration d'Euler (de la question 4).
 	\item Implémenter ce nouveau schéma d'intégration sous la forme d'une fonction \jl{verlet_integration} prenant les mêmes paramètres que \jl{euler_integration}. Reprendre ensuite les questions 7 et 8 en utilisant cette fois-ci \jl{verlet_integration}.
-	\item Superposer sur un même dessin l'évolution de la coordonnée $x$ en fonction du temps pour différentes valeurs de $k$, allant de ?? à ??. Commenter.
+	\item Superposer sur un même dessin l'évolution de la coordonnée $x$ en fonction du temps pour différentes valeurs de $k$, allant de \qty{100}{J/m^2} à \qty{150}{J/m^2}. Commenter.
 	\item $(*)$ Écrire une fonction \jl{draw_simulation(::Pendulum, output)} qui prend le pendule ainsi que la valeur renvoyée par \jl{verlet_integration} comme entrée, et crée une animation montrant visuellement la trajectoire du système au cours du temps. On reprendra la même représentation du pendule qu'à la question 4.
 \end{enumerate}
 
@@ -207,33 +207,11 @@ On considère maintenant plusieurs pendules élastiques comme celui précédent,
 \begin{enumerate}[resume]
 	\item $(*)$ Représenter ce nouveau système par un type \jl{PendulumSequence} dont un unique champ contient une liste de \jl{Pendulum}s ayant tous le même type mais pas nécessairement les mêmes valeurs des paramètres $m$, $l_0$ et $k$.
 	\item $(*)$ Reprendre les questions 2 et 3 pour ce nouveau type \jl{PendulumSequence}. Le second paramètre \jl{point} doit être une liste de points, un pour chaque sous-pendule.
-	\item $(*)$ On considère le cas de deux pendules élastiques attachés ensemble, le premier de paramètres $\der k1 = ??$, $\der{l_0}1 = \qty{20}{cm}$, $\der m1 = \qty{1}{kg}$, et le second avec $\der k2 = ??$, $\der{l_0}2 = \qty{10}{cm}$, $\der m2 = \qty{0.1}{kg}$. Les deux masses sont initialement disposées en respectivement $(-\der{l_0}1, 0)$ et $(-\der{l_0}1-\der{l_0}2, 0)$, lâchées sans vitesse initiale.
+	\item $(*)$ On considère le cas de deux pendules élastiques attachés ensemble, le premier de paramètres $\der k1 = \qty{100}{J/m^2}$, $\der{l_0}1 = \qty{20}{cm}$, $\der m1 = \qty{1}{kg}$, et le second avec $\der k2 = \qty{50}{J/m^2}$, $\der{l_0}2 = \qty{10}{cm}$, $\der m2 = \qty{0.1}{kg}$. Les deux masses sont initialement disposées en respectivement $(-\der{l_0}1, 0)$ et $(-\der{l_0}1-\der{l_0}2, 0)$, lâchées sans vitesse initiale.
 
 	Combien de temps met ce système à atteindre une configuration où la seconde masse se retrouve au-dessus de l'axe $(Ox)$ ?
 	\item $(*)$ Reprendre la question 12 avec le nouveau type \jl{PendulumSequence}.
 \end{enumerate}
-
-\exo{Analyse et génération de données}
-
-Télécharger le jeu de données présent sur \url{https://www.data.gouv.fr/fr/datasets/liste-de-prenoms/}
-
-\begin{enumerate}
-	\item Quel est le prénom avec la plus haute ``fréquence'' ? Que signifie cette ``fréquence'' ?
-	\item Quelle est la proportion de prénoms épicènes (c'est-à-dire pouvant être à la fois masculins et féminins) dans la base de données ?
-	\item Écrire une fonction \jl{generate_firstname(language)} qui génère aléatoirement un prénom de la langue spécifiée, de sorte que la probabilité associée à chaque prénom soit proportionnelle à sa ``fréquence''.
-\end{enumerate}
-
-Télécharger le fichier des prénoms donnés en France par département au format CSV à présent sur \url{https://www.insee.fr/fr/statistiques/7633685}.
-
-\begin{enumerate}[resume]
-	\item Créer une sous-table qui exclut les \jl{_PRENOMS_RARES} ainsi les lignes présentant des données manquantes.
-	\item Combien y a-t-il eu de ``Pierre'' et de ``Marie'' nommés en France depuis 1980 en Île-de-France (départements 75, 77, 78, 91, 92, 93, 94 et 95) ?
-	\item Écrire une fonction \jl{plot_firstnames_repartition(num, department=nothing, year=nothing)} qui, pour le département et l'année spécifiée, représente les \jl{num} prénoms les plus donnés sous la forme de barres ayant pour longueur la fréquence du prénom, et pour label le prénom. En absence de département donné, considérer toute la France ; en absence d'année donnée, considérer toute la plage depuis 1900.
-	\item $(*)$ Comparer la statistique des prénoms donnés en France avec les fréquences données par la base précédente.
-\end{enumerate}
-
-\exo{Le problème de l'emploi du temps}
-
 
 
 \end{document}
