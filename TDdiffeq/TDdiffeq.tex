@@ -232,16 +232,16 @@ La propagation de la maladie est liée à deux paramètres : le facteur de trans
 
 \exo{Cuisson d'une galette}
 
-On modélise une galette par un pavé droit, de base carrée de côté $l = \qty{30}{cm}$ et de hauteur $h$. La galette est initialement à la température $T_{\text{init}} = \qty{300}K$.
+On modélise une galette par un cylindre, de rayon $R = \qty{15}{cm}$ et de hauteur $h$. La galette est initialement à la température $T_{\text{init}} = \qty{300}K$.
 
 La galette est plongée à l'instant $t = 0$ dans un four à la température $T_{\text{oven}}(t, z)$, que l'on modélise comme une simple température extérieure dépendant potentiellement du temps $t$ et la hauteur $z$, au contact de laquelle les trois surfaces de la galette se réchauffent\footnote{Un vrai four agit surtout par radiation mais on ignore cet aspect dans ce modèle}.
 
 On rappelle l'équation de la chaleur :
 \[\frac{\partial T}{\partial t} = \alpha\Delta T\]
-avec $\alpha$ la diffusivité thermique, fixée à \qty{0.2}{mm^2/s} pour l'exercice, et $\Delta f = \frac{\partial^2f}{\partial x^2} + \frac{\partial^2f}{\partial y^2} + \frac{\partial^2f}{\partial z^2}$.
+avec $\alpha$ la diffusivité thermique, fixée à \qty{0.2}{mm^2/s} pour l'exercice, et $\Delta f = \frac{\partial^2f}{\partial r^2} + \frac1r\frac{\partial f}{\partial r} + \frac1{r^2}\frac{\partial^2f}{\partial \theta^2} + \frac{\partial^2f}{\partial z^2}$.
 
-Pour simplifier le problème, on considère celui-ci symétrique selon les axes $x$ et $y$. On résout donc l'équation :
-\[\frac{\partial T}{\partial t} = \alpha\times\paren{2\frac{\partial^2f}{\partial x^2} + \frac{\partial^2f}{\partial z^2}}\]
+Pour simplifier le problème, on observe que celui-ci a une symétrie cylindrique, et est donc indépendant de $\theta$. On résout donc l'équation :
+\[\frac{\partial T}{\partial t} = \alpha\times\paren{\frac{\partial^2f}{\partial r^2} + \frac1r\frac{\partial f}{\partial r} + \frac{\partial^2f}{\partial z^2}}\]
 
 %On rappelle l'expression du laplacien en coordonnées cylindriques :
 %\[\begin{split}\Delta f &= \frac1r\frac{\partial}{\partial r}\paren{r\frac{\partial f}{\partial r}} + \frac1{r^2}\frac{\partial^2f}{\partial\theta^2} + \frac{\partial^2f}{\partial z^2}
@@ -249,12 +249,12 @@ Pour simplifier le problème, on considère celui-ci symétrique selon les axes 
 %\end{split}\]
 
 On fixe la température au bord de la galette comme valant
-\[T_{\text{border}}(t, z) = T_{\text{init}} + \paren{T_{\text{oven}}(t, z)}\exp\paren{-t/\tau}\] avec $\tau = \qty{5}{minutes}$.
+\[T_{\text{border}}(t, z) = T_{\text{oven}} + \paren{T_{\text{init}} - T_{\text{oven}}(t, z)}\exp\paren{-t/\tau}\] avec $\tau = \qty{5}{minutes}$.
 
 \begin{enumerate}
 	\item Écrire une fonction qui renvoie les paramètres du problème, leurs domaines, la discrétisation spatiale, l'équation de la chaleur et les conditions au bord en fonction de $h$ et de la fonction $T_{\text{oven}}$, et qui renvoie un \jl{ODEProblem} (le résultat de \jl{discretize}).
 	
-	On simulera les 40 premières minutes de cuisson, on prendra 1 pas temporel par minute et 20 pas de discrétisation spatiale selon $(Ox)$ et selon $(Oz)$.
+	On simulera les 40 premières minutes de cuisson, on prendra 1 pas temporel par minute et 20 pas de discrétisation spatiale selon $\vec u_r$ et selon $\vec u_z$.
 	
 	\textit{Attention, les calculs peuvent demander un peu de temps, une vingtaine de secondes. La première exécution peut mettre plusieurs minutes.}
 \end{enumerate}
@@ -270,7 +270,7 @@ Un élément de volume de la galette est brûlé lorsqu'il a passé 30 minutes o
 	
 	\item Faire de même qu'à la question précédente avec \jl{time_burnt}
 
-	\item $(*)$ Afficher l'évolution de la température dans la galette en fonction de la position et du temps, sur une coupe de la galette qui passe par le centre de la galette.
+	\item $(*)$ Afficher l'évolution de la température dans la galette en fonction de la position et du temps, sur une coupe de la galette dans le plan $(Oxz)$.
 
 	\item On fixe $h = \qty{3}{cm}$. On considère un four parfaitement homogène et préchauffé, de sorte que sa température est fixée à $T_{\text{oven}}(t, z) = T_0$ indépendamment du temps et de l'espace.
 	\begin{enumerate}
@@ -279,7 +279,7 @@ Un élément de volume de la galette est brûlé lorsqu'il a passé 30 minutes o
 		\item $(*)$ Dans quelle gamme de température $T_0$ la galette peut-elle cuire en moins d'une heure sans brûler ?
 	\end{enumerate}
 
-	\item On fixe toujours $h = \qty{3}{cm}$, mais on considère maintenant un four initialement à température ambiante, et dont la répartition de la chaleur n'est pas homogène. La température du four est donnée par l'expression :
+	\item $(*)$ On fixe toujours $h = \qty{3}{cm}$, mais on considère maintenant un four initialement à température ambiante, et dont la répartition de la chaleur n'est pas homogène. La température du four est donnée par l'expression :
 	\[T_{\text{oven}}(t, z) = \qty{300}K + \frac{\min(t, \qty{10}{minutes})}{\qty{10}{minutes}}\times\paren{T_0 - T_{\text{init}} - \qty{30}{\degreeCelsius}\times(1 - z/h)}\]
 	
 	Reprendre la question précédente dans ces conditions.

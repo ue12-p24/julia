@@ -1,0 +1,527 @@
+\documentclass[12pt, aspectratio=141]{beamer}
+
+\definecolor{jrouge}{HTML}{CB3C33}
+\definecolor{jvert}{HTML}{389826}
+\definecolor{jbleu}{HTML}{4063D8}
+\definecolor{jviolet}{HTML}{9558B2}
+\definecolor{lightred}{HTML}{fcf3f3}
+\definecolor{lightgreen}{HTML}{e1f6db}
+\definecolor{lightpurple}{HTML}{f4eef7}
+\definecolor{lightgrey}{gray}{0.95}
+
+\mode<presentation>
+{
+	\usetheme{default}
+	\usecolortheme{rose}
+	%	\useoutertheme{smoothbars}
+	\useinnertheme{circles}
+	
+	\definecolor{beamer@blendedblue}{HTML}{4063D8}
+	%\definecolor{titlemustard}{rgb}{0.6,0.6,0.0}
+	%\setbeamercolor{title}{bg=titlemustard}
+	\setbeamercolor{normal text}{fg=black}
+	\setbeamercolor{alerted text}{fg=jrouge}
+	\setbeamerfont{title}{shape=\bfseries}
+	\setbeamercolor{example text}{fg=jvert}
+	
+	%\setbeamercolor{structure}{fg=beamer@blendedblue}
+	\setbeamertemplate{navigation symbols}{}
+	\setbeamertemplate{footline}{\color{black!50}\hfill\scriptsize\insertpagenumber\hspace{2em}\vspace{2em}}
+}
+
+\usepackage{natbib}
+%\renewcommand{\citenumfont}[1]{{\tiny#1}}
+\renewcommand{\citenumfont}[1]{}
+\bibpunct{}{};s;;
+
+\usepackage[french]{babel}
+\usepackage[mathletters]{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+% Alternative for XeLaTeX:
+%\usefonttheme{professionalfonts}
+%\usepackage{fontspec}
+%\setmonofont{JuliaMono}
+%\setdefaultlanguage{french}
+%\usepackage{unicode-math}
+
+\usepackage{subcaption}
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{soul}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{bbm}
+\usepackage{svg}
+
+\usepackage{tikz}
+\usetikzlibrary{scopes, backgrounds, arrows, automata, positioning, patterns, calc, decorations.pathmorphing, decorations.pathreplacing, arrows.meta}
+
+\usepackage{hyperref}
+\usepackage{ragged2e}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{aeguill}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{stmaryrd}
+\usepackage{moresize}
+
+\newcommand{\llbra}{\left\llbracket}
+\newcommand{\rrbra}{\right\rrbracket}
+\renewcommand{\brack}[1]{\ensuremath{\llbra#1\rrbra}}
+\newcommand{\der}[2]{#1^{\ensuremath{\left(#2\right)}}}
+\newcommand{\paren}[1]{\ensuremath{\left(#1\right)}}
+\newcommand{\abs}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\norm}[1]{\ensuremath{\left\|#1\right\|}}
+\newcommand{\interval}[1]{\ensuremath{\left[#1\right]}}
+\newcommand{\set}[2]{\ensuremath{\left\{#1\,\middle|\,#2\right\}}}
+\newcommand{\cont}[1]{\mathcal{C}^{#1}}
+\newcommand{\tends}[2]{\underset{#1\to #2}{\longrightarrow}}
+\newcommand{\seq}[3]{\ensuremath{\left(#1_{#2}\right)_{#2\in#3}}}
+\newcommand{\matr}[2]{\mathcal{M}_{#1}\paren{#2}}
+\newcommand{\matrRect}[3]{\mathcal{M}_{#1,#2}\paren{#3}}
+\newcommand{\Id}{\text{Id}}
+\newenvironment{disj}[1]{\left\{\begin{array}{#1}} {\end{array}\right.}
+
+\usepackage{siunitx}
+
+
+\newenvironment{changemargin}[2]{%
+	\begin{list}{}{%
+			%\setlength{\topsep}{0pt}%
+			\setlength{\leftmargin}{#1}%
+			\setlength{\rightmargin}{#2}%
+			\setlength{\listparindent}{\parindent}%
+			\setlength{\itemindent}{\parindent}%
+			\setlength{\parsep}{\parskip}%
+		}%
+		\item[]}{\end{list}}
+
+\defbeamertemplate{section page}{mruffel}[1][]{%
+	\begin{centering}
+		{\usebeamerfont{section name}\usebeamercolor[fg]{section name}#1
+			\vskip1em\par
+			
+			\begin{beamercolorbox}[sep=12pt,center,rounded=true,shadow=true]{part title}
+				\usebeamerfont{section title}\insertsection\par
+		\end{beamercolorbox}}
+	\end{centering}
+}
+
+
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+\pgfdeclareimage[height=0.5cm]{Mines}{../figures/Mines.pdf}
+\logo{\begin{tikzpicture}[overlay,remember picture]
+		\node[left=0.2cm] at (current page.31){
+			\pgfuseimage{Mines}
+		};
+\end{tikzpicture}}
+
+
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+%\AtBeginSubsection[]
+%{
+	%  \begin{frame}<beamer>
+		%    \tableofcontents[currentsection,currentsubsection]
+		%  \end{frame}
+	%}
+
+\AtBeginSection[]
+{
+	\begin{frame}
+		\sectionpage
+	\end{frame}
+}
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+
+%\beamerdefaultoverlayspecification{<+->}
+
+\usepackage{minted}
+\usemintedstyle{paraiso-light}
+\setminted[julia]{mathescape,linenos,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightred,escapeinside=££}
+\setminted[bash]{mathescape,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightgrey,escapeinside=££}
+
+\usepackage{lmodern}
+%\newcommand{\jl}[1]{\colorbox{lightred}{\small\ttfamily #1}}
+\newmintinline[jl]{julia}{}
+\newmintinline[jlscript]{julia}{fontsize=\scriptsize}
+\newmint[JL]{julia}{}
+\newmint[JLa]{julia}{linenos=false}
+\newminted{julia}{}
+\newenvironment{julia}{\vspace{-0.6em}\VerbatimEnvironment\begin{juliacode}}{\end{juliacode}}
+\newminted[jlrepl]{julia}{linenos=false}
+\newenvironment{repl}{\vspace{-0.6em}\VerbatimEnvironment\begin{jlrepl}}{\end{jlrepl}}
+\newcommand{\q}{\textquotesingle}
+\newcommand{\qq}{\textquotedbl}
+\newcommand{\jlREPL}{\textcolor{jvert}{\bfseries julia>}}
+
+\DeclareTextFontCommand{\emph}{\color{jrouge}\bfseries}
+
+\newenvironment<>{definition}[1]{%
+	\setbeamercolor{block title}{bg=lightgreen}%
+	\begin{block}{Définition}{#1}}{\end{block}}
+
+\newenvironment<>{convention}[1]{%
+	\setbeamercolor{block title}{bg=lightpurple}%
+	\begin{block}{Convention}{#1}}{\end{block}}
+
+\usepackage{xspace}
+\newcommand{\expr}{\ensuremath{\left\langle\textit{expr}\right\rangle}\xspace}
+\newcommand{\expra}[1]{\ensuremath{\left\langle\textit{expr}_{#1}\right\rangle}\xspace}
+\newcommand{\bexpr}{\ensuremath{\left\langle\textit{bexpr}\right\rangle}\xspace}
+\newcommand{\bexpra}[1]{\ensuremath{\left\langle\textit{bexpr}_{#1}\right\rangle}\xspace}
+\newcommand{\type}{\ensuremath{\left\langle\textit{type}\right\rangle}\xspace}
+\newcommand{\typea}[1]{\ensuremath{\left\langle\textit{type}_{#1}\right\rangle}\xspace}
+
+
+\title{Apprentissage de la programmation en Julia}
+
+\subtitle{Résolution numériques d'équations différentielles}
+
+\author{Lionel~Zoubritzky\inst{}}
+
+\institute{Mines Paris -- PSL}
+
+\date{12/2024}
+
+\begin{document}
+\setbeamertemplate{section page}[mruffel]
+
+\begin{frame}
+	\titlepage
+\end{frame}
+
+\begin{frame}{Équations différentielles}
+	Une \emph{équation différentielle} est une équation fonctionnelle qui fait apparaître une ou plusieurs dérivées de la fonction inconnue.
+	\vfill
+	
+	De telles équations apparaissent dans la quasi-totalité des domaines scientifiques. Leur résolution peut être :
+	\begin{itemize}
+		\item \emph{analytique} : cela consiste à trouver les solutions exactes de l'équation différentielle grâce à des outils mathématiques. C'est en général impossible.
+		\item \emph{numérique} : cela consiste à trouver une approximation de la solution par un algorithme. C'est souvent possible.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Équations différentielles ordinaires}
+	Une \emph{équation différentielle ordinaire} (\textit{ordinary differential equation}, \textbf{ODE}) est une équation d'inconnue $f$ pouvant s'écrire sous la forme :
+	\[f'(t) = F_p(t, f(t))\]
+	\vfill
+	
+	Exemples :
+	\begin{itemize}
+		\item L'équation exponentielle $f' = \alpha f$, avec $F_\alpha(t, u) = \alpha u$.
+		\vspace{0.5em}
+		
+		\item Un système d'équations différentielles ordinaires comme \[\begin{disj}{rl}
+			g'(x) &= g(x)h(x) + 7\\
+			h'(x) &= g(x)/x^2 - h(x)^2
+		\end{disj}\]
+		peut s'y ramener en posant :
+		\[f:t\mapsto (g(t), h(t))\quad\text{et}\quad F(t, u) = (u_1u_2 + 7, u_1/t^2 - u_2^2)\]
+		
+		On peut généraliser pour un nombre quelconque d'équations.
+		\vspace{0.5em}
+
+		\item Idem pour une équation du second ordre comme $g'' = -g$ avec :
+		\[f:x\mapsto (g(x), g'(x))\quad\text{et}\quad F(x, u) = (u_2, -u_1)\]
+		
+		On peut généraliser le raisonnement jusqu'à n'importe quel ordre.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Résolution numérique}
+	Une ODE $f'(t) = F_p(t, f(t))$ admet une unique solution une fois fixée une condition initiale $f(t_0)$ (dans la grande majorité des cas pratiques).
+
+	Il existe de très nombreux algorithmes permettant de résoudre numériquement une ODE. Ceux-ci ont pour objectif de trouver les valeurs de $f(t)$ pour différentes valeurs de $t$ dans un domaine donné.
+	\vfill
+
+	Pour ce faire, un algorithme général consiste à calculer une approximation de la valeur de $f(t_{n+1})$ en fonction de $F_p$, $t_n$, $f(t_n)$, avec $\seq tn{\mathbb N}$ une suite d'instants strictement croissante. On peut ainsi trouver, à partir d'une valeur $f(t_0)$ donnée, les valeurs successives, $f(t_1)$, $f(t_2)$, \ldots
+
+	On parle de \emph{schéma} d'intégration.
+	\vfill
+	
+	Le choix des pas $\delta t_n = t_{n+1}-t_n$ et la méthode de calcul de l'approximation caractérisent chaque schéma. Certains schéma exploitent la structure de $F_p$ et nécessitent aussi une formule pour les dérivées de $F_p$.
+\end{frame}
+
+\begin{frame}{Stabilité d'un schéma}
+	Un schéma est dit \emph{stable} pour la résolution d'une ODE $f'(t) = F_p(t, f(t))$ s'il existe une constante $C$ telle que, pour toute paire de conditions initiales $\alpha$ et $\beta$, les solutions $f_\alpha$ et $f_\beta$ obtenues en fixant respectivement $f(t_0) = \alpha$ ou $f(t_0) = \beta$ vérifient \[\forall t>t_0, \abs{\abs{f_\alpha(t) - f_\beta(t)}} < C\abs{\abs{f_\alpha(t_0) - f_\beta(t_0)}}\]
+	\vfill
+	
+	En d'autres termes, un schéma est stable lorsque des conditions initiales proches donnent des solutions numériques proches.\\
+	
+	En pratique, un schéma instable ne converge pas (sauf cas particulier).
+\end{frame}
+
+\begin{frame}{Schéma d'Euler}
+	L'algorithme le plus simple consiste à choisir un pas $\delta t$ fixé et à prendre :
+	\vspace{-0.5em}
+	\[f(t+\delta t) \approx f(t) + \delta t\times F_p(t, f(t))\]
+	Il s'agit du \emph{schéma d'Euler explicite}. Celui-ci est très simple à calculer, mais sa précision est généralement mauvaise.
+
+	Le \emph{schéma d'Euler implicite} consiste à prendre $f(t+\delta t)$ comme la solution de
+	\vspace{-0.5em}
+	\[f(t + \delta t) - \delta F_p(t+\delta t, f(t+\delta t)) = f(t)\]
+	Son calcul est plus complexe, mais sa précision est meilleure.
+	\vspace{1.2em}
+
+	Exemple : $f'(t) = -\alpha f(t)$ avec $\alpha>0$, de solution $f:t\mapsto C\exp(-\alpha t)$.
+	\begin{itemize}
+		\item Le schéma d'Euler explicite prend $f(t_{n+1}) = f(t_n)\times(1 - \delta t\times\alpha)$ donc $f(t_n) = f(t_0)\times\paren{1-\delta t\times\alpha}^n$. Il est donc stable lorsque $\delta t < 2/\alpha$.
+		\item Le schéma d'Euler implicite vérifie $f_{n+1} + \delta t\times\alpha f(t_{n+1}) = f(t_n)$ donc $f(t_n) = f(t_0)\times1/(1 + \delta t\times\alpha)^n$. Il est donc toujours stable.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Convergence d'un schéma}
+	Un schéma à pas fixé $\delta t$ est dit \emph{convergent d'ordre $m$} pour la résolution d'une ODE $f'(t) = F_p(t, f(t))$ lorsqu'il existe une fonction $C\in\mathcal C^0(\mathbb R_+,\mathbb R)$,
+	\[\forall n\in\mathbb N,\ \norm{f^{\text{schéma}}(t_n) - f^{\text{théorique}}(t_n)} \le C(t_n)\delta t^m\]
+	\vfill
+
+	La \emph{vitesse de convergence}, en $O(\delta t^m)$ pour un schéma d'ordre $m$ donc, renseigne sur le gain en précision que l'on peut espérer avoir lorsqu'on diminue la taille du pas $\delta t$. Cette notion se généralise aux schémas à pas variables.
+	\vfill
+
+	Par exemple, pour la résolution de l'équation $f' = -\alpha f$ :
+	\begin{itemize}
+		\item Les méthodes d'Euler (explicite et implicite) sont d'ordre 1.
+		\item La méthode des trapèzes : $g_{n+1} = f(t_n) + \delta t F_p(t_n, f(t_n))$ et\vspace{-0.7em}
+		\[f(t_{n+1}) = f(t_n) + \delta t/2\times F_p(t_n, f(t_n)) + \delta t/2\times F_p(t_{n+1}, g_{n+1})\]
+		est d'ordre 2.
+		\item Les méthodes de Runge-Kutta forment une classe de schéma pour n'importe quel ordre. RK4 (à l'ordre 4) est communément utilisée.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{OrdinaryDiffEq.jl}
+	La bibliothèque OrdinaryDiffEq.jl propose un ensemble de solveurs ainsi qu'une interface unifiée pour résoudre des ODE.
+	\vfill
+
+	L'interface immutable consiste à définir la valeur de $F_p(t, f(t))$ avec la signature \jl{F(u, p, t)} où :
+	\begin{itemize}
+		\item \jl{t} est l'instant $t$ du problème ;
+		\item \jl{p} est l'ensemble des paramètres fixés du problème ;
+		\item \jl{u} représente $f(t)$ ;
+		\item \jl{F} est le nom de la fonction (à choisir en fonction du problème)
+	\end{itemize}
+
+	On construit un \jl{ODEProblem} avec la condition initiale $\jl{u₀} = f(\jl{t₀})$ :
+	\begin{julia}
+		ode = ODEProblem(F, u₀, (t₀, t£$_{\text{max}}$£), p)
+	\end{julia}
+
+	La solution est alors donnée en appelant \jl{solve(ode)}.
+\end{frame}
+
+\begin{frame}{Interface mutable}
+	Si \jl{F} doit renvoyer un tableau, il est recommandé d'utiliser l'interface mutable à la place de l'interface immutable. Elle consiste à définir la fonction $F$ avec la signature \jl{F!(du, u, p, t)} où :
+	\begin{itemize}
+		\item \jl{u}, \jl{p} et \jl{t} ont la même signification qu'avec l'interface immutable ;
+		\item \jl{du} est un tableau de la même taille que $\jl{u} = f(t)$, qui doit être modifié en place pour qu'à la fin de l'appel de \jl{F!}, $\jl{du} = F(t, f(t))$ ;
+		\item \jl{F!} est le nom de la fonction (à choisir en fonction du problème)
+	\end{itemize}
+	La valeur renvoyée par \jl{F!} n'a aucune importance, il est donc recommandé de le signaler en renvoyant \jl{nothing}.
+	\vfill
+
+	La bibliothèque OrdinaryDiffEq.jl détermine si la fonction donnée est \jl{F} ou \jl{F!} grâce au nombre d'arguments (3 pour \jl{F}, 4 pour \jl{F!}).
+\end{frame}
+
+\begin{frame}{Raideur d'une équation différentielle}
+	Un équation différentielle est dite \emph{raide} (\textit{stiff}) lorsque sa résolution numérique est difficile. Il s'agit d'une notion qualitative.
+	\vfill
+
+	Résoudre de telles équations différentielles requiert des schémas adaptés comme les schémas implicites, généralement plus stables.
+
+	La liste des schémas définis dans OrdinaryDiffEq.jl est disponible sur {\small\url{https://docs.sciml.ai/DiffEqDocs/stable/solvers/ode_solve/}}
+	\vfill
+
+	Un schéma peut être passé explicitement comme second argument à \jl{solve}. Par exemple : \jl{solve(ode, Tsit5())} pour le schéma \jl{Tsit5}.
+	\vfill
+
+	Si le schéma à utiliser est connu, il vaut mieux charger la sous-bibliothèque d'OrdinaryDiffEq.jl qui l'exporte plutôt qu'OrdinaryDiffEq.jl en entier, pour accélérer le chargement. Par exemple, pour utiliser \jl{KenCarp4}, il suffit de charger la sous-bibliothèque OrdinaryDiffEqSDIRK.jl.
+\end{frame}
+
+\begin{frame}{Résultat numérique}
+	La fonction \jl{solve} accepte certains arguments nommés dont :
+	\begin{itemize}
+		\item \jl{dt}/\jl{dtmin}/\jl{dtmax} : le pas (initial/minimal/maximal) ;
+		\item \jl{abstol}/\jl{reltol} : la tolérance pour les pas adaptatifs ;
+		\item \jl{saveat} : les instants auxquels sauvegarder la solution.
+	\end{itemize}
+	\vfill
+
+	L'objet \jl{sol} obtenu en appelant \jl{solve} peut être appelé comme une fonction : \jl{sol(t)} calcule calcule la valeur de la solution en $t$ par interpolation.
+	\vfill
+
+	Les instants $t$ sauvegardés peuvent être par ailleurs obtenus via \jl{sol.t}, et les valeurs correspondantes via \jl{sol.u}. Ces deux champs sont des tableaux.
+\end{frame}
+
+\begin{frame}{DifferentialEquations.jl et SciML}
+	OrdinaryDiffEq.jl est une sous-bibliothèque de DifferentialEquations.jl, qui propose une interface unifiée pour résoudre toutes sortes d'équations différentielles, y compris non-ordinaires.
+	\vfill
+
+	Ces bibliothèques font partie de \textbf{SciML} (\textit{Scientific Computing + Machine Learning}), un vaste projet écrit en Julia qui contient du code et des interfaces pour traiter divers problèmes d'intérêt général en sciences. SciML est par ailleurs compatibles avec de nombreuses librairies externes, comme Makie.jl ou Unitful.jl.
+	
+	Pour plus de détails : \url{https://docs.sciml.ai/Overview/stable/}
+\end{frame}
+
+\begin{frame}[fragile]{ModelingToolkit.jl}
+	La bibliothèque ModelingToolkit.jl, qui fait partie de SciML, permet de définir de nombreux problèmes à résoudre de façon unifiée. Il peut être utilisé pour remplacer les interfaces \jl{F(u, p, t)} et \jl{F!(du, u, p, t)} spécifiques à OrdinaryDiffEq.jl vues précédemment.
+	\vfill
+	
+	\begin{julia}
+		using ModelingToolkit
+		@independent_variables t
+		@variables x(..) y(..) # (..) to avoid specifying arguments
+		@parameters α # parameters
+		const Dt = Differential(t); const Dt2 = Differential(t)^2
+		eqs = [ # use ~ to replace = in symbolic equations
+			Dt(x(t)) ~ y(t),
+			Dt2(y(t)) ~ x(t) + α*x(t)
+		]
+		@mtkbuild sys = ODESystem(eqs, t)
+		tspan = (0, 10) # integrate between t = 0 and t = 10
+		initial = [1.0, -3.5, 2.0] # values for unknowns(sys) at t = 0
+		prob = ODEProblem(sys, initial, tspan, [α => 7])
+		using OrdinaryDiffEq; solution = solve(prob); solution[x(t)]
+	\end{julia}
+\end{frame}
+
+\begin{frame}[fragile]{Aparté : calcul symbolique}
+	ModelingToolkit.jl repose sur la bibliothèque Symbolics.jl, faisant aussi partie de SciML, qui permet d'effectuer du \emph{calcul symbolique}, c'est-à-dire du calcul sur des symboles et non pas des valeurs :
+	
+	\begin{julia}
+		£\jlREPL£ using Symbolics
+		
+		£\jlREPL£ @variables x y
+		
+		£\jlREPL£ ex1 = (2x + y + 2)*(y + 3*x*y) - 6*y*x^2
+		-6(x^2)*y + (2 + 2x + y)*(y + 3x*y)
+		
+		£\jlREPL£ ex2 = expand(ex1)
+		2y + 8x*y + y^2 + 3x*(y^2)
+
+		£\jlREPL£ Symbolics.coeff(ex2, x)
+		8y + 3(y^2)
+		
+		£\jlREPL£ substitute(ans, [y => -4])
+		16
+	\end{julia}
+\end{frame}
+
+\begin{frame}[fragile]{Aparté : calcul symbolique}
+	Symbolics.jl contient des méthodes de manipulation d'expressions élémentaires comme \jl{expand}, \jl{substitute}, \jl{Symbolics.coeff}, \jl{Symbolics.degree}. Il peut aussi calculer des dérivées :
+	\begin{julia}
+		£\jlREPL£ Dxx = Differential(x)^2
+		Differential(x) ∘ Differential(x)
+		
+		£\jlREPL£ der = expand_derivatives(Dxx(y*x^3 + cos(x^2)))
+		-2sin(x^2) + 6x*y - 4(x^2)*cos(x^2)
+	\end{julia}
+
+	Les expressions symboliques peuvent être transformées en fonction :
+	\begin{julia}
+		£\jlREPL£ foo = eval(build_function(der, x, y));
+		
+		£\jlREPL£ val = sqrt(π/2)
+		1.2533141373155001
+		
+		£\jlREPL£ foo(val, 1/(2*val))
+		0.9999999999999982
+	\end{julia}
+\end{frame}
+
+\begin{frame}[fragile]{Aparté : calcul symbolique}
+	Symbolics.jl contient aussi un solveur pour certains types d'équations analytiquement résolubles :
+	\begin{julia}
+		£\jlREPL£ using Groebner # required explicitly by Symbolics here
+
+		£\jlREPL£ eqs = [x*y ~ 2, y^2 + x^2 ~ 4];
+			   
+		£\jlREPL£ Symbolics.symbolic_solve(eqs)
+		2-element Vector{Any}:
+		 Dict{Num, Any}(y => -√(2), x => -√(2))
+		 Dict{Num, Any}(y => √(2), x => √(2))
+
+		£\jlREPL£ Symbolics.symbolic_solve(3^x - 2^(x+1), x)
+		1-element Vector{SymbolicUtils.BasicSymbolic{Real}}:
+		(slog(1) + slog(2)) / (slog(3) - slog(2))
+		
+		£\jlREPL£ Symbolics.symbolic_to_float(ans[1])
+		1.709511291351454239544777744270969250706495608072977583049435
+	\end{julia}
+\end{frame}
+
+\begin{frame}{Équations différentielles aux dérivées partielles}
+	Une équation différentielle aux dérivées partielles (\textit{partial differential equation}, \textbf{PDE}) implique les dérivées partielles selon plusieurs variables indépendantes. Sa résolution numérique ne peut donc pas s'effectuer à partir d'une simple discrétisation selon un axe, comme pour une ODE.
+	\vfill
+
+	Il existe plusieurs stratégies possibles pour résoudre de telles équations :
+	\begin{itemize}
+		\item Méthode des éléments finis ;
+		\item Méthode des volumes finis ;
+		\item Méthode des différences finies, que l'on va détailler ici.
+	\end{itemize}
+	\vfill
+
+	Voir aussi Trixi.jl pour un traitement approfondi de la résolution des PDEs.
+\end{frame}
+
+\begin{frame}{Méthode des différences finies}
+	Considérons une PDE où la fonction inconnue $f$ est dérivée selon une ou plusieurs dimensions spatiales et une dimension temporelle $t$. La méthode des différences finies consiste à discrétiser l'espace : l'axe $(Ox)$ par exemple sera transformé en une suite discrète de points $\paren{x_i = x_0 + i\delta x}_{i\in\brack{0,n}}$. On a ensuite recours à l'une des approximation suivante :
+	\[\begin{split}
+		(\partial f/\partial x)(x_i, t) &\approx \paren{f(x_{i+1}, t) - f(x_i, t)}/\delta x\quad\text{(différence à droite)}
+		\\&\approx \paren{f(x_i, t) - f(x_{i-1}, t)}/\delta x\quad\text{(différence à gauche)}
+		\\&\approx \paren{f(x_{i+1}, t) - f(x_{i-1}, t)}/2\delta x\quad\text{(différence centrée)}
+	\end{split}\]
+	qui se généralise aux ordres supérieurs, par exemple : \[(\partial^2f/\partial x^2)(x_i, t)\approx \paren{f(x_{i-1}, t) + f(x_{i+1}, t) - 2f(x_i), t}/\delta x^2\]
+	
+	Une PDE selon $x$ et $t$ peut ainsi être transformée en un système de $n+1$ ODE en $t$ seulement, ayant pour fonctions inconnues les $t\mapsto f(x_i, t)$.
+\end{frame}
+
+\begin{frame}{Méthode des différences finies}
+	Exemple : on veut résoudre l'équation $\partial f/\partial t = 1 - \lambda\partial f/\partial x$ sur $x\in\interval{-2, 2}$ et $t\in\interval{0,1}$ avec la condition au bord $\forall t,\ f(-2, t) = f(2, t) = \sin(t)$ et la condition initiale $\forall x,\ f(x, 0) = 0$, pour un paramètre $\lambda$ fixé.
+	\vfill
+
+	Avec la méthode des différences finies, on prend $N_x\in\mathbb N$, $\delta x = 4/N_x$. On définit ensuite $\seq fi{\brack{1,N_x-1}}$ par les équations $f_i' = 1 - \lambda\paren{f_{i+1} - f_{i-1}}/2\delta x$ ainsi que $f_0 = f_{N_x} = \sin$, et les conditions initiales $f_i(0) = 0$.
+	\vfill
+	
+	En notant $A\in\mathcal{M}_{N_x-1}(\mathbb R)$ la matrice tridiagonale ayant pour coefficients $a_{i,i+1} = 1$, $a_{i,i-1} = -1$ et $a_{i,j} = 0$ partout ailleurs, cela revient à trouver une fonction $f:\interval{0,1}^{N-1}$ sujette à l'ODE
+	\[f' = 1 - \lambda Af/2\delta x\]
+	(avec quelques ajustements pour tenir compte des conditions au bord).
+\end{frame}
+
+\begin{frame}[fragile]{MethodOfLines.jl}
+	La bibliothèque MethodOfLines.jl automatise la méthode des différences finies pour la résolution des PDE, dans le formalisme de SciML.
+
+	\begin{julia}
+		using MethodOfLines, ModelingToolkit, OrdinaryDiffEq
+		@parameters λ=1.7 # default value for the parameter
+		@independent_variables x t
+		@variables f(..)
+		const Dx = Differential(x); const Dt = Differential(t)
+		eqs = [Dt(f(x, t)) ~ 1 - λ*Dx(f(x, t))]
+		domains = [t in (0.0, 1.0), x in (-2.0, 2.0)]
+		bcs = [ # boundary conditions
+			f(x, 0) ~ 0,
+			f(-2, t) ~ sin(t), f(2, t) ~ sin(t)
+		]
+		@named sys = PDESystem(eqs, bcs, domains, [t,x], [f(t, x)], [λ])
+		discretization = MOLFiniteDifference([x => 100], t)
+		prob = discretize(sys, discretization)
+		solve(prob, Tsit5())
+	\end{julia}
+	Pour modifier la valeur des paramètres : \jlscript{new_prob = remake(prob; p=[2])}.
+\end{frame}
+
+\end{document}
