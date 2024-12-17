@@ -193,7 +193,7 @@
 
 \institute{Mines Paris -- PSL}
 
-\date{11/2024}
+\date{12/2024}
 
 \begin{document}
 	\setbeamertemplate{section page}[mruffel]
@@ -366,13 +366,15 @@
 
 \begin{frame}{Règle diagonale}
 	\begin{definition}
-		\noindent\emph{Règle diagonale} : si une variable de type n'apparaît qu'en position covariante (c'est-à-dire comme paramètres de seulement \jl{Tuple} et d'\jl{Union}) et au moins deux fois, alors cette variable est \emph{diagonale} et ne peut représenter qu'un type \underline{concret} ou une valeur \jl{isbits}.
+		\noindent\emph{Règle diagonale} : si une variable de type n'apparaît en position covariante (c'est-à-dire comme paramètre direct de seulement \jl{Tuple} et d'\jl{Union}) au moins deux fois et jamais en position invariante, alors cette variable est \emph{diagonale} et ne peut représenter qu'un type \textbf{concret}.
 	\end{definition}
 	
 	Exemples et contre-exemples :
 	\begin{itemize}
-		\item \jl{Tuple{T,T} where T} admet pour sous-type \jl{Tuple{Int,Int}} mais pas \jl{Tuple{Integer,Integer}} car \jl{Integer} n'est pas concret.
+		\item \jl{Tuple{T,T} where T} admet pour sous-type \jl{Tuple{Int,Int}} mais pas \jl{Tuple{Integer,Integer}} car \jl{Integer} n'est pas concret. On retiendra que \jl{x isa Tuple{T,T} where T} est bien vrai pour \jl{x = (3, 4)} mais pas pour \jl{x = ("foo", 14.5)}
+		\vspace{0.4em}
 		\item \jl{Dict{Integer,Integer} <: Dict{T,T} where T} car \jl{T} n'est pas en position covariante.
+		\vspace{0.4em}
 		\item Dans \jl{Union{T, Tuple{T}, Vector{T}} where {T}}, la variable \jl{T} n'est pas diagonale car elle apparaît une fois en position invariante.
 	\end{itemize}
 	\vspace{1em}
@@ -474,18 +476,18 @@
 			x + pn.n
 		end
 		
-		pn = PlusN(12) # an instance of the custom struct
-		pn(8) # == 20  # the instance has been made callable
+		plus12 = PlusN(12)  # an instance of the custom struct
+		plus12(8) # == 20   # the instance has been made callable
 	\end{julia}
 
-	Les fonctions usuelles ne sont qu'un cas particulier de cette constructions : chaque définition de fonction \jl{f} revient à créer un type singleton de la forme \jl{struct "typeof(f)" end} et à ajouter des méthodes dessus.
+	Les fonctions usuelles ne sont qu'un cas particulier de cette constructions : chaque définition de fonction \jl{foo} revient à créer un type singleton de la forme \jl{struct var"typeof(foo)" end} et à ajouter des méthodes dessus.
 \end{frame}
 
 \begin{frame}[fragile]{Dispatch multiple}
 	\begin{definition}
 		Lors d'un appel de fonction, la \emph{signature de l'appel} est le type du tuple des arguments de la fonction (hormis les arguments nommés). Le type de la fonction est ajouté comme premier argument de la signature de l'appel.
 
-		La signature d'un appel est toujours d'un type concret.
+		La signature d'un appel est toujours un type concret.
 	\end{definition}
 
 	Exemples :
@@ -500,7 +502,7 @@
 	\begin{definition}
 		La méthode à exécuter lors d'un appel est choisie comme celle ayant la signature la plus spécifique, parmi toutes celles dont la signature de l'appel est un sous-type.
 
-		Le choix de la méthode à exécuter lors d'un appel dépend donc du type de \underline{tous} les arguments. On parle de \emph{dispatch multiple}.
+		Le choix de la méthode à exécuter lors d'un appel dépend donc du type de \textbf{tous} les arguments. On parle de \emph{dispatch multiple}.
 	\end{definition}
 	
 
@@ -670,19 +672,27 @@
 \end{frame}
 
 \begin{frame}[fragile]{Itération}
-	Exemple : on considère un type \jl{Attendance} qui représente la liste des élèves présents à une classe avec deux champs : \jl{students} pour la liste des noms d'élèves, et \jl{present} une liste booléenne indiquant si l'élève est présent ou non. Pour itérer seulement sur les noms des élèves présents, on peut déclarer :
+%	Exemple : on considère un type \jl{Attendance} qui représente la liste des élèves présents à une classe avec deux champs : \jl{students} pour la liste des noms d'élèves, et \jl{present} une liste booléenne indiquant si l'élève est présent ou non. Pour itérer seulement sur les noms des élèves présents, on peut déclarer :
 	\begin{julia}
+		struct Attendance
+			students::Vector{String}  # list of student names
+			present::Vector{Bool}     # true if the student is present
+		end
+		
+		# let's iterate only on the students who are present
 		function Base.iterate(att::Attendance, i=1)
 			# the state is i, the index of the next student to check
 			while i <= length(att.students)
 				att.present[i] && return (att.students[i], i+1)
 				i += 1
 			end
-			return nothing
+			return nothing # reached the end of the student list
 		end
 	\end{julia}
 
+\vspace{-0.2em}
 	On peut vérifier le comportement sur un exemple :
+	\vspace{-0.2em}
 	\begin{repl}
 		£\jlREPL£ att = Attendance(["A", "B", "C"], Bool[0, 1, 1]);
 			   for x in att; println(x); end
@@ -735,7 +745,7 @@
 	Exemple : la syntaxe \jl{MyType[]} est utilisée pour créer un vecteur vide dont les éléments sont de type \jl{MyType}. Cela provient de la méthode \jl{getindex(::Type{X}) where {X} = Vector{X}(undef, 0)} de \jl{Base}.
 	\vspace{1em}
 
-	Si les indices utilisés sont des entiers consécutifs, le type mérite peut-être d'être déclaré comme un sous-type de \jl{AbstractArray}. Il est alors demandé de créer une méthode pour \jl{getindex(::T, ::Int)} spécifiquement, et une pour \jl{size(::T)}. La convention complète est sur :
+	Si les indices utilisés sont des entiers consécutifs, le type mérite peut-être d'être déclaré comme un sous-type de \jl{AbstractArray}. Il est alors demandé de créer une méthode pour \jl{getindex(::T, ::Int)} spécifiquement, et une pour \jl{size(::T)}. L'interface complète est sur :
 	\scriptsize\url{https://docs.julialang.org/en/v1/manual/interfaces/#man-interface-array}
 \end{frame}
 
