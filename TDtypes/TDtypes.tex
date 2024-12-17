@@ -246,13 +246,13 @@ Un graphe est \emph{simple} lorsqu'il n'y a pas de \emph{boucle} (une arête ent
 On considère dans cet exercice des graphes simples définis par le nombre de sommets $n$ et par l'ensemble des arêtes $E\subseteq V^2$ avec $V = \brack{1,n}$.
 
 \begin{enumerate}
-	\item Créer un type \jl{SimpleGraph} qui représente un tel graphe sous la forme d'une liste \jl{neighbors} de taille $n$ telle que, pour tout $\jl{i}\in\brack{1,n}$, \jl{neighbors[i]} est la liste des \jl{j} tels que $(\jl{i},\jl{j})\in E$.
+	\item Créer un type \jl{SimpleGraph} qui représente un tel graphe sous la forme d'une liste \jl{neighbors} de taille $n$ et de type \jl{Vector{Vector{Int}}} telle que, pour tout $\jl{i}\in\brack{1,n}$, \jl{neighbors[i]} est la liste des \jl{j} tels que $(\jl{i},\jl{j})\in E$.
 	
 	\item Implémenter les fonctions \jl{nv(::SimpleGraph)} qui renvoie le nombre de sommets et \jl{ne(::SimpleGraph)} qui renvoie le nombre d'arêtes. Ajouter les champs nécessaires à \jl{SimpleGraph} pour que la complexité de ces fonctions soit $O(1)$.
 	
 	\item Implémenter la fonction \jl{add_vertices!(::SimpleGraph, n)} qui ajoute \jl{n} sommets au graphe. Aucune arête n'est créée par cette fonction.
 
-	\item Implémenter la fonction \jl{add_edge!(::SimpleGraph, ::Tuple{Int,Int})} qui ajoute comme arête la paire \jl{(i,j)} donné en second argument. La fonction renvoie \jl{true} si l'arête est nouvellement ajoutée, et \jl{false} si l'arête existait déjà.
+	\item Implémenter la fonction \jl{add_edge!(::SimpleGraph, ::Tuple{Int,Int})} qui ajoute comme arête la paire \jl{(i,j)} donné en second argument. La fonction lance une erreur si le graphe résultant ne serait pas simple. Sinon, elle renvoie \jl{true} si l'arête est nouvellement ajoutée, et \jl{false} si l'arête existait déjà.
 
 %	\item Surcharger \jl{show} pour qu'un graphe s'affiche comme une série des nombres, chaque paire de nombres consécutifs correspondant à une arête. Créer un constructeur de \jl{SimpleGraph} qui fait l'opération réciproque, de sorte que \jl{SimpleGraph(repr(g::SimpleGraph))} représente le même graphe que \jl{g}.
 
@@ -401,11 +401,11 @@ Un \emph{parcours de graphe} est un algorithme qui visite une partie ou la total
 \end{itemize}
 
 \begin{enumerate}[resume]
-	\item À l'aide d'un parcours en largeur, implémenter \jl{notconnectedto(g::SimpleGraph, s)} qui renvoie la liste des sommets que l'on ne peut pas atteindre en suivant des arêtes à partir de \jl{s}.
+	\item À l'aide d'un parcours en profondeur, implémenter \jl{notconnectedto(g::SimpleGraph, s)} qui renvoie la liste des sommets que l'on ne peut pas atteindre en suivant des arêtes à partir de \jl{s}.
 	
-	\item $(*)$ À l'aide d'un parcours en profondeur, implémenter \jl{isincycle(g::SimpleGraph, s)} qui renvoie \jl{true} si le sommet \jl{s} est dans un \emph{cycle} de \jl{g}. Un cycle de taille $k$ est une séquence de sommets $s_1, s_2, \ldots, s_k, s_{k+1} = s_1$ tels et pour tout $i\in\brack{1,k},\ (s_i,s_{i+1})\in E$.
+	\item $(*)$ À l'aide d'un parcours en largeur, implémenter \jl{isincycle(g::SimpleGraph, s)} qui renvoie \jl{true} si le sommet \jl{s} est dans un \emph{cycle} de \jl{g}. Un cycle de taille $k$ est une séquence de sommets $s_1, s_2, \ldots, s_k, s_{k+1} = s_1$ tels et pour tout $i\in\brack{1,k},\ (s_i,s_{i+1})\in E$.
 
-	\item Les deux parcours de graphe précédents ne garantissent pas que tous les sommets soient visités : dans l'illustration, les sommets 5 et 7 ne sont pas visités si l'on part du sommet 1 par exemple. À quelle condition tous les sommets sont-ils visités ?
+	\item Les deux parcours de graphe précédents ne garantissent pas que tous les sommets soient visités : dans l'illustration, les sommets 5 et 7 ne sont pas visités si l'on part du sommet 1 par exemple. À quelle condition sur le graphe et/ou sur le sommet de départ tous les sommets sont-ils visités ?
 
 %	\item La \emph{matrice d'adjacence} $A\in\matr n{\mathbb F_2}$ d'un graphe est défini par $(A)_{i,j} = 1$ si $(i,j)\in E$ et 0 sinon.
 \end{enumerate}
@@ -428,8 +428,10 @@ Comme précédemment, on notera $n$ le nombre de sommets et on assimilera $V$ à
 	\textsl{On pourra, au besoin, utiliser la fonction \jl{fill}.}
 
 	\item Implémenter un constructeur externe pour \jl{WeightedGraph} qui prend une matrice d'adjacence en entrée et renvoie le graphe qui correspond à cette matrice.
-	
+
 	\item L'algorithme de Roy-Floyd-Warshall permet de calculer la distance minimale entre toutes les paires de sommets d'un graphe, à condition qu'il n'y ait pas de cycle de poids négatif. Pour cela, on va construire une suite de matrices $\paren{\der Ak}_{0\le k\le n}$ de sorte que $\der Ak_{i,j}$ soit le poids minimal d'un chemin qui va de $i$ à $j$ en ne passant que par des sommets intermédiaires dans $\brack{1,k}$, et $\der Ak_{i,j} = \infty$ s'il n'existe pas de tel chemin. On a donc $\der A0 = A$ la matrice d'adjacence.
+
+	\textit{Note : on ne considère que des chemins de taille non nulle. En particulier, le plus court chemin entre un sommet et lui-même sera de taille infini si ce sommet n'est pas dans un cycle.}
 	\begin{enumerate}
 		\item Établir la relation de récurrence entre $\der A{k+1}$ et $\der Ak$.
 		\item Montrer que $\der An_{i,j}$ est le poids minimal d'un chemin entre $i$ et $j$.
@@ -467,16 +469,16 @@ $V = \brack{1,n}$ désigne les atomes contenus dans une maille élémentaire, et
 
 \begin{enumerate}
 	\item Écrire un type \jl{PeriodicGraph{N}} qui représente un tel graphe \jl{N}-périodique.
-	
-	\item Dans un graphe non-orienté, à chaque arête \textbf{directe} correspond une arête inverse, ou indirecte, qui lui est équivalente. Dans le cas des graphes périodiques, une arête directe est de la forme $(s, d, o)\in E$ avec soit  [$s < d$], soit [$s = d$ et le premier élément non-nul de $o$ est strictement positif]. Par exemple, l'arête $(1, 2, (0, -1))$ est directe car $1 < 2$, et l'arête indirecte associée est $(2, 1, (0, 1))$.
-
-	Écrire une fonction \jl{edges(g::PeriodicGraph)} qui renvoie la liste des arêtes directes d'un graphe périodique.
 
 	\item Un sommet d'un tel graphe périodique est représenté par une paire \jl{(i, ofs)} où $\jl{i}\in V$ est l'identifiant du sommet dans la maille élémentaire, et $\jl{ofs}\in\Z^N$ est la position de la maille dans laquelle se trouve le sommet. Par exemple, le sommet blanc lié par une arête cyan au sommet 1 de l'exemple est le sommet \jl{(2, (0,-1))}.
 
 	Écrire une fonction \jl{neighbors(g::PeriodicGraph, x)} qui renvoie la liste des voisins du sommet \jl{x} dans le graphe \jl{g}.
 
 	\textsl{Par exemple, si \jl{g} désigne le graphe de l'exemple, alors le sommet \jl{(1, (0,0))} doit se retrouver dans la liste renvoyée par \jl{neighbors(g, (2, (0,-1)))}, et inversement \jl{(2, (0,-1))} dans la liste des voisins de \jl{(1, (0,0))}.}
+
+	\item Dans un graphe non-orienté, à chaque arête \textbf{directe} correspond une arête inverse, ou indirecte, qui lui est équivalente. Dans le cas des graphes périodiques, une arête directe est de la forme $(s, d, o)\in E$ avec soit  [$s < d$], soit [$s = d$ et le premier élément non-nul de $o$ est strictement positif]. Par exemple, l'arête $(1, 2, (0, -1))$ est directe car $1 < 2$, et l'arête indirecte associée est $(2, 1, (0, 1))$.
+
+	Écrire une fonction \jl{edges(g::PeriodicGraph)} qui renvoie la liste des arêtes directes d'un graphe périodique.
 	
 	\item La distance entre deux sommets d'un graphe non pondéré est le plus petit nombre d'arêtes qui permettent de relier ces deux sommets. Par exemple, un sommet est à distance 0 de lui-même et à distance 1 de tous ses voisins.
 
