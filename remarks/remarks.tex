@@ -1,0 +1,422 @@
+\documentclass[12pt, aspectratio=141]{beamer}
+
+\definecolor{jrouge}{HTML}{CB3C33}
+\definecolor{jvert}{HTML}{389826}
+\definecolor{jbleu}{HTML}{4063D8}
+\definecolor{jviolet}{HTML}{9558B2}
+\definecolor{jjaune}{HTML}{FDBC4B}
+\definecolor{lightred}{HTML}{fcf3f3}
+\definecolor{lightgreen}{HTML}{e1f6db}
+\definecolor{lightpurple}{HTML}{f4eef7}
+\definecolor{lightgrey}{gray}{0.95}
+
+\mode<presentation>
+{
+	\usetheme{default}
+	\usecolortheme{rose}
+	%	\useoutertheme{smoothbars}
+	\useinnertheme{circles}
+	
+	\definecolor{beamer@blendedblue}{HTML}{4063D8}
+	%\definecolor{titlemustard}{rgb}{0.6,0.6,0.0}
+	%\setbeamercolor{title}{bg=titlemustard}
+	\setbeamercolor{normal text}{fg=black}
+	\setbeamercolor{alerted text}{fg=jrouge}
+	\setbeamerfont{title}{shape=\bfseries}
+	\setbeamercolor{example text}{fg=jvert}
+	
+	%\setbeamercolor{structure}{fg=beamer@blendedblue}
+	\setbeamertemplate{navigation symbols}{}
+	\setbeamertemplate{footline}{\color{black!50}\hfill\scriptsize\insertpagenumber\hspace{2em}\vspace{2em}}
+}
+
+\usepackage{natbib}
+%\renewcommand{\citenumfont}[1]{{\tiny#1}}
+\renewcommand{\citenumfont}[1]{}
+\bibpunct{}{};s;;
+
+\usepackage[french]{babel}
+\usepackage[mathletters]{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+% Alternative for XeLaTeX:
+%\usefonttheme{professionalfonts}
+%\usepackage{fontspec}
+%\setmonofont{JuliaMono}
+%\setdefaultlanguage{french}
+%\usepackage{unicode-math}
+
+\usepackage{subcaption}
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{soul}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{bbm}
+\usepackage{svg}
+
+\usepackage{tikz}
+\usetikzlibrary{scopes, backgrounds, arrows, automata, positioning, patterns, calc, decorations.pathmorphing, decorations.pathreplacing, arrows.meta}
+
+\usepackage{hyperref}
+\usepackage{ragged2e}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{aeguill}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{stmaryrd}
+\usepackage{moresize}
+
+\newcommand{\llbra}{\left\llbracket}
+\newcommand{\rrbra}{\right\rrbracket}
+\renewcommand{\brack}[1]{\ensuremath{\llbra#1\rrbra}}
+\newcommand{\der}[2]{#1^{\ensuremath{\left(#2\right)}}}
+\newcommand{\paren}[1]{\ensuremath{\left(#1\right)}}
+\newcommand{\abs}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\interval}[1]{\ensuremath{\left[#1\right]}}
+\newcommand{\set}[2]{\ensuremath{\left\{#1\,\middle|\,#2\right\}}}
+\newcommand{\cont}[1]{\mathcal{C}^{#1}}
+\newcommand{\tends}[2]{\underset{#1\to #2}{\longrightarrow}}
+\newcommand{\seq}[3]{\ensuremath{\left(#1_{#2}\right)_{#2\in#3}}}
+\newcommand{\matr}[2]{\mathcal{M}_{#1}\paren{#2}}
+\newcommand{\matrRect}[3]{\mathcal{M}_{#1,#2}\paren{#3}}
+\newcommand{\Id}{\text{Id}}
+\newenvironment{disj}[1]{\left\{\begin{array}{#1}} {\end{array}\right.}
+
+
+\newenvironment{changemargin}[2]{%
+	\begin{list}{}{%
+			%\setlength{\topsep}{0pt}%
+			\setlength{\leftmargin}{#1}%
+			\setlength{\rightmargin}{#2}%
+			\setlength{\listparindent}{\parindent}%
+			\setlength{\itemindent}{\parindent}%
+			\setlength{\parsep}{\parskip}%
+		}%
+		\item[]}{\end{list}}
+
+\defbeamertemplate{section page}{mruffel}[1][]{%
+	\begin{centering}
+		{\usebeamerfont{section name}\usebeamercolor[fg]{section name}#1
+			\vskip1em\par
+			
+			\begin{beamercolorbox}[sep=12pt,center,rounded=true,shadow=true]{part title}
+				\usebeamerfont{section title}\insertsection\par
+		\end{beamercolorbox}}
+	\end{centering}
+}
+
+
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+\pgfdeclareimage[height=0.5cm]{Mines}{../figures/Mines.pdf}
+\logo{\begin{tikzpicture}[overlay,remember picture]
+		\node[left=0.2cm] at (current page.31){
+			\pgfuseimage{Mines}
+		};
+\end{tikzpicture}}
+
+
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+%\AtBeginSubsection[]
+%{
+	%  \begin{frame}<beamer>
+		%    \tableofcontents[currentsection,currentsubsection]
+		%  \end{frame}
+	%}
+
+\AtBeginSection[]
+{
+	\begin{frame}
+		\sectionpage
+	\end{frame}
+}
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+
+%\beamerdefaultoverlayspecification{<+->}
+
+\usepackage{minted}
+\usemintedstyle{paraiso-light}
+\setminted[julia]{mathescape,linenos,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightred,escapeinside=££}
+\setminted[bash]{mathescape,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightgrey,escapeinside=££}
+
+\usepackage{lmodern}
+%\newcommand{\jl}[1]{\colorbox{lightred}{\small\ttfamily #1}}
+\newmintinline[jl]{julia}{}
+\newmintinline[jlscript]{julia}{fontsize=\scriptsize}
+\newmint[JL]{julia}{}
+\newmint[JLa]{julia}{linenos=false}
+\newminted{julia}{}
+\newenvironment{julia}{\vspace{-0.6em}\VerbatimEnvironment\begin{juliacode}}{\end{juliacode}}
+\newminted[jlrepl]{julia}{linenos=false}
+\newenvironment{repl}{\vspace{-0.6em}\VerbatimEnvironment\begin{jlrepl}}{\end{jlrepl}}
+\newcommand{\q}{\textquotesingle}
+\newcommand{\qq}{\textquotedbl}
+\newcommand{\jlREPL}{\textcolor{jvert}{\bfseries julia>}}
+\newcommand{\jlHELP}{\textcolor{jjaune}{\bfseries help>}}
+
+\DeclareTextFontCommand{\emph}{\color{jrouge}\bfseries}
+
+\newenvironment<>{definition}[1]{%
+	\setbeamercolor{block title}{bg=lightgreen}%
+	\begin{block}{Définition}{#1}}{\end{block}}
+
+\newenvironment<>{convention}[1]{%
+	\setbeamercolor{block title}{bg=lightpurple}%
+	\begin{block}{Convention}{#1}}{\end{block}}
+
+\usepackage{xspace}
+\newcommand{\expr}{\ensuremath{\left\langle\textit{expr}\right\rangle}\xspace}
+\newcommand{\expra}[1]{\ensuremath{\left\langle\textit{expr}_{#1}\right\rangle}\xspace}
+\newcommand{\bexpr}{\ensuremath{\left\langle\textit{bexpr}\right\rangle}\xspace}
+\newcommand{\bexpra}[1]{\ensuremath{\left\langle\textit{bexpr}_{#1}\right\rangle}\xspace}
+\newcommand{\type}{\ensuremath{\left\langle\textit{type}\right\rangle}\xspace}
+\newcommand{\typea}[1]{\ensuremath{\left\langle\textit{type}_{#1}\right\rangle}\xspace}
+
+
+\title{Apprentissage de la programmation en Julia}
+
+\subtitle{Retour sur les premiers TDs}
+
+\author{Lionel~Zoubritzky\inst{}}
+
+\institute{Mines Paris -- PSL}
+
+\date{12/2024}
+
+\begin{document}
+\setbeamertemplate{section page}[mruffel]
+
+\begin{frame}
+	\maketitle
+\end{frame}
+
+\begin{frame}[fragile]{Organisation des tests}
+	Les trois règles de la programmation, à suivre \textbf{dans l'ordre} :
+	\begin{enumerate}
+		\item Écrire du code correct (\textit{``make it work''}) ;
+		\item Écrire du code clair (\textit{``make it right''}) ;
+		\item Écrire du code efficace (\textit{``make it fast''}).
+	\end{enumerate}
+	\vfill
+	\pause
+	
+	\textbf{Toute fonctionnalité codée doit être testée.} Cela consiste en :
+	\begin{enumerate}
+		\item Écrire des tests.
+		\item Exécuter les tests.
+	\end{enumerate}
+	
+	Idéalement, les tests doivent être écrits avant d'implémenter la fonctionnalité (\textit{test-driven development}). Il faut faire en sorte que, a minima, chaque ligne du code soit exécutée dans un test (\textit{coverage}).
+	\vfill
+	
+	Un \emph{test unitaire} est un test élémentaire, consistant à vérifier un calcul. Les tests sont composés d'un assemblage de code de préparation (\textit{setup}) et de tests unitaires.
+\end{frame}
+
+\begin{frame}[fragile]{Organisation des tests}
+	Un test unitaire s'écrit avec la macro \jl{@test} de la bibliothèque standard \jl{Test}. Il existe aussi :
+	\begin{itemize}
+		\item \jl{@test_throws} pour vérifier que le code lance une erreur voulue.
+		\item \jl{@test_broken} pour garder la trace des fonctionnalités pas encore implémentées, ou qui comportent un bug connu.
+	\end{itemize}
+	\vfill
+	
+	\begin{julia}
+		using Test
+		
+		@test minimum(-, [2, 6, 3, -4, 12, 5]) == -12
+		
+		#= @test_throws takes as its first argument the error type,
+		or a part of the displayed error =#
+		@test_throws ArgumentError minimum([])
+		@test_throws "not allowed" minimum([])
+		
+		# The following is broken because tofrench is not yet defined
+		@test_broken tofrench(14) == "quatorze"
+	\end{julia}
+\end{frame}
+
+\begin{frame}[fragile]{Organisation des tests}
+	Plusieurs tests cohérents peuvent être regroupés dans un \jl{@testset} (de la bibliothèque \jl{Test}), qui porte un nom. Cela permet d'organiser les tests :
+	\begin{julia}
+		@testset "Exercice 1" begin
+			x = ...
+			@test ...
+			...
+		end
+	\end{julia}
+	\vfill
+	
+	Si une variable n'est utile que dans un domaine de code restreint, mieux vaut l'entourer ce code d'un bloc \jl{let} qui permet d'introduire une portée locale :
+	\begin{julia}
+		x = 17
+		let x = 14, y = nothing
+			@test foo(x, y) = ...
+		end
+		@test x == 17
+	\end{julia}
+\end{frame}
+
+\begin{frame}{Débogage}
+	\textsl{Mon code ne marche pas, que faire ?}
+	\begin{itemize}
+		\item Si une erreur s'affiche : \textbf{lire l'erreur}. Celle-ci contient une \emph{trace de la pile d'appel} (\textit{stacktrace}), celle-ci montrant la liste des appels de fonctions partant de l'endroit où l'erreur est apparue, et remontant jusqu'à l'expression de l'utilisateur.
+		
+		À supposer que l'erreur vient de votre code, vérifier votre code autour de la ligne correspondant au dernier appel de fonction de votre code.
+		
+		\item S'il n'y a pas d'erreur mais que le résultat est faux, il faut vérifier les différentes étapes du code menant au résultat.
+	\end{itemize}
+	\vspace{1em}
+	
+	Pour enquêter sur le comportement du code qui s'exécute, vous pouvez :
+	\begin{itemize}
+		\item Ajouter des \jl{println} ou des \jl{@show} pour afficher des valeurs.
+		\item Utiliser Infiltrator.jl et sa macro \jl{@infiltrate}.
+		\item Utiliser le débogueur inclus dans l'extension de VSCode en plaçant des \emph{breakpoints} puis en exécutant l'expression avec la macro \jl{@debug}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Docstring et documentation}
+	La documentation d'une fonction est définie par une \emph{docstring}, qui est une chaîne de caractère placée avant la fonction qui doit ressembler à ceci :
+
+	\begin{julia}
+		"""
+			my_function(x, y, mult=12; trig, kind=:degree)
+
+		Compute `trig(x + y*mult)` where `trig` must be either `sin`
+		or `cos`.
+
+		The optional keyword argument `kind` determines whether `x`
+		and `y` are given in degrees (the default) or in radians (by
+		specifying `kind=:radians`).
+		"""
+		function my_function(x, y, mult=12; trig, kind=:degree)
+	\end{julia}
+
+	Ne pas oublier de mettre la signature de la fonction après un retour à la ligne et une indentation après le \jl{"""} initial, ni la ligne vide juste après cette signature, et pas de ligne vide entre la fin de la docstring et la définition de la fonction. Le contenu de la docstring est écrit en Markdown.
+	
+	Convention : une docstring est généralement écrite à l'impératif.
+\end{frame}
+
+\begin{frame}[fragile]{Docstring et documentation}
+	Une telle docstring peut aussi être affectée à n'importe quel \textbf{nom}, y compris donc une fonction, mais aussi un type, une constante ou même une variable :
+	
+	\begin{julia}
+		"""
+			MyInterestingSingleton
+
+		Singleton type which can only be constructed by calling
+		`an_interesting_constructor()`.
+		"""
+		struct MyInterestingSingleton
+			an_interesting_constructor() = new()
+		end
+		
+		"""
+			something_interesting
+			
+		Singleton value of [`MyInterestingSingleton`](@ref)
+		"""
+		const something_interesting = an_interesting_constructor()
+	\end{julia}
+\end{frame}
+
+\begin{frame}[fragile]{Docstring et documentation}
+	La docstring est ce qui est indiqué lorsque l'utilisateur recherche le nom dans la documentation :
+	\begin{julia}
+		£\jlHELP£ my_function
+		search: my_function function @cfunction Function functionloc
+		@functionloc
+		
+		my_function(x, y, mult=12; trig, kind=:degree)
+		
+		Compute trig(x + y*mult) where trig must be either sin or cos.
+		
+		The optional keyword argument kind determines whether x and y
+		are given in degrees (the default) or in radians (by specifying
+		kind=:radians).
+	\end{julia}
+
+	Une \emph{docstring} représente donc la documentation d'un nom. Pour répondre à la question d'un TD, il vaut mieux utiliser des \emph{commentaires}.
+\end{frame}
+
+\begin{frame}[fragile]{Commentaires}
+	Un \emph{commentaire} est un texte délimité par un signe \jl{#} à gauche et un retour à la ligne à droite. Ce texte est ignoré par Julia.
+	\vfill
+	
+	Il est possible de faire des \emph{commentaires multi-lignes}, délimités par \jl{#=} à gauche et par \jl{=#} à droite :
+	\begin{julia}
+		#= Question III. 6)
+		Les complexités des opérations sur un Vector de taille n sont :
+		- O(1) pour pop!
+		- O(1) pour popfirst!
+		- O(1) pour push!
+		- O(1) pour pushfirst!
+		- O(1) pour length
+		- O(n) pour minimum
+		- O(n) pour maximum
+		- O(n*log(n)) pour sort
+		=#
+	\end{julia}
+\end{frame}
+
+\begin{frame}{Initialisation des tableaux}
+	Pour créer une liste vide, on écrit \jl{T[]} où \jl{T} désigne le type des éléments du tableau.
+	\begin{itemize}
+		\item \jl{Vector{T}()} fonctionne aussi, mais c'est verbeux.
+		\item \jl{[]} crée un \jl{Vector{Any}}. Cela conduit quasiment toujours à des problèmes de performance.
+	\end{itemize}
+	\vspace{0.5em}
+
+	Pour créer un tableau de booléens, on peut utiliser \jl{trues(n)} ou \jl{falses(n)}, ou encore \jl{BitArray{N}(undef, n)} et sa version 1D \jl{BitVector(undef, n)}. Attention, ces fonctions renvoient un \jl{BitArray}, pas un \jl{Array} (mais on peut faire les mêmes opérations dessus).
+	\vspace{1em}
+
+	Pour créer un tableau rempli du même élément, on peut utiliser \jl{zeros} (pour 0) ou \jl{ones} (pour 1) : \jl{zeros(T, n1, n2, ...)}.
+	
+	On peut aussi utiliser \jl{l = fill(x, n1, n2, ...)}, mais attention, il s'agira du même élément \jl{x} physiquement partout dans le tableau. Si \jl{x} est mutable, par exemple lui-même un tableau, alors muter n'importe quel élément de \jl{l} (par exemple \jl{push!(l[4], 72)}) mutera tous les autres !
+\end{frame}
+
+\begin{frame}[fragile]{Opérateurs logiques vs opérateurs booléens}
+	Les opérateurs logiques \jl{&}, \jl{|} et \jl{~} sont à réserver pour les opérations sur des entiers. {\bfseries Pour les opérations sur les booléens, il vaut mieux utiliser les opérateurs booléens \jl{&&}, \jl{||} et \jl{!}}.
+	\vfill
+
+	Par ailleurs, attention à la précédence ! Pour utiliser sans ambiguïté à la fois \jl{||} et \jl{&&} sur une même ligne, utilisez des parenthèses :
+	\begin{julia}
+		i == n || val < maxv && return val    # unclear
+
+		(i == n || val < maxv) && return val  # OK
+		i == n || (val < maxv && return val)  # OK
+	\end{julia}
+\end{frame}
+
+\begin{frame}{Règles de style}
+	Pensez à aérer votre code et à rester cohérent dans vos conventions internes d'une ligne à l'autre. Les règles générales sont :
+	
+	\begin{itemize}
+		\item une espace avant et après chaque opérateur (sauf éventuellement la multiplication et la division), y compris les comparaisons (comme \jl{==}) et les affectations (comme \jl{+=}).
+		\item une espace avant et après le \jl{=} de l'affectation.
+		\item pas d'espace autour du \jl{=} pour les arguments optionnels.
+		\item une espace après une virgule et un point-virgule, mais pas avant.
+		\item jamais deux espaces consécutives.
+		\item éviter de faire des lignes trop longues.
+%		\item si, au sein d'une fonction, vous décidez de sauter une ligne avant le début d'un bloc, sautez une ligne à la fin de ce même bloc.
+	\end{itemize}
+	\vfill
+
+	Remarque : si votre éditeur de texte vous suggère une indentation absurde, c'est probablement que vous avez oublié un \jl{end} précédemment ou, plus généralement, que vous avez une erreur de syntaxe.
+\end{frame}
+
+\end{document}
