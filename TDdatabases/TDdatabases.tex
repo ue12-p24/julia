@@ -1,0 +1,171 @@
+\documentclass{article}
+
+\usepackage{xcolor}
+\definecolor{jrouge}{HTML}{CB3C33}
+\definecolor{jvert}{HTML}{389826}
+\definecolor{jbleu}{HTML}{4063D8}
+\definecolor{jviolet}{HTML}{9558B2}
+\definecolor{lightred}{HTML}{fcf3f3}
+\definecolor{lightgreen}{HTML}{e1f6db}
+\definecolor{lightpurple}{HTML}{f4eef7}
+\definecolor{lightgrey}{gray}{0.95}
+
+\usepackage{natbib}
+%\renewcommand{\citenumfont}[1]{{\tiny#1}}
+\renewcommand{\citenumfont}[1]{}
+\bibpunct{}{};s;;
+
+\usepackage[top=1.5cm,bottom=1.5cm, left=2.5cm,right=2.5cm]{geometry}
+\usepackage[french]{babel}
+\usepackage[mathletters]{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+% Alternative for XeLaTeX:
+%\usefonttheme{professionalfonts}
+%\usepackage{fontspec}
+%\setmonofont{JuliaMono}
+%\setdefaultlanguage{french}
+%\usepackage{unicode-math}
+
+\usepackage{subcaption}
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{soul}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{bbm}
+\usepackage{svg}
+
+\usepackage{tikz}
+\usetikzlibrary{scopes, backgrounds, arrows, automata, positioning, patterns, calc, decorations.pathmorphing, decorations.pathreplacing, arrows.meta}
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	breaklinks=true,
+}
+\usepackage{ragged2e}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{aeguill}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{stmaryrd}
+\usepackage{siunitx}
+
+\usepackage{forloop}
+\newcounter{loop}
+\newcounter{numEx}
+\newcommand{\exo}[1]{
+	\stepcounter{numEx}
+	\setcounter{loop}{0}
+	\subsection*{Exercice \arabic{numEx} -- #1}
+}
+\newcommand{\correction}{\textsl{\\Correction de l'exercice \arabic{numEx}\\}}
+\newenvironment{corr}{
+	\correction	\begin{enumerate}}
+	{\end{enumerate}
+}
+
+\usepackage{enumitem}
+\renewlist{itemize}{itemize}{4}
+\setlist[itemize,1]{label={$\bullet$}}
+\setlist[itemize,2]{label={$\triangleright$}}
+\setlist[itemize,4]{label={$\circ$}}
+
+\newcommand{\llbra}{\left\llbracket}
+\newcommand{\rrbra}{\right\rrbracket}
+\renewcommand{\brack}[1]{\ensuremath{\llbra#1\rrbra}}
+\newcommand{\der}[2]{#1^{\ensuremath{\left(#2\right)}}}
+\newcommand{\paren}[1]{\ensuremath{\left(#1\right)}}
+\newcommand{\abs}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\interval}[1]{\ensuremath{\left[#1\right]}}
+\newcommand{\set}[2]{\ensuremath{\left\{#1\,\middle|\,#2\right\}}}
+\newcommand{\cont}[1]{\mathcal{C}^{#1}}
+\newcommand{\tends}[2]{\underset{#1\to #2}{\longrightarrow}}
+\newcommand{\seq}[3]{\ensuremath{\left(#1_{#2}\right)_{#2\in#3}}}
+\newcommand{\matr}[2]{\mathcal{M}_{#1}\paren{#2}}
+\newcommand{\matrRect}[3]{\mathcal{M}_{#1,#2}\paren{#3}}
+\newcommand{\Id}{\text{Id}}
+\newenvironment{disj}[1]{\left\{\begin{array}{#1}} {\end{array}\right.}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\eps}{\varepsilon}
+
+
+
+\title{TD -- Apprentissage de la programmation en Julia}
+
+\author{Lionel~Zoubritzky}
+
+\date{11/2024}
+
+\usepackage{minted}
+\usemintedstyle{paraiso-light}
+\setminted[julia]{mathescape,linenos,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightred,escapeinside=££}
+\setminted[bash]{mathescape,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightgrey,escapeinside=££}
+
+\usepackage{lmodern}
+%\newcommand{\jl}[1]{\colorbox{lightred}{\small\ttfamily #1}}
+\newmintinline[jl]{julia}{}
+\newmintinline[jlscript]{julia}{fontsize=\scriptsize}
+\newmint[JL]{julia}{}
+\newmint[JLa]{julia}{linenos=false}
+\newminted{julia}{}
+\newenvironment{julia}{\vspace{-0.6em}\VerbatimEnvironment\begin{juliacode}}{\end{juliacode}}
+\newminted[jlrepl]{julia}{linenos=false}
+\newenvironment{repl}{\vspace{-0.6em}\VerbatimEnvironment\begin{jlrepl}}{\end{jlrepl}}
+\newcommand{\q}{\textquotesingle}
+\newcommand{\qq}{\textquotedbl}
+\newcommand{\jlREPL}{\textcolor{jvert}{\bfseries julia>}}
+
+\DeclareTextFontCommand{\emph}{\bfseries}
+
+\usepackage{xspace}
+\newcommand{\expr}{\ensuremath{\left\langle\textit{expr}\right\rangle}\xspace}
+\newcommand{\expra}[1]{\ensuremath{\left\langle\textit{expr}_{#1}\right\rangle}\xspace}
+\newcommand{\bexpr}{\ensuremath{\left\langle\textit{bexpr}\right\rangle}\xspace}
+\newcommand{\bexpra}[1]{\ensuremath{\left\langle\textit{bexpr}_{#1}\right\rangle}\xspace}
+
+
+
+\begin{document}
+	
+\begin{center}
+	\Large Apprentissage de la programmation en Julia
+	
+	TD \no8 : Bases de données
+	\vspace{2em}
+\end{center}
+
+\exo{Analyse et génération de données}
+
+Télécharger le jeu de données présent sur \url{https://www.data.gouv.fr/fr/datasets/liste-de-prenoms/}
+
+\begin{enumerate}
+	\item Quel est le prénom avec la plus haute ``fréquence'' ? Que signifie cette ``fréquence'' ?
+	\item Quelle est la proportion de prénoms épicènes (c'est-à-dire pouvant être à la fois masculins et féminins) dans la base de données ?
+	\item Écrire une fonction \jl{generate_firstname(language)} qui génère aléatoirement un prénom de la langue spécifiée, de sorte que la probabilité associée à chaque prénom soit proportionnelle à sa ``fréquence''.
+\end{enumerate}
+
+Télécharger le fichier des prénoms donnés en France par département au format CSV à présent sur \url{https://www.insee.fr/fr/statistiques/7633685}.
+
+\begin{enumerate}[resume]
+	\item Créer une sous-table qui exclut les \jl{_PRENOMS_RARES} ainsi les lignes présentant des données manquantes.
+	\item Combien y a-t-il eu de ``Pierre'' et de ``Marie'' nommés en France depuis 1980 en Île-de-France (départements 75, 77, 78, 91, 92, 93, 94 et 95) ?
+	\item Écrire une fonction \jl{plot_firstnames_repartition(num, department=nothing, year=nothing)} qui, pour le département et l'année spécifiée, représente les \jl{num} prénoms les plus donnés sous la forme de barres ayant pour longueur la fréquence du prénom, et pour label le prénom. En absence de département donné, considérer toute la France ; en absence d'année donnée, considérer toute la plage depuis 1900.
+	\item $(*)$ Comparer la statistique des prénoms donnés en France avec les fréquences données par la base précédente.
+\end{enumerate}
+
+\exo{Le problème de l'emploi du temps}
+
+\end{document}
