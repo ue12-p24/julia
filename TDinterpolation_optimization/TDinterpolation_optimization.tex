@@ -1,0 +1,218 @@
+\documentclass{article}
+
+\usepackage{xcolor}
+\definecolor{jrouge}{HTML}{CB3C33}
+\definecolor{jvert}{HTML}{389826}
+\definecolor{jbleu}{HTML}{4063D8}
+\definecolor{jviolet}{HTML}{9558B2}
+\definecolor{lightred}{HTML}{fcf3f3}
+\definecolor{lightgreen}{HTML}{e1f6db}
+\definecolor{lightpurple}{HTML}{f4eef7}
+\definecolor{lightgrey}{gray}{0.95}
+
+\usepackage{natbib}
+%\renewcommand{\citenumfont}[1]{{\tiny#1}}
+\renewcommand{\citenumfont}[1]{}
+\bibpunct{}{};s;;
+
+\usepackage[top=1.5cm,bottom=1.5cm, left=2.5cm,right=2.5cm]{geometry}
+\usepackage[french]{babel}
+\usepackage[mathletters]{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+% Alternative for XeLaTeX:
+%\usefonttheme{professionalfonts}
+%\usepackage{fontspec}
+%\setmonofont{JuliaMono}
+%\setdefaultlanguage{french}
+%\usepackage{unicode-math}
+
+\usepackage{subcaption}
+
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{soul}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage{bbm}
+\usepackage{svg}
+
+\usepackage{tikz}
+\usetikzlibrary{scopes, backgrounds, arrows, automata, positioning, patterns, calc, decorations.pathmorphing, decorations.pathreplacing, arrows.meta}
+
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,
+	breaklinks=true,
+}
+\usepackage{ragged2e}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{aeguill}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{stmaryrd}
+\usepackage{siunitx}
+
+\usepackage{forloop}
+\newcounter{loop}
+\newcounter{numEx}
+\newcommand{\exo}[1]{
+	\stepcounter{numEx}
+	\setcounter{loop}{0}
+	\subsection*{Exercice \arabic{numEx} -- #1}
+}
+\newcommand{\correction}{\textsl{\\Correction de l'exercice \arabic{numEx}\\}}
+\newenvironment{corr}{
+	\correction	\begin{enumerate}}
+	{\end{enumerate}
+}
+
+\usepackage{enumitem}
+\renewlist{itemize}{itemize}{4}
+\setlist[itemize,1]{label={$\bullet$}}
+\setlist[itemize,2]{label={$\triangleright$}}
+\setlist[itemize,4]{label={$\circ$}}
+
+\newcommand{\llbra}{\left\llbracket}
+\newcommand{\rrbra}{\right\rrbracket}
+\renewcommand{\brack}[1]{\ensuremath{\llbra#1\rrbra}}
+\newcommand{\der}[2]{#1^{\ensuremath{\left(#2\right)}}}
+\newcommand{\paren}[1]{\ensuremath{\left(#1\right)}}
+\newcommand{\abs}[1]{\ensuremath{\left|#1\right|}}
+\newcommand{\interval}[1]{\ensuremath{\left[#1\right]}}
+\newcommand{\set}[2]{\ensuremath{\left\{#1\,\middle|\,#2\right\}}}
+\newcommand{\cont}[1]{\mathcal{C}^{#1}}
+\newcommand{\tends}[2]{\underset{#1\to #2}{\longrightarrow}}
+\newcommand{\seq}[3]{\ensuremath{\left(#1_{#2}\right)_{#2\in#3}}}
+\newcommand{\matr}[2]{\mathcal{M}_{#1}\paren{#2}}
+\newcommand{\matrRect}[3]{\mathcal{M}_{#1,#2}\paren{#3}}
+\newcommand{\Id}{\text{Id}}
+\newenvironment{disj}[1]{\left\{\begin{array}{#1}} {\end{array}\right.}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\eps}{\varepsilon}
+
+
+
+\title{TD -- Apprentissage de la programmation en Julia}
+
+\author{Lionel~Zoubritzky}
+
+\date{11/2024}
+
+\usepackage{minted}
+\usemintedstyle{paraiso-light}
+\setminted[julia]{mathescape,linenos,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightred,escapeinside=££}
+\setminted[bash]{mathescape,obeytabs,tabsize=4,numbersep=3pt,fontsize=\small,framesep=2mm,autogobble,bgcolor=lightgrey,escapeinside=££}
+
+\usepackage{lmodern}
+%\newcommand{\jl}[1]{\colorbox{lightred}{\small\ttfamily #1}}
+\newmintinline[jl]{julia}{}
+\newmintinline[jlscript]{julia}{fontsize=\scriptsize}
+\newmint[JL]{julia}{}
+\newmint[JLa]{julia}{linenos=false}
+\newminted{julia}{}
+\newenvironment{julia}{\vspace{-0.6em}\VerbatimEnvironment\begin{juliacode}}{\end{juliacode}}
+\newminted[jlrepl]{julia}{linenos=false}
+\newenvironment{repl}{\vspace{-0.6em}\VerbatimEnvironment\begin{jlrepl}}{\end{jlrepl}}
+\newcommand{\q}{\textquotesingle}
+\newcommand{\qq}{\textquotedbl}
+\newcommand{\jlREPL}{\textcolor{jvert}{\bfseries julia>}}
+
+\DeclareTextFontCommand{\emph}{\bfseries}
+
+\usepackage{xspace}
+\newcommand{\expr}{\ensuremath{\left\langle\textit{expr}\right\rangle}\xspace}
+\newcommand{\expra}[1]{\ensuremath{\left\langle\textit{expr}_{#1}\right\rangle}\xspace}
+\newcommand{\bexpr}{\ensuremath{\left\langle\textit{bexpr}\right\rangle}\xspace}
+\newcommand{\bexpra}[1]{\ensuremath{\left\langle\textit{bexpr}_{#1}\right\rangle}\xspace}
+
+
+
+\begin{document}
+	
+\begin{center}
+	\Large Apprentissage de la programmation en Julia
+	
+	TD \no7 : Interpolation, optimisation
+	\vspace{2em}
+\end{center}
+
+\exo{Interpolation de Tchebychev}
+
+L'interpolation de Tchebychev désigne l'interpolation de Lagrange d'une fonction $f:\interval{a,b}\to\mathcal X$ aux points de Tchebychev, c'est-à-dire aux racines du polynôme de Tchebychev de première espèce. Ceux-ci sont donnés par les valeurs :
+\[x_k = \frac{a+b}2 + \frac{b-a}2\cos\paren{\frac{2k+1}{2n}\times\pi}\qquad k\in\brack{1,n}\]
+
+\begin{enumerate}
+	\item Créer un type composite \jl{Polynom}, sous-type de \jl{Function} ayant pour unique champ \jl{coeffs} une liste de coefficients polynomiaux, par ordre croissant des puissances de $X$, stockée sous la forme d'un tuple.
+	
+	On pourra ajouter des paramètres de type à \jl{Polynom}.
+	
+	\item Créer une méthode pour \jl{(p::Polynom)(x)} qui calcule la valeur du polynom \jl{p} au point \jl{x}.
+	
+	\textit{On pourra utiliser la fonction \textnormal{\jl{evalpoly}} de \textnormal{\jl{Base}}.}
+
+	\item Que fait la fonction \jl{foo} suivante ? La renommer avec un nom plus descriptif.
+	
+	\begin{jlrepl}
+		using Symbolics
+		function foo(roots::NTuple{N,T}) where {N,T}
+			@variables X
+			poly = expand(prod(X - r for r in roots))
+			ntuple(i -> Symbolics.coeff(poly, X^(i-1))::T, Val(N+1))
+		end
+	\end{jlrepl}
+
+	\item Créer une fonction \jl{lagrange_interpolator(xs, ys)} qui prend un tuple de nœuds \jl{xs} et de valeurs correspondantes \jl{ys}, et qui renvoie un \jl{Polynom} avec pour \jl{coeffs} les coefficients du polynôme interpolateur de Lagrange correspondant.
+
+	\item Créer une méthode \jl{chebychev_interpolator(f, a, b, ::Val{N}) where N} qui prend une fonction \jl{f} et les bornes de l'intervalle $\brack{\jl{a},\jl{b}}$, et qui renvoie l'interpolateur de Tchebychev correspondant avec $n = \jl{N}$.
+	
+	\item $(*)$ Comparer graphiquement et/ou numériquement l'interpolateur de Tchebychev et une interpolation de Lagrange en des points régulièrement espacés sur la fonction $f:x\in\interval{-1,1}\mapsto\frac1{1+25x^2}$.
+\end{enumerate}
+
+\exo{Un peu de sciences des données}
+
+\begin{enumerate}
+	\item Définir la fonction \jl{reference(t, λ, ε) = (5+λ/6)*tanh(t + ε/4) + atan(λ*t)/(t + 0.1t^2)*(1 + ε)}.
+	
+	Puis, définir les trois constantes \jl{TRANGE = 0.1:0.1:8}, \jl{λRANGE = 0:12} et enfin\\\jl{DATA = [reference(t, λ, rand()) for t in TRANGE, λ in λRANGE]}.
+	
+	Dans le reste de l'énoncé, on considère que \jl{DATA} représente des données acquises expérimentalement. Par exemple, on peut imaginer que \jl{DATA[i_t, i_λ]} représente la mesure de l'allongement à l'instant \jl{TRANGE[i_t]} d'un système élastique amorti, lâché initialement à la longueur \jl{λRANGE[i_λ]}.
+	
+	On cherche à construire un modèle permettant d'estimer rapidement la donnée expérimentale pour toutes les valeurs de $\jl{t}\in\R_+$ et $\jl{λ}\in\R_+$. On n'utilisera donc pas la fonction \jl{reference} dans le code, sauf lorsque c'est explicitement demandé.
+	
+	\item On commence en fixant le paramètre $\lambda$ et en regardant l'évolution des données selon $t$.
+	\begin{enumerate}
+		\item Superposer graphiquement l'évolution des données selon $t$ à $\lambda$ fixé et leur régression linéaire. La régression linéaire est-elle un modèle pertinent ?
+
+		\item On considère la fonction modèle $g_{\alpha,\beta,\lambda}: t\mapsto \paren{\lambda + \alpha t}/\paren{1 + \beta t^2}$. Pour chaque valeur de $\lambda$ dans \jl{λRANGE}, déterminer numériquement la valeur de $\alpha_\lambda$ et $\beta_\lambda$ qui minimisent l'écart des moindres carrés entre les données expérimentales et celles obtenues par $g_{\alpha_\lambda, \beta_\lambda, \lambda}$ pour $t$ dans \jl{TRANGE}.
+
+		\item $(*)$ Quantifier la qualité du modèle $g_{\alpha_\lambda,\beta_\lambda,\lambda}$ par rapport à la régression linéaire.
+	\end{enumerate}
+
+	\item $(*)$ On regarde maintenant l'évolution de $\alpha_\lambda$ et $\beta_\lambda$ en fonction de $\lambda$. À l'aide d'une régression linéaire ou en utilisant les fonctions de la librairie \jl{Interpolations.jl}, écrire deux fonctions \jl{α_parameter(λ)} et \jl{β_parameter(λ)} qui fournissent une approximation de respectivement $\alpha_\lambda$ et $\beta_\lambda$ pour tout $\lambda\in\R_+$.
+
+	\item $(*)$ On utilise maintenant les résultats précédents pour faire un modèle général.
+	\begin{enumerate}
+		\item Écrire une fonction \jl{model(t, λ)} qui fournit une approximation des données expérimentales au point $t$ avec le paramètre $\lambda$.
+		\item Comparer ce modèle à \jl{reference} en prenant \jl{ε = 0} sur le domaine $0.1 < t < 8$, $0 < \lambda < 12$. Le modèle permet-il une bonne interpolation ?
+		\item Comparer ce modèle à \jl{reference} en prenant \jl{ε = 0} en dehors des domaines précédents. Le modèle permet-il une bonne extrapolation ?
+	\end{enumerate}
+	
+\end{enumerate}
+
+
+\exo{$(*)$ Optimisation sous contrainte}
+
+{\Large\color{red} TODO}
+
+\end{document}
