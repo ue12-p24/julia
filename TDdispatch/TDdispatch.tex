@@ -186,6 +186,8 @@ En général, on parle d'arbres sans préciser qu'ils sont implicitement \emph{e
 \begin{enumerate}[resume]
 	\item Implémenter cette interface pour \jl{Tree}.
 	
+	\item Implémenter la fonction \jl{Base.:(==)(t1::AbstractTree, t2::AbstractTree)} qui vérifie si deux arbres sont identiques.
+	
 	\item Implémenter la fonction \jl{children(tree::AbstractTree)} qui renvoie la liste (\jl{Vector}, \jl{Tuple} ou autre) des éléments contenus dans les sous-nœuds de la racine de \jl{tree}.
 	
 	Note : cette fonction doit être implémentée de sorte à fonctionner sur n'importe quel sous-type de \jl{AbstractTree}, pas seulement sur un \jl{Tree}.

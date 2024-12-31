@@ -182,6 +182,8 @@ On va simuler l'évolution temporelle d'un tel pendule élastique en intégrant 
 
 \begin{enumerate}[resume]
 	\item En faisant l'approximation que pour toute fonction du temps $f(t)$ on a $f(t+\delta t) \approx f(t) + \delta tf'(t)$, en déduire un protocole de simulation de l'évolution temporelle du système précédent.
+
+	On fera évoluer les positions \textsl{avant} les vitesses pour cet exercice.
 	\item Implémenter ce protocole en une fonction qui renvoie la listes des paires formées par la position et la vitesse de la masse à chaque pas de la simulation. La signature de la fonction est :
 	
 	\jl{euler_integration(::Pendulum, initial_point, initial_velocity, δt, total_time)}.
