@@ -189,13 +189,13 @@
 
 \title{Apprentissage de la programmation en Julia}
 
-\subtitle{Bases de données}
+\subtitle{Fichiers, bases de données}
 
 \author{Lionel~Zoubritzky\inst{}}
 
 \institute{Mines Paris -- PSL}
 
-\date{12/2024}
+\date{01/2025}
 
 \begin{document}
 	\setbeamertemplate{section page}[mruffel]
@@ -204,18 +204,270 @@
 		\titlepage
 	\end{frame}
 
+
+\section{Fichiers}
+
+\begin{frame}{Systèmes de fichiers}
+	Un \emph{fichier} (\textit{file}) est un bloc de données enregistré sur le périphérique de stockage à long terme de l'ordinateur (disque dur ou SSD). Les fichiers sont placés dans des \emph{dossiers} ou \emph{répertoires} (\textit{folder}), eux-mêmes placés dans d'autres répertoires, etc.
+	\vfill
+	
+	Le \emph{chemin} (\textit{path}) d'un fichier désigne son emplacement dans la hiérarchie des répertoires. Un symbole \texttt{/} sépare les noms des répertoires et du fichier. Le chemin peut être :
+	\begin{itemize}
+		\item \emph{relatif} s'il part du répertoire courant : par exemple \texttt{./file}, directement \texttt{file} ou encore \texttt{subpath/file}.
+		\item \emph{absolu} s'il part de la racine du système fichier, symbolisée par un \texttt{/} au début du chemin : \texttt{/home/username/subpath/file}.
+	\end{itemize}
+	\vfill
+	
+	\small
+	Le système de fichiers (c'est-à-dire le mode de stockage des répertoires et fichiers sur le disque) dépend du système d'exploitation : Windows utilise NTFS, Linux utilise ext4, MacOS utilise APFS, les clés USB utilisent souvent exFAT, et d'autres systèmes plus vieux existent encore comme FAT32, HFS, \ldots
+\end{frame}
+
+\begin{frame}{Lecture simple d'un fichier}
+	En Julia, il existe plusieurs manières de lire un fichier. Pour les fichiers contenant du texte, le plus simple est de les lire ligne par ligne :
+	\begin{itemize}
+		\item \jl{readlines(path)} renvoie une liste dont chaque élément est une ligne du fichier dont le chemin est la chaîne de caractères \jl{path}.
+		\item \jl{eachline(path)} renvoie un itérateur sur les lignes du fichier.
+	\end{itemize}
+	\vspace{1em}
+
+	\begin{block}{Performance}
+		Les code \jl{for l in readlines(x) ...} et \jl{for l in eachline(x) ...} sont équivalents, mais la seconde version est plus efficace car ele ne crée par une liste intermédiaire.
+	\end{block}
+\end{frame}
+
+\begin{frame}{Lecture d'un fichier}
+	Pour faire des opérations plus complexes sur un fichier, il faut procéder en plusieurs temps :
+	\begin{enumerate}
+		\item Ouvrir le fichier avec \jl{open} et un mode d'ouverture :
+		\begin{itemize}
+			\item \jl{"r"} pour lecture seule (\textit{read}).
+			\item \jl{"w"} pour écriture seule (\textit{write}). \textbf{Attention :} s'il existait déjà, le fichier est écrasé !
+			\item \jl{"a"} pour écriture à la fin du fichier existant (\textit{append}).
+			\item \jl{"r+"}, \jl{"w+"}, \jl{"a+"} font la même chose que sans le \jl{"+"}, mais permettent de plus d'écrire (pour \jl{"r+"}) ou de lire (pour \jl{"w+"} et \jl{"a+"})
+		\end{itemize}
+		
+		\jl{open} renvoie un \emph{descripteur de fichier} : \jl{io = open(path, "a")}
+		
+		\item Lire avec \jl{read} ou écrire avec \jl{write}/\jl{show}/\jl{print}/\jl{println} sur le descripteur de fichier. Exemple : \jl{println(io, "Hello world!")}.
+		
+		\item Refermer le fichier avec l'appel \jl{close(io)}.
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Ouverture usuelle de fichiers}
+	L'appel \jl{open(func, path, mode)} est équivalent aux trois lignes
+	\begin{julia}
+		io = open(path, mode)
+		func(io)
+		close(io)
+	\end{julia}
+	
+	\pause
+	
+	\begin{block}{Syntaxe \texttt{do}}
+		En Julia, le mot-clé \jl{do} suivant un appel \jl{foo(args...)} permet d'ajouter une fonction comme premier argument de l'appel. Ainsi, un appel de la forme \jl{foo((x, y) -> [...], args...)} peut être réécrit :
+		\begin{repl}
+			foo(args...) do x, y
+				[...]
+			end
+		\end{repl}
+	\end{block}
+	
+	Pour ouvrir un fichier avec \jl{open} sans oublier le \jl{close}, on écrira donc :
+	\begin{julia}
+		open(path, mode) do io
+			# code with read(io) or print(io, ...), etc.
+		end
+	\end{julia}
+\end{frame}
+
+\begin{frame}[fragile]{Lecture et écriture hors texte}
+	Pour lire et écrire du texte, on utilise donc principalement \jl{eachline} et \jl{println}. Un nombre peut être écrit sous forme de texte avec \jl{print} : on le retransforme en nombre avec \jl{parse} (voir diapositive ``Lecture de valeurs'').
+	\vfill
+	
+	Il est aussi possible d'écrire dans des fichiers des valeurs qui ne sont pas du texte : on utilise pour cela la fonction \jl{write}. Inversement, pour lire une valeur non-textuelle, on utilise \jl{read} en précisant le type de la valeur (pour savoir combien de bits lire).
+	\vfill
+	
+	\begin{julia}
+		open("/tmp/test.txt", "w+") do io
+			println(io, "this is a text")
+			write(io, 21.7)
+			seekstart(io) # put back io to the start of the file
+			display(readline(io)) # read one line and display it
+			display(read(io, Float64)) # read one float and display it
+		end
+	\end{julia}
+\end{frame}
+
+\section{Stockage de l'information}
+
+\begin{frame}{Encodage}
+	Un fichier peut contenir du texte, mais pas seulement : toute séquence de bits peut être stockée dans un fichier.
+	\vfill
+	
+	Stocker un texte revient à stocker la séquence de bits correspondant à ses caractères. De façon générale, stocker une information dans un fichier requiert un \emph{encodage}, c'est-à-dire une convention sur la façon dont les bits du fichier représentent les valeurs.
+	\vfill
+	
+	L'encodage le plus simple consiste à copier les bits utilisés par le programme, mais cela n'est possible que pour les valeurs \jl{isbits}, car les bits représentant un pointeur (une adresse dans la mémoire) n'ont pas de sens hors de l'exécution du programme.
+\end{frame}
+
+\begin{frame}[fragile]{Sérialisation}
+	La bibliothèque standard \jl{Serialization} permet de stocker la plupart des valeurs issues d'un programme Julia dans un fichier :
+	\begin{repl}
+		£\jlREPL£ using Serialization
+		
+		£\jlREPL£ x = foobar(...);
+		
+		£\jlREPL£ serialize("/some/path/in/my/computer/data.serial", x);
+		
+		£\jlREPL£ y = deserialize("/some/path/in/my/computer/data.serial")
+		
+		£\jlREPL£ x == y   # only works if == was correctly implemented
+		true
+	\end{repl}
+
+	Une valeur \emph{sérialisée} (\textit{serialized} ou \textit{marshalled}) dans une version de Julia sera lisible dans les versions ultérieures, mais pas  inférieures. Il s'agit d'une méthode adaptée au stockage à court ou moyen terme.
+\end{frame}
+
+\begin{frame}[fragile]{TranscodingStreams.jl}
+	Pour lire ou écrire des données \emph{compressées}, on peut utiliser TranscodingStreams.jl, qui offre une interface de compression. Cette librairie s'utilise en tandem avec le mode de compression requis, par exemple :
+	\begin{itemize}
+		\item zip, format classique inclus avec CodecZlib.jl ;
+		\item zstd, format parmi les plus efficaces, inclus avec CodecZstd.jl ;
+		\item base64, format n'utilisant que 64 caractères (\jl{A}-\jl{Z}, \jl{a}-\jl{z}, \jl{0}-\jl{9}, \jl{+} et \jl{/}), ainsi que \jl{=} pour le padding, inclus avec CodecBase.jl.
+	\end{itemize}
+
+	Étant donné \jl{io} (de type \jl{<: IO}), par exemple un descripteur de fichier :
+	\begin{itemize}
+		\item \jl{io2 = TranscodingStream(XCompressor(), io} crée un nouvel \jl{IO} tel que écrire sur \jl{io2} écrit sur \jl{io} le flux compressée des données. \jl{X} doit être remplacé par le mode de compression : par exemple \jl{ZstdCompressor()} pour le format zstd {\small (fourni par CodectZstd.jl)}.
+		\item \jl{TranscodingStream(XDecompressor(), io)} : pareil pour la lecture.
+	\end{itemize}
+\end{frame}
+
+
 \section{Bases de données}
 
-\begin{frame}{Données}
+\begin{frame}{Organisation des données}
 	Une \emph{donnée} désigne un quantum d'information. Une \emph{base de données} est une collection \textbf{organisée} de données, stockée sur un support physique.
 	
 	Une \emph{base de données relationnelle} organise les données selon un tableau bidimensionnel :
 	\begin{itemize}
 		\item Chaque colonne représente un \emph{attribut}, c'est-à-dire une caractéristique représentable numériquement (une taille, une couleur, une mesure physique, un nom, un identifiant, \ldots)
-		\item Chaque ligne représente un \emph{enregistrement}, c'est-à-dire une collection d'attributs appartenant à une même unité.
+		\item Chaque ligne représente un \emph{enregistrement} (\textit{record}), c'est-à-dire une collection d'attributs appartenant à une même unité.
 	\end{itemize}
+	\vfill
 	
-	On peut voir une base de donnée relationnelle comme une liste d'objets de même type : chaque ligne représente un objet, et chaque colonne un de ses champs.
+	On peut voir une base de donnée relationnelle comme une liste d'objets de même type : chaque ligne représente un objet, et chaque colonne un de ses champs. On peut aussi la voir comme une matrice dont les colonnes sont nommées, et ne partagent pas nécessairement le même type.
+\end{frame}
+
+\begin{frame}[fragile]{DataFrames.jl}
+	La bibliothèque DataFrames.jl permet de manipuler des bases de données relationnelles avec une interface unifiée.
+
+	\begin{repl}
+		£\jlREPL£ using DataFrames
+		
+		£\jlREPL£ df = DataFrame()
+		0×0 DataFrame
+		
+		£\jlREPL£ df.people_names = ["Alice", "Bob"]; # attribute creation
+		
+		£\jlREPL£ df.age = [22, 21]; df.info = [157, :babar]
+		
+		£\jlREPL£ df
+		2×3 DataFrame
+		 Row | people_names     age       info
+		     | String           Int64     Any
+		-----+----------------------------------
+		   1 | Alice               22     157
+		   2 | Bob                 21     babar
+	\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Accès aux attributs dans DataFrames.jl}
+	Une \jl{DataFrame} peut se manipuler soit comme un type composite, ayant pour champs les différents attributs (colonnes), soit comme une matrice:
+	\vfill
+
+	\begin{repl}
+		£\jlREPL£ df.age
+		2-element Vector{Int64}:
+		 22
+		 21
+		
+		£\jlREPL£ df[2, :age] # can be accessed like a matrix
+		21
+		
+		£\jlREPL£ df[:, :age] == df.age   # copying alternative to df.age
+		true
+		
+		£\jlREPL£ df[!, :age] === df.age  # non-copying alternative
+		true
+		
+		£\jlREPL£ df[!, 2] == df.age      # numeric access
+		true
+		\end{repl}
+\end{frame}
+
+\begin{frame}[fragile]{Accès aux enregistrements dans DataFrames.jl}
+	Les enregistrements peuvent s'obtenir avec la syntaxe matricielle. De même que pour une \jl{DataFrame}, la \jl{DataFrameRow} résultante peut se manipuler soit comme un type composite, soit comme un vecteur :
+	\vfill
+
+	\begin{repl}
+		£\jlREPL£ record = df[1, :] # single record
+		DataFrameRow
+		 Row | people_names     age       info 
+		     | String           Int64     Any  
+		-----+----------------------------------
+		   1 | Alice               22     157
+		
+		£\jlREPL£ record.age == record[:age] == record[2] == 22
+		true
+	\end{repl}
+
+	Un sous-ensemble d'une \jl{DataFrame} s'obtient en indexant par des tableaux, comme dans un tableau :
+
+	\begin{repl}
+		£\jlREPL£ df[1:2, :] == df[:, [:people_names, :age, :info]] == df
+		true
+	\end{repl}
+\end{frame}
+
+\begin{frame}{Requêtes}
+	Au-delà de leur emploi matriciel, les bases de données peuvent être interrogées par des \emph{requêtes}. Celles-ci prennent la forme d'une combinaison d'ordre simples comme :
+	\begin{itemize}
+		\item \jl{select!} manipule les colonnes en permettant de ne retenir que certains attributs, de changer l'ordre, de renommer et de transformer.
+		\item \jl{transform!} : comme \jl{select!}, sans enlever d'attribut.
+		\item \jl{sort!} : trie la \jl{DataFrame}.
+		\item \jl{innerjoin} / \jl{leftjoin} / \jl{semijoin} / \jl{crossjoin} / \ldots : jointures.
+		\item \jl{describe} crée un nouveau \jl{DataFrame} dont chaque ligne correspond à une description d'un attribut de l'argument donné.
+		\item \jl{stack} / \jl{unstack} interversion entre formats longs et larges.
+	\end{itemize}
+
+	et leurs équivalents avec copie (sans point d'exclamation final). Consulter la documentation de DataFrames.jl pour plus de possibilités.
+\end{frame}
+
+\begin{frame}[fragile]{Requêtes : exemple de select}
+	\jl{select!(df)} modifie \jl{df} et la renvoie.
+	
+	\jl{select(df)} modifie une copie de \jl{df}.
+	\vspace{1em}
+
+	\begin{repl}
+		£\jlREPL£ select!(df, :info, :people_names => :name)
+		2×2 DataFrame
+		 Row | info      name   
+		     | Any       String 
+		-----+------------------
+		   1 | 157       Alice
+		   2 | babar     Bob
+		
+		£\jlREPL£ select!(df, :info => (x -> x .== :babar) => :isbabar)
+		2×1 DataFrame
+		 Row | isbabar 
+		     | Bool    
+		-----+---------
+		     |   false
+		   2 |    true
+	\end{repl}
 \end{frame}
 
 \begin{frame}{Format de bases de données}
@@ -236,16 +488,23 @@
 	Une base de donnée nécessite parfois plusieurs tels fichiers (on parle aussi de \emph{banque de données}).
 \end{frame}
 
-\begin{frame}{Requêtes}
-	content...
-\end{frame}
+\begin{frame}[fragile]{CSV.jl}
+	La bibliothèque CSV.jl permet d'importer et d'exporter au format CSV.
+	\begin{repl}
+		£\jlREPL£ CSV.write("/path/to/some/file.csv", df)
+		"/path/to/some/file.csv"
+		
+		£\jlREPL£ CSV.read("/path/to/some/file.csv", DataFrame)
+		2×3 DataFrame
+		 Row | people_names     age       info
+		     | String           Int64     Any
+		-----+----------------------------------
+		   1 | Alice               22     157
+		   2 | Bob                 21     babar
+	\end{repl}
+	\vfill
 
-\begin{frame}{\texttt{DataFrames.jl}}
-	content...
-\end{frame}
-
-\begin{frame}{\texttt{CSV.jl}}
-	content...
+	D'autres bibliothèques existent pour les autres formats de bases de données, comme Arrow.jl, Parquet2.jl, HDF5.jl, etc.
 \end{frame}
 
 \end{document}
