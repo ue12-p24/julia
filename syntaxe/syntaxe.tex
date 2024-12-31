@@ -370,7 +370,6 @@ $ julia /chemin/vers/mon_programme.jl
 		Un \emph{littéral} est une expression dont l'écriture donne la valeur.
 	\end{definition}
 	Exemples : les exemples de la diapositive précédente (\jl{true}, \jl{-32}, \jl{'ç'}, \jl{"Bonjour !"}, \ldots)
-	
 \end{frame}
 
 \begin{frame}{Variables}
@@ -1734,96 +1733,6 @@ $ julia /chemin/vers/mon_programme.jl
 	\end{repl}
 
 	On peut aussi itérer sur un \jl{Set}.
-\end{frame}
-
-
-\section{Fichiers}
-
-\begin{frame}{Systèmes de fichiers}
-	Un \emph{fichier} (\textit{file}) est un bloc de données enregistré sur le périphérique de stockage à long terme de l'ordinateur (disque dur ou SSD). Les fichiers sont placés dans des \emph{dossiers} ou \emph{répertoires} (\textit{folder}), eux-mêmes placés dans d'autres répertoires, etc.
-	\vfill
-
-	Le \emph{chemin} (\textit{path}) d'un fichier désigne son emplacement dans la hiérarchie des répertoires. Un symbole \texttt{/} sépare les noms des répertoires et du fichier. Le chemin peut être :
-	\begin{itemize}
-		\item \emph{relatif} s'il part du répertoire courant : par exemple \texttt{./file}, directement \texttt{file} ou encore \texttt{subpath/file}.
-		\item \emph{absolu} s'il part de la racine du système fichier, symbolisée par un \texttt{/} au début du chemin : \texttt{/home/username/subpath/file}.
-	\end{itemize}
-	\vfill
-
-	\small
-	Le système de fichiers (c'est-à-dire le mode de stockage des répertoires et fichiers sur le disque) dépend du système d'exploitation : Windows utilise NTFS, Linux utilise ext4, MacOS utilise APFS, les clés USB utilisent souvent exFAT, et d'autres systèmes plus vieux existent encore comme FAT32, HFS, \ldots
-\end{frame}
-
-\begin{frame}{Lecture simple d'un fichier}
-	En Julia, il existe plusieurs manières de lire un fichier. Pour les fichiers contenant du texte, le plus simple est de les lire ligne par ligne :
-	\begin{itemize}
-		\item \jl{readlines(path)} renvoie une liste dont chaque élément est une ligne du fichier dont le chemin est la chaîne de caractères \jl{path}.
-		\item \jl{eachline(path)} renvoie un itérateur sur les lignes du fichier. Les code \jl{for l in readlines(x) ...} et \jl{for l in eachline(x) ...} sont équivalents (mais la seconde version est plus efficace).
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Lecture d'un fichier}
-	Pour faire des opérations plus complexes sur un fichier, il faut procéder en plusieurs temps :
-	\begin{enumerate}
-		\item Ouvrir le fichier avec \jl{open} et un mode d'ouverture :
-		\begin{itemize}
-			\item \jl{"r"} pour lecture seule (\textit{read}).
-			\item \jl{"w"} pour écriture seule (\textit{write}). \textbf{Attention :} s'il existait déjà, le fichier est écrasé !
-			\item \jl{"a"} pour écriture à la fin du fichier existant (\textit{append}).
-			\item \jl{"r+"}, \jl{"w+"}, \jl{"a+"} font la même chose que sans le \jl{"+"}, mais permettent de plus d'écrire (pour \jl{"r+"}) ou de lire (pour \jl{"w+"} et \jl{"a+"})
-		\end{itemize}
-
-		\jl{open} renvoie un \emph{descripteur de fichier} : \jl{io = open(path, "a")}
-
-		\item Lire avec \jl{read} ou écrire avec \jl{write}/\jl{show}/\jl{print}/\jl{println} sur le descripteur de fichier. Exemple : \jl{println(io, "Hello world!")}.
-
-		\item Refermer le fichier avec l'appel \jl{close(io)}.
-	\end{enumerate}
-\end{frame}
-
-\begin{frame}[fragile]{Ouverture usuelle de fichiers}
-	L'appel \jl{open(func, path, mode)} est équivalent aux trois lignes
-	\begin{julia}
-		io = open(path, mode)
-		func(io)
-		close(io)
-	\end{julia}
-
-	\pause
-
-	\begin{block}{Syntaxe \texttt{do}}
-		En Julia, le mot-clé \jl{do} suivant un appel \jl{foo(args...)} permet d'ajouter une fonction comme premier argument de l'appel. Ainsi, un appel de la forme \jl{foo((x, y) -> [...], args...)} peut être réécrit :
-		\begin{repl}
-			foo(args...) do x, y
-				[...]
-			end
-		\end{repl}
-	\end{block}
-
-	Pour ouvrir un fichier avec \jl{open} sans oublier le \jl{close}, on écrira donc :
-	\begin{julia}
-		open(path, mode) do io
-			# code with read(io) or print(io, ...), etc.
-		end
-	\end{julia}
-\end{frame}
-
-\begin{frame}[fragile]{Lecture et écriture hors texte}
-	Pour lire et écrire du texte, on utilise donc principalement \jl{eachline} et \jl{println}. Un nombre peut être écrit sous forme de texte avec \jl{print} : on le retransforme en nombre avec \jl{parse} (voir diapositive ``Lecture de valeurs'').
-	\vfill
-
-	Il est aussi possible d'écrire dans des fichiers des valeurs qui ne sont pas du texte : on utilise pour cela la fonction \jl{write}. Inversement, pour lire une valeur non-textuelle, on utilise \jl{read} en précisant le type de la valeur (pour savoir combien de bits lire).
-	\vfill
-
-	\begin{julia}
-		open("/tmp/test.txt", "w+") do io
-			println(io, "this is a text")
-			write(io, 21.7)
-			seekstart(io) # put back io to the start of the file
-			display(readline(io)) # read one line and display it
-			display(read(io, Float64)) # read one float and display it
-		end
-	\end{julia}
 \end{frame}
 
 
