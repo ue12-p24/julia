@@ -198,7 +198,7 @@
 
 \institute{Mines Paris -- PSL}
 
-\date{12/2024}
+\date{01/2025}
 
 \begin{document}
 \setbeamertemplate{section page}[mruffel]
@@ -417,20 +417,41 @@
 \end{frame}
 
 \begin{frame}{Optimisation}
-	L'\emph{optimisation} de fonction est une généralisation des problèmes précédents (interpolation et ajustement de courbe). Dans sa forme la plus générale, cela consiste à trouver le minimum d'une fonction $f:\mathcal A\to\R$.
+	L'\emph{optimisation} de fonction est une généralisation des problèmes précédents (interpolation et ajustement de courbe). Dans sa forme la plus générale, cela consiste à résoudre le problème suivant :
+
+	\begin{block}{Problème d'optimisation}
+		$\text{Déterminer }x\in\mathcal I\text{ qui minimise }f(x)$\\
+		$\text{sous la contrainte }\forall i\in\brack{1,m},\ g_i(x) = 0\text{ et }\forall j\in\brack{1,p},\ h_j(x) \le 0$
+	\end{block}
+
 	\vfill
 
 	La fonction $f$ s'appelle le \emph{coût} ou l'\emph{objectif} (\textit{objective}, \textit{cost}, \textit{loss}, \textit{utility}, \textit{fitness}). En toute logique, optimiser un procédé revient à trouver les paramètres qui minimisent son coût.
+	\vfill
+	
+	$\mathcal I$ est un produit cartésien d'intervalles, les contraintes plus fines sur le domaine de $x$ sont données par les fonctions $g_i$ et $h_j$. Dans, la suite, on notera $\mathcal A = \set{x\in \mathcal I}{\forall i\in\brack{1,m},\,g_i(x) = 0\text{ et }\forall j\in\brack{1,p},\,h_j(x)\le 0}$ le domaine des valeurs possibles de $x$.
 \end{frame}
 
 \begin{frame}{Descente de gradient}
 	Dans le cas où $f$ est suffisamment régulière et ne contient qu'un seul minimum dans son domaine $\mathcal A$, celui-ci peut être obtenu en partant d'un point de $\mathcal A$ et en faisant une \emph{descente de gradient}.
+	\vfill
 	
-	Il s'agit d'un type d'\emph{algorithme glouton}.
+	Cela consiste à calculer itérativement la suite $\seq xn\N$ où $x_0$ est le point de départ et $x_{n+1} = x_n - \nabla f(x_n)\delta x$.
+	
+	Figurativement, cela revient à simuler le mouvement d'une masse posée en $x_0$ initialement, et qui roule sur la surface décrite par $f$ sous l'effet de la gravité, jusqu'à se stabiliser dans un minimum local.
+	\vfill
+	
+	Il s'agit d'un type d'\emph{algorithme glouton} : algorithme qui choisit à tout moment le meilleur choix local, et conduit ainsi à un optimum local.
 \end{frame}
 
 \begin{frame}{Algorithme de Newton}
-	content...
+	L'\emph{algorithme de Newton-Raphson} utilise un pas différent :
+	\[x_{n+1} = x_n - \gamma \left[\nabla^2f(x_n)\right]^{-1}\nabla f(x_n)\qquad\text{avec }0<\gamma\le1\]
+
+	Il s'agit du pas qui minimise un puits quadratique : si $f:x\mapsto x^TSx$ avec $S$ une matrice symétrique définie positive, alors $\nabla f(x) = 2Sx$ et $\nabla^2f(x) = 2S$ donc depuis n'importe quel $x_0$, $x_1 = 0$ donne directement le minimum de $f$.
+	\vfill
+	
+	Ainsi, si l'on approxime localement la forme de $f$ autour du minimum comme un puits quadratique, l'algorithme de Newton converge très vite vers le minimum. En contrepartie, il faut calculer le produit $\left[\nabla^2f(x_n)\right]^{-1}\nabla f(x_n)$ à chaque pas, ce qui peut être très coûteux car la \emph{hessienne} $\nabla^2 f$ peut être très large.
 \end{frame}
 
 \begin{frame}{Optimisation sans gradient}
@@ -455,16 +476,70 @@
 \begin{frame}[fragile]{Optimization.jl}
 	La bibliothèque Optimization.jl permet de résoudre numériquement les problèmes d'optimisation, avec une interface unifiée.
 	
-	\begin{julia}
-		using Optimization
-		rosenbrock(x, p) = (p[1] - x[1])^2 + p[2] * (x[2] - x[1]^2)^2
-		x0 = zeros(2)
-		p = [1.0, 100.0]
-		f = OptimizationFunction(rosenbrock)
-		prob = Optimization.OptimizationProblem(f, x0, p, lb = [-1.0, -1.0], ub = [1.0, 1.0])
-		sol = solve(prob, BBO_adaptive_de_rand_1_bin_radiuslimited(), maxiters = 100000,
-		maxtime = 1000.0)
-	\end{julia}
+	\begin{enumerate}
+		\item La fonction à optimiser doit avoir deux arguments : la variable d'optimisation \jl{x} et le paramètre \jl{p}.
+		\begin{repl}
+			rosenbrock(x, p) = (p[1] - x[1])^2 + p[2] * (x[2] - x[1]^2)^2
+		\end{repl}
+		\item Elle est transformée en \jl{OptimizationFunction}, avec le mode de dérivation \jl{admode}, ses dérivées si disponible, et ses contraintes :
+		\begin{repl}
+			f = OptimizationFunction(rosenbrock, admode; kwargs...)
+		\end{repl}
+		\item Le point initial \jl{x0}, la valeur du paramètre \jl{p} ainsi que les bornes inférieure \jl{lb} et supérieure \jl{ub} sur \jl{x} sont données :
+		\begin{repl}
+			x0 = zeros(2); p = [1.0, 100.0]
+			lb = [-1.0, 1.0]; ub = [1.0, 1.0]
+			prob = Optimization.OptimizationProblem(f, x0, p; ub, lb)
+		\end{repl}
+		\item La fonction \jl{solve} est appelée avec un \jl{solver} :
+		\begin{repl}
+			solve(prob, solver; kwargs...)
+		\end{repl}
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Dérivation automatique}
+	\jl{OptimizationFunction(func, admode; kwargs...)} encapsule la fonction à optimiser \jl{func}. Pour résoudre un problème d'optimisation, il faut souvent pouvoir dériver la fonction, parfois deux fois.
+	\vfill
+	
+	Pour permettre cela, on peut passer en argument nommé \jl{grad} le gradient et \jl{hess} la hessienne, explicitement. Alternativement, on peut choisir un mode de dérivation \jl{admode} pour que ce soit Julia qui dérive \jl{func}. Il existe plusieurs modes de \emph{dérivation automatique} :
+	\begin{itemize}
+		\item \jl{NoAD()} : pas de différentiation, valeur par défaut.
+		\item \jl{AutoForwardDiff()} : accumulation directe, pour les petits problèmes ou si la dimension de \jl{x} est petite devant celle de \jl{f(x)}.
+		\item \jl{AutoModelingToolkit()} : accumulation inverse, pertinente dans le cas opposé où la dimension de \jl{f(x)} est petite devant celle de \jl{x}.
+		\item D'autres choix : {\footnotesize\url{https://docs.sciml.ai/Optimization/stable/API/ad/}}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Contraintes}
+	Les contraintes sur le domaine $\mathcal A$ sont décomposées de la façon suivante :
+	\begin{itemize}
+		\item $\mathcal I$ est donné par les valeurs limites \jl{lb} et \jl{ub}.
+		\item S'il existe d'autres contraintes, elles sont exprimées en passant une fonction \jl{contraints(u, p)} comme un argument nommé \jl{cons} à \jl{OptimizationFunction}. À chaque étape de résolution, \jl{constraints(u, p)} renvoie un vecteur \jl{v} de taille $n_{\text{cons}}$, où \jl{u} représente le point $x$ et \jl{p} le paramètre.
+		
+		Ce vecteur est comparé aux contraintes \jl{lcons} et \jl{ucons} passées en argument à \jl{OptimizationProblem}. S'il existe un $\jl{i}\in\brack{1, n_{\text{cons}}}$ pour lequel $\jl{lcons[i]} \le \jl{v[i]} \le \jl{ucons[i]}$ n'est pas vrai, alors le point \jl{u} est considéré comme hors du domaine.
+	\end{itemize}
+	\vspace{1em}
+
+	Attention : certains solveurs évaluent parfois $f$ même en dehors du domaine, pour des calculs intermédiaires. Si une telle évaluation peut conduire à une erreur (par exemple pour $f = \jl{sqrt}$ sur $\mathbb R^*_-$), il convient de transformer $f$ et $\mathcal A$ pour éliminer ce risque.
+	\vspace{-0.5em}
+\end{frame}
+
+\begin{frame}{Choix du solveur}
+	Tout comme pour la résolution des équations différentielles, le choix du solveur d'un problème d'optimisation dépend crucialement des propriétés du problème. Quelques uns d'usage courant :
+	\begin{itemize}
+		\item \jl{Optimization.LBFGS()} : usage très général
+		\item \jl{Optimization.Sophia()} : solveur plus récent
+		\item \jl{Optim.Newton()}, \jl{Optim.NewtonTrustRegion()} : méthode de Newton, requiert un calcul efficace de la hessienne
+		\item \jl{Optim.NelderMead()}, \jl{Optim.SimulatedAnnealing()}, \jl{Optim.ParticleSwarm()} : pas besoin de dérivée
+		\item \jl{BlackBoxOptim.BBO_adaptive_de_rand_1_bin_radiuslimited()} : pas besoin de dérivée, n'accepte pas les contraintes (hors celles sur $\mathcal I$).
+	\end{itemize}
+	\vspace{0.6em}
+
+	Les solveurs de Optim.jl s'obtiennent en installant OptimizationOptimJL.jl ; ceux de BlackBoxOptim.jl en installant OptimizationBBO.jl.
+	\vspace{0.6em}
+
+	La liste complète : {\footnotesize\url{https://docs.sciml.ai/Optimization/stable/}}, dans l'onglet de gauche, chaque page de la catégorie ``Optimizer Packages''.
 \end{frame}
 
 \end{document}
